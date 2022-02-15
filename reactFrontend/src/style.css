@@ -1,0 +1,268 @@
+.transaction {
+  align-items: center;
+  background-color: initial;
+  background-image: linear-gradient(#464d55, #25292e);
+  border-radius: 8px;
+  border-width: 0;
+  width: 400px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1), 0 3px 6px rgba(0, 0, 0, 0.05);
+  box-sizing: border-box;
+  color: #fff;
+  cursor: pointer;
+  display: inline-flex;
+  flex-direction: column;
+  font-family: Nunito, sans-serif;
+  font-size: 25px;
+  font-weight: bold;
+  height: 52px;
+  justify-content: center;
+  line-height: 1;
+  margin: 20px;
+  position: absolute;
+  top: 30%;
+  left: 47%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  outline: none;
+  overflow: hidden;
+  padding: 0 32px;
+  text-align: center;
+  text-decoration: none;
+  transform: translate3d(0, 0, 0);
+  transition: all 150ms;
+  vertical-align: baseline;
+  white-space: nowrap;
+  z-index: -1;
+}
+
+.addProcess {
+  align-items: center;
+  background-color: initial;
+  background-image: linear-gradient(#464d55, #25292e);
+  border-radius: 8px;
+  border-width: 0;
+  width: 400px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1), 0 3px 6px rgba(0, 0, 0, 0.05);
+  box-sizing: border-box;
+  color: #fff;
+  cursor: pointer;
+  display: inline-flex;
+  flex-direction: column;
+  font-family: Nunito, sans-serif;
+  font-size: 25px;
+  font-weight: bold;
+  height: 52px;
+  justify-content: center;
+  line-height: 1;
+  margin: 20px;
+  position: absolute;
+  top: 40%;
+  left: 47%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  outline: none;
+  overflow: hidden;
+  padding: 0 32px;
+  text-align: center;
+  text-decoration: none;
+  transform: translate3d(0, 0, 0);
+  transition: all 150ms;
+  vertical-align: baseline;
+  white-space: nowrap;
+  z-index: -1;
+}
+
+.viewBlocks {
+  align-items: center;
+  background-color: initial;
+  background-image: linear-gradient(#464d55, #25292e);
+  border-radius: 8px;
+  border-width: 0;
+  width: 400px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1), 0 3px 6px rgba(0, 0, 0, 0.05);
+  box-sizing: border-box;
+  color: #fff;
+  cursor: pointer;
+  display: inline-flex;
+  flex-direction: column;
+  font-family: Nunito, sans-serif;
+  font-size: 25px;
+  font-weight: bold;
+  height: 52px;
+  justify-content: center;
+  line-height: 1;
+  margin: 20px;
+  position: absolute;
+  top: 50%;
+  left: 47%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  outline: none;
+  overflow: hidden;
+  padding: 0 32px;
+  text-align: center;
+  text-decoration: none;
+  transform: translate3d(0, 0, 0);
+  transition: all 150ms;
+  vertical-align: baseline;
+  white-space: nowrap;
+  z-index: -1;
+}
+
+.create--form {
+  background-color: rgb(201, 219, 201);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  overflow: hidden;
+  width: 560px;
+  height: 450px;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 18%;
+  left: 30%;
+  padding-top: 30px;
+  padding-left: 80px;
+}
+
+.formInput {
+  float: left;
+  width: 410px;
+  border: 0px;
+  color: #25292e;
+  background-color: white;
+  padding: 10px 10px 10px 30px;
+  font: 13px Nunito, sans-serif;
+  margin-bottom: 20px;
+}
+
+.formLabel {
+  display: block;
+  float: left;
+  width: 120px;
+  padding-top: 11px;
+  padding-bottom: 11px;
+  font: 15px Nunito, sans-serif;
+}
+
+.create-btn {
+  display: inline-block;
+  background-color: #000;
+  color: #fff;
+  font-family: Nunito, sans-serif;
+  letter-spacing: 2px;
+  font-size: 15px;
+  line-height: 20px;
+  padding: 8px 16px;
+  border: none;
+  cursor: pointer;
+  margin-top: 10px;
+  margin-left: 203px;
+}
+
+.cancel-btn {
+  display: inline-block;
+  background-color: #000;
+  color: #fff;
+  font-family: Nunito, sans-serif;
+  letter-spacing: 2px;
+  font-size: 15px;
+  line-height: 20px;
+  padding: 8px 16px;
+  border: none;
+  cursor: pointer;
+  margin-left: 15.5px;
+}
+
+.addForm {
+  width: 500px;
+  float: left;
+}
+
+.formTextArea {
+  float: right;
+  border: 0px;
+  width: 290px;
+  height: 120px;
+  padding: 10px 10px 10px 30px;
+  font: 15px Nunito, sans-serif;
+  color: #25292e;
+  background-color: rgba(214, 205, 205, 0.986);
+  resize: none;
+  margin-right: 10px;
+}
+
+.broadcast {
+  display: inline-block;
+  background-color: #000;
+  color: #fff;
+  font-family: Nunito, sans-serif;
+  letter-spacing: 2px;
+  font-size: 15px;
+  line-height: 20px;
+  padding: 8px 16px;
+  border: none;
+  cursor: pointer;
+  margin-top: 10px;
+  margin-left: 373px;
+}
+
+.sidebar {
+  background-color: rgb(201, 219, 201);
+  width: 350px;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  padding-top: 40px;
+}
+
+.user {
+  text-align: center;
+  font-family: Nunito, sans-serif;
+  font-size: 25px;
+  font-weight: bold;
+}
+
+.profile {
+  background-color: white;
+  height: 550px;
+  margin-left: 30px;
+  margin-right: 30px;
+}
+
+.profileTitle {
+  text-align: center;
+  font-family: Nunito, sans-serif;
+  font-size: 35px;
+  font-weight: bold;
+  padding-top: 20px;
+}
+
+.profileInfo {
+  text-align: left;
+  font-family: Nunito, sans-serif;
+  font-size: 20px;
+  list-style: square;
+}
+
+.encryptPopup {
+  position: absolute;
+  top: 0;
+  left: 10%;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.encryptPopup-inner {
+  position: relative;
+  padding: 32px;
+  width: 100%;
+  max-width: 500px;
+  z-index: 1;
+  background-color: aliceblue;
+}

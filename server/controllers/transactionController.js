@@ -13,11 +13,11 @@ const getAllTransactions = async (req, res) => {
 }
 
 const createTransactions = async (req, res) => {
-  const { fromAddress, toAddress, amount, privateKey } = req.body
+  const { from, to, amount } = req.body
 
-  const key = ec.keyFromPrivate(privateKey)
-  const tx = new Transaction(fromAddress, toAddress, amount)
-  tx.signTransaction(key)
+  // const key = ec.keyFromPrivate(privateKey)
+  const tx = new Transaction(from, to, amount)
+  // tx.signTransaction(key)
 
   const transaction = await TransactionModel.create(tx)
   res.status(201).json({ transaction })

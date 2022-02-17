@@ -1,0 +1,16 @@
+.create--form {
+  background-color: rgb(201, 219, 201);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  overflow: hidden;
+  width: 560px;
+  height: 450px;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 18%;
+  left: 30%;
+  padding-top: 30px;
+  padding-left: 80px;
+}

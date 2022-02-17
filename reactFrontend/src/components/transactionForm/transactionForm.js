@@ -1,6 +1,7 @@
 import React, { Component } from "react"
 import axios from "axios"
-import history from "./History"
+import history from "../routes/history"
+import "./style.css"
 
 class TransactionForm extends Component {
   constructor(props) {
@@ -83,10 +84,10 @@ class TransactionForm extends Component {
 
   render() {
     return (
-      <div className="create--form">
-        <h2>Create your transactions here</h2>
-        <form className="form" onSubmit={this.onSubmit}>
-          <label className="formLabel">From Address</label>
+      <div>
+        <form className="create--form" onSubmit={this.onSubmit}>
+          <h2>Create your transactions here</h2>
+          <label className="formLabel">Sender's Address</label>
           <input
             onChange={this.onChangeFrom}
             name="from"
@@ -96,7 +97,7 @@ class TransactionForm extends Component {
             placeholder="Enter public key"
           ></input>
 
-          <label className="formLabel">To Address</label>
+          <label className="formLabel">Receiver's Address</label>
           <input
             onChange={this.onChangeTo}
             name="to"

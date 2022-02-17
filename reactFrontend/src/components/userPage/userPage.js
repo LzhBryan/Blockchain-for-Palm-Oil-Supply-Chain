@@ -1,9 +1,8 @@
 import React, { Component } from "react"
-import "./style.css"
-import Transaction from "./Transaction"
-import AddProcess from "./AddProcess"
-import ViewBlocks from "./ViewBlocks"
-import Sidebar from "./Sidebar"
+import Transaction from "../transactionBtn/transactionBtn"
+import AddProcess from "../addProcess/addProcess"
+import ViewBlocks from "../viewBlocks/viewBlocks"
+import Sidebar from "../sidebar/sidebar"
 
 class UserPage extends Component {
   render() {

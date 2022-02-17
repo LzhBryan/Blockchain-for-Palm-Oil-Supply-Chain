@@ -1,6 +1,6 @@
 import React, { Component } from "react"
 import "./style.css"
-import history from "./History"
+import history from "../routes/history"
 
 class Transaction extends Component {
   /*const [transPopup, setTransPopup] = useState(false)*/

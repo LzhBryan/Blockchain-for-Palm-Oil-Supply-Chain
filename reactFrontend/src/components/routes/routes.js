@@ -1,9 +1,9 @@
 import React, { Component } from "react"
 import { Router, Switch, Route } from "react-router-dom"
-import UserPage from "./UserPage"
-import TransactionForm from "./TransactionForm"
-import Encrypt from "./Encrypt"
-import history from "./History"
+import UserPage from "../userPage/userPage"
+import TransactionForm from "../transactionForm/transactionForm"
+import Encrypt from "../encrypt/encrypt"
+import history from "../routes/history"
 
 export default class Routes extends Component {
   render() {

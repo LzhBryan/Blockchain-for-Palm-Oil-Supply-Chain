@@ -1,9 +1,8 @@
 import React, { Component } from "react"
 import { Router, Switch, Route } from "react-router-dom"
-import UserPage from "../userPage/userPage"
-import TransactionForm from "../transactionForm/transactionForm"
-import Encrypt from "../encrypt/encrypt"
-import history from "../routes/history"
+import UserPage from "../UserPage/userPage"
+import TransactionForm from "../TransactionForm/transactionForm"
+import history from "./history"
 
 export default class Routes extends Component {
   render() {
@@ -12,7 +11,6 @@ export default class Routes extends Component {
         <Switch>
           <Route path="/" exact component={UserPage} />
           <Route path="/Create" exact component={TransactionForm} />
-          <Route path="/Create/Encrypt" exact component={Encrypt} />
         </Switch>
       </Router>
     )

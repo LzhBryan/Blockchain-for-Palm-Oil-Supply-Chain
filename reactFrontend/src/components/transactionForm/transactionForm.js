@@ -1,135 +1,149 @@
-import React, { Component } from "react"
+import React, { useState } from "react"
 import axios from "axios"
-import history from "../routes/history"
-import "./style.css"
+import Modal from "../Modal/modal"
+import {
+  Typography,
+  Card,
+  CardContent,
+  Grid,
+  TextField,
+} from "@material-ui/core"
+import { makeStyles } from "@material-ui/core/styles"
+import Button from "@material-ui/core/Button"
 
-class TransactionForm extends Component {
-  constructor(props) {
-    super(props)
-    this.onChangeFrom = this.onChangeFrom.bind(this)
-    this.onChangeTo = this.onChangeTo.bind(this)
-    this.onChangeAmount = this.onChangeAmount.bind(this)
-    this.onSubmit = this.onSubmit.bind(this)
-    this.state = {
-      from: "",
-      to: "",
-      amount: "",
+const useStyles = makeStyles((theme) => ({
+  root: {
+    "& > *": {
+      margin: theme.spacing(1),
+    },
+  },
+}))
+
+const TransactionForm = () => {
+  const classes = useStyles()
+
+  const [from, setFrom] = useState("")
+  const [privateKey, setPrivateKey] = useState("")
+  const [to, setTo] = useState("")
+  const [amount, setAmount] = useState("")
+  const [modal, setModal] = useState(false)
+  const [transaction, setTransaction] = useState("")
+
+  const handlePopup = () => {
+    if (from && privateKey && to && amount) {
+      setModal(true)
     }
   }
 
-  onChangeFrom(e) {
-    this.setState({
-      from: e.target.value,
-    })
-  }
-
-  onChangeTo(e) {
-    this.setState({
-      to: e.target.value,
-    })
-  }
-
-  onChangeAmount(e) {
-    this.setState({
-      amount: e.target.value,
-    })
-  }
-
-  onSubmit(e) {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    const transaction = {
-      from: this.state.from,
-      to: this.state.to,
-      amount: this.state.amount,
+
+    const transaction = { from, privateKey, to, amount }
+
+    if (from && privateKey && to && amount) {
+      const res = await axios.post(
+        "http://localhost:5000/api/transactions",
+        transaction
+      )
+      console.log(res.data)
+      setTransaction(res.data.transaction)
+      setFrom("")
+      setPrivateKey("")
+      setTo("")
+      setAmount("")
     }
-    console.log(transaction)
-
-    axios
-      .post("http://localhost:5000/api/transactions", transaction)
-      .then((res) => console.log(res.data))
-
-    this.setState({
-      from: "",
-      to: "",
-      amount: "",
-    })
-    window.location = "/Create/Encrypt"
   }
 
-  /*const [input, setInput] = useState({
-    from: "",
-    to: "",
-    amount: "",
-  })
-
-  function handleChange(event) {
-    const { name, value } = event.target
-    setInput((prevInput) => {
-      return {
-        ...prevInput,
-        [name]: value,
-      }
-    })
-  }
-
-  function handleClick(event) {
-    event.preventDefault()
-    const newTransaction = {
-      from: input.from,
-      to: input.to,
-      amount: input.amount,
-    }
-    axios.post("http://localhost:3001/create", newTransaction)
+  /*const handlePopup = () => {
+    Swal.fire("Your transaction is completed!")
   }*/
 
-  render() {
-    return (
-      <div>
-        <form className="create--form" onSubmit={this.onSubmit}>
-          <h2>Create your transactions here</h2>
-          <label className="formLabel">Sender's Address</label>
-          <input
-            onChange={this.onChangeFrom}
-            name="from"
-            type="text"
-            value={this.state.from}
-            className="formInput"
-            placeholder="Enter public key"
-          ></input>
+  return (
+    <div className={classes.root}>
+      <Card
+        style={{
+          maxWidth: 600,
+          margin: "130px auto",
+          padding: "50px 50px 50px",
+        }}
+      >
+        <CardContent>
+          <Typography gutterBottom variant="h5" align="left">
+            Create your transactions here
+          </Typography>
+          <form onSubmit={handleSubmit}>
+            <Grid container spacing={1}>
+              <Grid xs={12} item>
+                <TextField
+                  className="fromAddress"
+                  name="from"
+                  label="Sender's Address"
+                  placeholder="Enter public key"
+                  value={from}
+                  onChange={(e) => setFrom(e.target.value)}
+                  fullWidth
+                />
+              </Grid>
 
-          <label className="formLabel">Receiver's Address</label>
-          <input
-            onChange={this.onChangeTo}
-            name="to"
-            type="text"
-            value={this.state.to}
-            className="formInput"
-            placeholder="Enter public key"
-          ></input>
+              <Grid xs={12} item>
+                <TextField
+                  name="privateKey"
+                  label="Sender's Private Key"
+                  placeholder="Enter private key"
+                  value={privateKey}
+                  onChange={(e) => setPrivateKey(e.target.value)}
+                  fullWidth
+                />
+              </Grid>
 
-          <label className="formLabel">Amount</label>
-          <input
-            onChange={this.onChangeAmount}
-            name="amount"
-            type="number"
-            value={this.state.amount}
-            className="formInput"
-            placeholder="Enter amount"
-          ></input>
+              <Grid xs={12} item>
+                <TextField
+                  name="to"
+                  label="Receiver's Address"
+                  placeholder="Enter public key"
+                  value={to}
+                  onChange={(e) => setTo(e.target.value)}
+                  fullWidth
+                />
+              </Grid>
 
-          <input type="submit" value="Sign & Create" className="create-btn" />
+              <Grid xs={12} item>
+                <TextField
+                  name="amount"
+                  label="Amount"
+                  placeholder="Enter amount"
+                  value={amount}
+                  onChange={(e) => setAmount(e.target.value)}
+                  fullWidth
+                />
+              </Grid>
 
-          {/*<button className="create-btn" onClick={handleClick}>
-          Sign & Create
-  </button>*/}
-
-          <button className="cancel-btn" onClick={() => history.push("/")}>
-            Cancel
-          </button>
-        </form>
-      </div>
-    )
-  }
+              <Grid xs={12} item>
+                <Button
+                  style={{ marginTop: "20px" }}
+                  type="submit"
+                  variant="outlined"
+                  color="primary"
+                  onClick={handlePopup}
+                >
+                  Sign & create
+                </Button>
+                <Button
+                  style={{ marginTop: "20px", marginLeft: "20px" }}
+                  variant="outlined"
+                  color="secondary"
+                  href="/"
+                >
+                  Cancel
+                </Button>
+                {modal && <Modal transaction={transaction} />}
+              </Grid>
+            </Grid>
+          </form>
+        </CardContent>
+      </Card>
+    </div>
+  )
 }
 
 export default TransactionForm

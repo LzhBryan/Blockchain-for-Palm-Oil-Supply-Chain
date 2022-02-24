@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import axios from "axios"
-import Modal from "../Modal/modal"
+import Modal from "../Modal/Modal"
 import {
   Typography,
   Card,

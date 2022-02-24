@@ -1,9 +1,9 @@
 import React, { Component } from "react"
 import { Router, Switch, Route } from "react-router-dom"
-import UserPage from "../UserPage/userPage"
-import TransactionForm from "../TransactionForm/transactionForm"
-import history from "./history"
-import TransactionTable from "../TransactionPage/transactionTable"
+import UserPage from "../UserPage/UserPage"
+import TransactionForm from "../TransactionForm/TransactionForm"
+import history from "./History"
+import TransactionTable from "../TransactionPage/TransactionTable"
 
 export default class Routes extends Component {
   render() {

@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react"
+import React from "react"
 import { Link } from "react-router-dom"
-import "./style.css"
+import "./modal.css"
 
 const Modal = ({ transaction }) => {
   return (

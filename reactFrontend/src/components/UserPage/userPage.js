@@ -1,8 +1,8 @@
 import React, { Component } from "react"
-import Transaction from "../TransactionBtn/transactionBtn"
-import AddProcess from "../AddProcess/addProcess"
-import ViewBlocks from "../ViewBlocks/viewBlocks"
-import Sidebar from "../Sidebar/sidebar"
+import Transaction from "../TransactionBtn/TransactionBtn"
+import AddProcess from "../AddProcess/AddProcess"
+import ViewBlocks from "../ViewBlocks/ViewBlocks"
+import Sidebar from "../Sidebar/Sidebar"
 import { Link } from "react-router-dom"
 import { MdPendingActions } from "react-icons/md"
 

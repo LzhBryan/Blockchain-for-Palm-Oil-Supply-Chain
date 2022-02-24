@@ -1,5 +1,5 @@
 import React, { Component } from "react"
-import "./style.css"
+import "./addProcess.css"
 
 class AddProcess extends Component {
   constructor(props) {

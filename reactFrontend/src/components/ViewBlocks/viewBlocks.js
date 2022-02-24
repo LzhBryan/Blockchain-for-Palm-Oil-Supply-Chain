@@ -1,5 +1,5 @@
 import React, { Component } from "react"
-import "./style.css"
+import "./viewBlocks.css"
 
 class ViewBlocks extends Component {
   handleClick() {

@@ -10,7 +10,7 @@ import {
   TableRow,
   Paper,
 } from "@material-ui/core"
-import TransactionRows from "./transactionRows"
+import TransactionRows from "./TransactionRows"
 
 const useRowStyles = makeStyles({
   tableContainer: {

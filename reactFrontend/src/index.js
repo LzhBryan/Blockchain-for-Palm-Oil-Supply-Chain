@@ -1,8 +1,7 @@
 import React from "react"
 import ReactDOM from "react-dom"
 import { BrowserRouter as Router } from "react-router-dom"
-import Routes from "./Routes"
-import "./style.css"
+import Routes from "./components/Routes/routes"
 
 ReactDOM.render(
   <Router>

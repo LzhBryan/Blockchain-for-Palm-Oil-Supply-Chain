@@ -12,7 +12,7 @@ class Transaction {
 
   computeHash() {
     return createHash("SHA256")
-      .update(this.fromAddress + this.toAddress + this.amount)
+      .update(this.fromAddress + this.toAddress + this.amount + this.timestamp)
       .digest("hex")
   }
 

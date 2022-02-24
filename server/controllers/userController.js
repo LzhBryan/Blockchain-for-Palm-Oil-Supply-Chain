@@ -28,7 +28,14 @@ const login = async (req, res) => {
   res.status(200).json({ name: user.username, token })
 }
 
+/* const dashboard = async (req, res) => {
+  res.status(200).json({
+    msg: "Successful",
+  })
+}*/
+
 module.exports = {
   registration,
   login,
+  //dashboard,
 }

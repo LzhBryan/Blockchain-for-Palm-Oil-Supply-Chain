@@ -1,4 +1,4 @@
-const User = require("../models/user")
+const UserModel = require("../models/user")
 
 const registration = async (req, res) => {
   const user = await UserModel.create({ ...req.body })

@@ -1,41 +1,48 @@
 const UserModel = require("../models/user")
+const { BadRequestError, UnauthenticatedError } = require("../errors")
+const EC = require("elliptic").ec
+const ec = new EC("secp256k1")
 
-const registration = async (req, res) => {
+const generateKeys = async (req, res) => {
+  const key = ec.genKeyPair()
+  const publicKey = key.getPublic("hex")
+  const privateKey = key.getPrivate("hex")
+  res.status(200).json({ publicKey, privateKey })
+}
+
+const register = async (req, res) => {
   const user = await UserModel.create({ ...req.body })
+
+  // to do: check if user already exists in database
+
   const token = user.createJWT()
-  res.status(201).json({ name: user.username, token })
+  res.status(201).json({ user: { name: user.username }, token })
 }
 
 const login = async (req, res) => {
   const { username, password } = req.body
 
   if (!username || !password) {
-    res.status(400).json({ msg: "Please provide email or password" })
+    throw new BadRequestError("Please provide email and password")
   }
 
-  const user = await UserModel.findOne({ username: req.body.username })
+  const user = await UserModel.findOne({ username })
 
   if (!user) {
-    return res.status(401).json({ msg: "Invalid" })
+    throw new BadRequestError("Invalid credentials")
   }
 
   const isPasswordCorrect = await user.comparePassword(password)
   if (!isPasswordCorrect) {
-    return res.status(401).json({ msg: "Invalid" })
+    throw new BadRequestError("Invalid credentials")
   }
 
   const token = user.createJWT()
-  res.status(200).json({ name: user.username, token })
+  res.status(200).json({ user: { name: user.username }, token })
 }
 
-/* const dashboard = async (req, res) => {
-  res.status(200).json({
-    msg: "Successful",
-  })
-}*/
-
 module.exports = {
-  registration,
+  register,
   login,
-  //dashboard,
+  generateKeys,
 }

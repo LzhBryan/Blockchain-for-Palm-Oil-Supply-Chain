@@ -1,10 +1,8 @@
 const Transaction = require("../blockchain/transaction")
 const TransactionModel = require("../models/transaction")
-
+const { NotFoundError } = require("../errors")
 const EC = require("elliptic").ec
 const ec = new EC("secp256k1")
-
-const { NotFoundError } = require("../errors")
 
 const getAllTransactions = async (req, res) => {
   // get all transactions history for a particular user
@@ -14,7 +12,6 @@ const getAllTransactions = async (req, res) => {
 
 const createTransactions = async (req, res) => {
   const { from, privateKey, to, amount } = req.body
-  console.log(req.body)
   const key = ec.keyFromPrivate(privateKey)
   const tx = new Transaction(from, to, amount)
   tx.signTransaction(key)
@@ -24,7 +21,6 @@ const createTransactions = async (req, res) => {
 }
 
 const getTransaction = async (req, res) => {
-  console.log(req.params)
   const { id: transactionID } = req.params
 
   const transaction = await TransactionModel.findOne({ _id: transactionID })

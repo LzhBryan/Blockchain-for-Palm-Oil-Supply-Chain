@@ -1,0 +1,25 @@
+.paper {
+  padding: 20px;
+  height: 80vh;
+  width: 20vw;
+  margin: 3rem auto;
+}
+
+.icon {
+  margin-top: 1rem;
+  font-size: 4rem;
+}
+
+.text {
+  color: red;
+}
+
+h1 {
+  text-align: center;
+  margin-top: 5rem;
+}
+
+.title {
+  text-align: center;
+  margin: 0.5rem 0;
+}

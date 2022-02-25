@@ -2,10 +2,10 @@ const mongoose = require("mongoose")
 const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken")
 
-const UserSchema = new mongoose.Schema({
+const userSchema = new mongoose.Schema({
   username: {
     type: String,
-    required: [true, "Please provide name"],
+    required: [true, "Please provide username"],
     minlength: 3,
     maxlength: 50,
     unique: true,
@@ -14,34 +14,49 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: [true, "Please provide password"],
   },
+  role: {
+    type: String,
+    required: [true, "Please provide user role"],
+    enum: [
+      "Planter",
+      "Miller",
+      "Refiner",
+      "Manufacturer",
+      "Transporter",
+      "WarehouseManager",
+      "Retailer",
+      "Validator",
+    ],
+  },
+  publicKey: {
+    type: String,
+    required: [true, "Please generate public key"],
+  },
+  privateKey: {
+    type: String,
+    required: [true, "Please generate private key"],
+  },
 })
 
-//Registration
-UserSchema.pre("save", async function () {
+// Registration
+userSchema.pre("save", async function () {
   const salt = await bcrypt.genSalt(10)
   this.password = await bcrypt.hash(this.password, salt)
 })
 
 // Create token to user
-UserSchema.methods.createJWT = function () {
+userSchema.methods.createJWT = function () {
   return jwt.sign(
-    {
-      id: this._id,
-      username: this.name,
-    },
+    { userID: this._id, username: this.username },
     process.env.JWT_SECRET,
-    {
-      expiresIn: process.env.JWT_LIFETIME,
-    }
+    { expiresIn: process.env.JWT_LIFETIME }
   )
 }
 
 // Login
-UserSchema.methods.comparePassword = async function (userpwd) {
-  const isMatch = await bcrypt.compare(userpwd, this.password)
+userSchema.methods.comparePassword = async function (inputPassword) {
+  const isMatch = await bcrypt.compare(inputPassword, this.password)
   return isMatch
 }
 
-const model = mongoose.model("UserSchema", UserSchema)
-
-module.exports = model
+module.exports = mongoose.model("User", userSchema)

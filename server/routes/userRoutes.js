@@ -1,12 +1,13 @@
 const express = require("express")
 const router = express.Router()
+
 const {
   login,
-  registration,
-  /*dashboard,*/
+  register,
+  generateKeys,
 } = require("../controllers/userController")
 
-router.route("/register").post(registration)
+router.route("/register").post(register).get(generateKeys)
 router.route("/login").post(login)
 //router.route("/dashboard").get(authMiddleware, dashboard)
 

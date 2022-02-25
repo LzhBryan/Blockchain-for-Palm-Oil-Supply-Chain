@@ -20,6 +20,17 @@ const transactionSchema = new mongoose.Schema({
     type: String,
     required: [true, "Please providee transaction signature"],
   },
+  status: {
+    type: String,
+    enum: ["Pending", "Approved", "Rejected"],
+    default: "Pending",
+  },
+  createdBy: {
+    type: String,
+  },
+  approvedBy: {
+    type: String,
+  },
 })
 
 module.exports = mongoose.model("Transaction", transactionSchema)

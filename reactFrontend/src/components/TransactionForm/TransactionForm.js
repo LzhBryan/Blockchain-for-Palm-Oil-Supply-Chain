@@ -132,7 +132,7 @@ const TransactionForm = () => {
                   style={{ marginTop: "20px", marginLeft: "20px" }}
                   variant="outlined"
                   color="secondary"
-                  href="/"
+                  href="/User"
                 >
                   Cancel
                 </Button>

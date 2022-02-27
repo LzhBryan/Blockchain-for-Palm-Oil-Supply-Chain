@@ -6,7 +6,7 @@ const Modal = ({ transaction }) => {
   return (
     <div className="modalBg">
       <div className="modalContainer">
-        <Link to={"/"} className="exit-btn">
+        <Link to={"/User"} className="exit-btn">
           ×
         </Link>
         <h2 className="header">Transaction Completed</h2>

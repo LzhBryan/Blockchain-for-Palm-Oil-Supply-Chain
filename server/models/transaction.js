@@ -1,4 +1,5 @@
 const mongoose = require("mongoose")
+const Transaction = require("../blockchain/transaction")
 
 const transactionSchema = new mongoose.Schema({
   fromAddress: {
@@ -18,7 +19,7 @@ const transactionSchema = new mongoose.Schema({
   },
   signature: {
     type: String,
-    required: [true, "Please providee transaction signature"],
+    required: [true, "Please provide transaction signature"],
   },
   status: {
     type: String,
@@ -27,10 +28,25 @@ const transactionSchema = new mongoose.Schema({
   },
   createdBy: {
     type: String,
+    required: true,
   },
   approvedBy: {
-    type: String,
+    type: Array,
+  },
+  rejectedBy: {
+    type: Array,
   },
 })
+
+transactionSchema.methods.checkValidity = function () {
+  const transaction = new Transaction(
+    this.fromAddress,
+    this.toAddress,
+    this.amount
+  )
+  transaction.timestamp = this.timestamp
+  transaction.signature = this.signature
+  return transaction.isValid()
+}
 
 module.exports = mongoose.model("Transaction", transactionSchema)

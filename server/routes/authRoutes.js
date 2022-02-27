@@ -5,10 +5,9 @@ const {
   login,
   register,
   generateKeys,
-} = require("../controllers/userController")
+} = require("../controllers/authController")
 
 router.route("/register").post(register).get(generateKeys)
 router.route("/login").post(login)
-//router.route("/dashboard").get(authMiddleware, dashboard)
 
 module.exports = router

@@ -21,7 +21,6 @@ const userSchema = new mongoose.Schema({
       "Planter",
       "Miller",
       "Refiner",
-      "Manufacturer",
       "Transporter",
       "WarehouseManager",
       "Retailer",
@@ -31,10 +30,12 @@ const userSchema = new mongoose.Schema({
   publicKey: {
     type: String,
     required: [true, "Please generate public key"],
+    unique: true,
   },
   privateKey: {
     type: String,
     required: [true, "Please generate private key"],
+    unique: true,
   },
 })
 
@@ -47,7 +48,7 @@ userSchema.pre("save", async function () {
 // Create token to user
 userSchema.methods.createJWT = function () {
   return jwt.sign(
-    { userID: this._id, username: this.username },
+    { userID: this._id, username: this.username, role: this.role },
     process.env.JWT_SECRET,
     { expiresIn: process.env.JWT_LIFETIME }
   )

@@ -7,7 +7,7 @@ class Blockchain {
   }
 
   initGenesisBlock() {
-    return new Block("", "", Date.now())
+    return new Block("", "")
   }
 
   getLatestBlock() {
@@ -17,8 +17,7 @@ class Blockchain {
   addPendingTransactions() {
     const block = new Block(
       this.getLatestBlock().hash,
-      this.pendingTransactions,
-      Date.now()
+      this.pendingTransactions
     )
     block.hash = block.computeHash()
     this.chain.push(block)

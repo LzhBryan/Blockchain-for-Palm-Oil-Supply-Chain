@@ -11,10 +11,14 @@ const generateKeys = async (req, res) => {
 }
 
 const register = async (req, res) => {
-  const user = await UserModel.create({ ...req.body })
+  const { username, password } = req.body
 
-  // to do: check if user already exists in database
+  const usernameAlreadyExists = await UserModel.findOne({ username })
+  if (usernameAlreadyExists) {
+    throw new BadRequestError("Username already exists")
+  }
 
+  const user = await UserModel.create({ username, password })
   const token = user.createJWT()
   res.status(201).json({ user: { name: user.username }, token })
 }
@@ -40,6 +44,8 @@ const login = async (req, res) => {
   const token = user.createJWT()
   res.status(200).json({ user: { name: user.username }, token })
 }
+
+// logout functions to be implemented
 
 module.exports = {
   register,

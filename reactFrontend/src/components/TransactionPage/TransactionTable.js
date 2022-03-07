@@ -11,6 +11,7 @@ import {
   Paper,
 } from "@material-ui/core"
 import TransactionRows from "./TransactionRows"
+import Swal from "sweetalert2"
 
 const useRowStyles = makeStyles({
   tableContainer: {
@@ -25,10 +26,21 @@ const TransactionTable = () => {
 
   const getTransactions = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/api/transactions")
+      const response = await axios.get(
+        "http://localhost:5000/api/transactions",
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+          },
+        }
+      )
       setTransactions(response.data.transactions)
     } catch (error) {
-      console.log(error)
+      localStorage.removeItem("authToken")
+      await Swal.fire({
+        title: "You are not authorized to this route",
+        icon: "error",
+      })
     }
   }
 

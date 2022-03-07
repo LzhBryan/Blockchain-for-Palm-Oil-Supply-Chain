@@ -33,7 +33,7 @@ const LoginPage = ({ history }) => {
       )
       localStorage.setItem("authToken", data.token)
       Swal.fire({
-        title: "Successfully Login",
+        title: "Successfully registered",
         icon: "success",
       })
       history.push("/user")

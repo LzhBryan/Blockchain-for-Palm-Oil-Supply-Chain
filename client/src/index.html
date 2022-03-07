@@ -2,9 +2,40 @@
 <html>
   <head>
     <meta charset="UTF-8" />
-    <title>Hello World!</title>
   </head>
   <body>
-    <div id="root"></div>
+    <section class="main-app">
+      <nav>
+        <div class="left-nav">
+          <span class="nav-link">&#x2630</span>
+        </div>
+        <div class="right-nav">
+          <span
+            class="nav-link"
+            id="minimize"
+            onClick="minimizeApp()"
+          >
+            &#x2212
+          </span>
+          <span
+            class="nav-link"
+            id="close-app"
+            onClick="closeApp()"
+          >
+            &#10006
+          </span>
+        </div>
+      </nav>
+      <div id="root"></div>
+    </section>
   </body>
+  <script>
+    function closeApp() {
+      app.window.close()
+    }
+
+    function minimizeApp(){
+      app.window.minimize()
+    }
+  </script>
 </html>

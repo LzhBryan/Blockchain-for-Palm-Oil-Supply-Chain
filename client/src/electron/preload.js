@@ -1,1 +1,10 @@
-const { ipcRenderer } = require('electron')
+const { contextBridge, ipcRenderer } = require("electron")
+
+const API = {
+  window: {
+    close: () => ipcRenderer.send("app/close"),
+    minimize: () => ipcRenderer.send("app/minimize"),
+  },
+}
+
+contextBridge.exposeInMainWorld("app", API)

@@ -2,7 +2,6 @@ const Transaction = require("../blockchain/transaction")
 const TransactionModel = require("../models/transaction")
 const UserModel = require("../models/user")
 const BlockModel = require("../models/block")
-const blockController = require("./blockController")
 const {
   NotFoundError,
   BadRequestError,
@@ -131,11 +130,11 @@ const approveTransaction = async (req, res) => {
     const latestBlock = await BlockModel.findOne({ hash: null })
     transaction = await TransactionModel.findOneAndUpdate(
       { _id: transactionID },
-      { status: "InBlock" },
+      { status: "inBlock" },
       { new: true }
     )
     await latestBlock.updateOne({
-      $push: { transactions: transaction },
+      $push: { records: transaction._id },
       timestamp: new Date().toLocaleString("en-GB"),
     })
   }
@@ -148,10 +147,21 @@ const approveTransaction = async (req, res) => {
   res.status(200).json({ message: message, transaction })
 }
 
+async function updateStatus() {
+  const recordInBlock = await TransactionModel.find({ status: "inBlock" })
+  if (recordInBlock != 0) {
+    await TransactionModel.updateMany(
+      { status: "inBlock" },
+      { $set: { status: "inChain" } }
+    )
+  }
+}
+
 module.exports = {
   getAllTransactions,
   createTransactions,
   getTransaction,
   validateTransaction,
   approveTransaction,
+  updateStatus,
 }

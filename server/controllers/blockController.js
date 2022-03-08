@@ -1,5 +1,6 @@
 const BlockModel = require("../models/block")
 const UserModel = require("../models/user")
+const transactionController = require("./transactionController")
 const {
   NotFoundError,
   BadRequestError,
@@ -16,11 +17,16 @@ const getAllBlocks = async (req, res) => {
   if (blockchain.length == 0) {
     await createGenesisBlock()
     await createHibernateBlock()
+    blockchain = "Genesis and hibernate blocks are created"
   }
-  res.status(200).json({ Blockchain: await BlockModel.find({}) })
+  res.status(200).json({ Blockchain: blockchain })
 }
 
-const getBlock = async (req, res) => {}
+const getBlock = async (req, res) => {
+  const { id: blockID } = req.params
+  const selectedBlock = await BlockModel.find({ _id: blockID })
+  res.status(200).json({ details: selectedBlock })
+}
 
 const activateBlock = async (req, res) => {
   const { id: blockID } = req.params
@@ -42,7 +48,7 @@ const activateBlock = async (req, res) => {
     )
     res.status(200).json({ msg: `Block ${blockID} is activated` })
   } else {
-    res.status(403).json({ msg: "Block cannot be activated " })
+    res.status(403).json({ msg: "Block cannot be activated" })
   }
 }
 
@@ -93,8 +99,6 @@ const approveBlock = async (req, res) => {
         { status: "Approved" },
         { new: true }
       )
-      pushBlock()
-      createHibernateBlock()
     }
 
     const rejectedPercentage =
@@ -109,6 +113,11 @@ const approveBlock = async (req, res) => {
     }
   }
 
+  if (block.status === "Approved") {
+    block = await pushBlock(blockID)
+    await createHibernateBlock()
+  }
+
   let message
   isApproved
     ? (message = "You have approved this block")
@@ -121,47 +130,54 @@ async function createGenesisBlock() {
   const timestamp = new Date().toLocaleString("en-GB")
   const previousHash = ""
   const noRecord = ""
-  await BlockModel.create({
+  const genesisBlock = await BlockModel.create({
     blockId: FIRST_BLOCK,
     prevHash: previousHash,
     hash: await hashing(FIRST_BLOCK, previousHash, timestamp, noRecord),
     timestamp: timestamp,
     status: "inChain",
   })
+  return genesisBlock
 }
 
 async function createHibernateBlock() {
-  await BlockModel.create({
+  const hibernateBlock = await BlockModel.create({
     timestamp: new Date().toLocaleString("en-GB"),
   })
+  return hibernateBlock
 }
 
 async function checkRecordCapacity() {
   LATEST_BLOCK = await getLatestBlock()
-  return LATEST_BLOCK.transactions.length === MAX_RECORD
+  return LATEST_BLOCK.records.length === MAX_RECORD
 }
 
 async function getLatestBlock() {
   return await BlockModel.findOne({ hash: null })
 }
 
-async function pushBlock() {
+async function pushBlock(blockID) {
   const blockIndex = await BlockModel.collection.countDocuments()
   const prevBlock = await BlockModel.findOne({ blockId: blockIndex - 2 })
   const timestamp = new Date().toLocaleString("en-GB")
-  LATEST_BLOCK = await getLatestBlock()
-  await LATEST_BLOCK.updateOne({
-    blockId: blockIndex - 1,
-    prevHash: prevBlock.hash,
-    hash: await hashing(
-      blockIndex - 1,
-      prevBlock.hash,
-      timestamp,
-      LATEST_BLOCK.transactions
-    ),
-    timestamp: timestamp,
-    status: "inChain",
-  })
+  const block = await BlockModel.findOneAndUpdate(
+    { _id: blockID },
+    {
+      blockId: blockIndex - 1,
+      prevHash: prevBlock.hash,
+      hash: await hashing(
+        blockIndex - 1,
+        prevBlock.hash,
+        timestamp,
+        blockID.records
+      ),
+      timestamp: timestamp,
+      status: "inChain",
+    },
+    { new: true }
+  )
+  await transactionController.updateStatus()
+  return block
 }
 
 async function hashing(blockIndex, prevBlock, timestamp, record) {

@@ -20,11 +20,14 @@ const blockSchema = new mongoose.Schema({
     type: String,
     required: [true, "Please provide the timestamp"],
   },
-  transactions: {
-    type: Array,
-    default: [],
-    required: [true, "Please provide a list of transactions"],
-  },
+  records: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      default: [],
+      required: [true, "Please provide a list of transactions"],
+      ref: "Transaction",
+    },
+  ],
   status: {
     type: String,
     enum: ["Pending", "Approved", "Rejected", "inChain", "Hibernation"],

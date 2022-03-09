@@ -9,7 +9,6 @@ const {
 const CONSENSUS_THRESHOLD = 0.66
 const FIRST_BLOCK = 0
 const MAX_RECORD = 2
-let LATEST_BLOCK
 const { createHash } = require("crypto")
 
 const getAllBlocks = async (req, res) => {
@@ -24,7 +23,10 @@ const getAllBlocks = async (req, res) => {
 
 const getBlock = async (req, res) => {
   const { id: blockID } = req.params
-  const selectedBlock = await BlockModel.find({ _id: blockID })
+  let selectedBlock = await BlockModel.findOne({ _id: blockID })
+  if (!selectedBlock) {
+    throw new NotFoundError(`No block with id ${blockID}`)
+  }
   res.status(200).json({ details: selectedBlock })
 }
 
@@ -36,20 +38,30 @@ const activateBlock = async (req, res) => {
     throw new UnauthenticatedError("Not authorized")
   }
 
-  let isMaxRecord = await checkRecordCapacity()
-  if (isMaxRecord) {
-    await BlockModel.findOneAndUpdate(
-      { _id: blockID },
-      {
-        status: "Pending",
-        timestamp: new Date().toLocaleString("en-GB"),
-      },
-      { new: true }
-    )
-    res.status(200).json({ msg: `Block ${blockID} is activated` })
-  } else {
-    res.status(403).json({ msg: "Block cannot be activated" })
+  const selectedBlock = await BlockModel.findOne({ _id: blockID })
+  if (!selectedBlock) {
+    throw new NotFoundError(`No block with id ${blockID}`)
   }
+
+  if (selectedBlock.status !== "Hibernation") {
+    throw new BadRequestError(
+      `Block ${selectedBlock.blockId} has been activated`
+    )
+  }
+
+  const isMaxRecord = await checkRecordCapacity(blockID)
+  if (!isMaxRecord) {
+    throw new BadRequestError("Block cannot be activate")
+  }
+  const activateBlock = await BlockModel.findOneAndUpdate(
+    { _id: blockID },
+    {
+      status: "Pending",
+      timestamp: new Date().toLocaleString("en-GB"),
+    },
+    { new: true }
+  )
+  res.status(200).json({ msg: `Block ${blockID} is activated`, activateBlock })
 }
 
 const approveBlock = async (req, res) => {
@@ -61,14 +73,19 @@ const approveBlock = async (req, res) => {
     throw new UnauthenticatedError("Not authorized")
   }
 
-  const approveBefore = await BlockModel.findOne({
+  const blockStatus = await BlockModel.findOne({ _id: blockID })
+  if (blockStatus.status !== "Pending") {
+    throw new BadRequestError("You are tampering with the block...")
+  }
+
+  const hasApproveBefore = await BlockModel.findOne({
     $and: [
       { _id: blockID },
       { $or: [{ approvedBy: username }, { rejectedBy: username }] },
     ],
   })
 
-  if (approveBefore) {
+  if (hasApproveBefore) {
     throw new BadRequestError("Already rejected or approved this block")
   }
 
@@ -147,13 +164,9 @@ async function createHibernateBlock() {
   return hibernateBlock
 }
 
-async function checkRecordCapacity() {
-  LATEST_BLOCK = await getLatestBlock()
-  return LATEST_BLOCK.records.length === MAX_RECORD
-}
-
-async function getLatestBlock() {
-  return await BlockModel.findOne({ hash: null })
+async function checkRecordCapacity(blockID) {
+  const blockRecord = await BlockModel.findOne({ _id: blockID })
+  return blockRecord.records.length === MAX_RECORD
 }
 
 async function pushBlock(blockID) {
@@ -176,7 +189,7 @@ async function pushBlock(blockID) {
     },
     { new: true }
   )
-  await transactionController.updateStatus()
+  await transactionController.updateStatus(MAX_RECORD)
   return block
 }
 

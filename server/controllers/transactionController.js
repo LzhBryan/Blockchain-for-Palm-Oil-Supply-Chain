@@ -147,14 +147,21 @@ const approveTransaction = async (req, res) => {
   res.status(200).json({ message: message, transaction })
 }
 
-async function updateStatus() {
-  const recordInBlock = await TransactionModel.find({ status: "inBlock" })
-  if (recordInBlock != 0) {
-    await TransactionModel.updateMany(
-      { status: "inBlock" },
-      { $set: { status: "inChain" } }
-    )
+async function updateStatus(MAX_RECORD) {
+  const fullStorage = checkMaxRecord(MAX_RECORD)
+  if (!fullStorage) {
+    throw new BadRequestError("Insufficient records...")
   }
+  const updatedStatus = await TransactionModel.updateMany(
+    { status: "inBlock" },
+    { $set: { status: "inChain" } }
+  )
+  return updatedStatus
+}
+
+async function checkMaxRecord(MAX_RECORD) {
+  const recordInBlock = await TransactionModel.find({ status: "inBlock" })
+  return recordInBlock.length === MAX_RECORD
 }
 
 module.exports = {

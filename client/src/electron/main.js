@@ -16,6 +16,8 @@ const createWindow = () => {
     height: 700,
     frame: false,
     show: false,
+    minWidth: 700,
+    minHeight: 500,
     transparent: true,
     webPreferences: {
       preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
@@ -62,4 +64,12 @@ ipcMain.on("app/close", () => {
 
 ipcMain.on("app/minimize", () => {
   mainWindow.minimize()
+})
+
+ipcMain.on("app/resize", () => {
+  if (mainWindow.isMaximized()) {
+    mainWindow.setSize(700, 500)
+  } else {
+    mainWindow.maximize()
+  }
 })

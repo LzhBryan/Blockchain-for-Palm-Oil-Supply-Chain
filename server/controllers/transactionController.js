@@ -1,44 +1,23 @@
-const Transaction = require("../blockchain/transaction")
 const TransactionModel = require("../models/transaction")
 const UserModel = require("../models/user")
 const BlockModel = require("../models/block")
-const {
-  NotFoundError,
-  BadRequestError,
-  UnauthenticatedError,
-} = require("../errors")
+const { NotFoundError, BadRequestError } = require("../errors")
 const EC = require("elliptic").ec
 const ec = new EC("secp256k1")
+const { createHash } = require("crypto")
 const CONSENSUS_THRESHOLD = 0.66
+const MAX_RECORD = 2
 
-const getAllTransactions = async (req, res) => {
-  // const { username, role } = req.user
-
-  // if (role === "Validator") {
-  //   const transactions = await TransactionModel.find({ status: "Pending" })
-  //   res.status(200).json({ transactions })
-  // } else {
-  //   const transactions = await TransactionModel.find({ createdBy: username })
-  //   res.status(200).json({ transactions })
-  // }
-
-  const transactions = await TransactionModel.find({})
+const getPendingTransactions = async (req, res) => {
+  const transactions = await TransactionModel.find({ status: "Pending" })
   res.status(200).json({ transactions })
-
-  // get all transactions history for a particular user
 }
 
-const createTransactions = async (req, res) => {
-  const { from, privateKey, to, amount } = req.body
-  const { username } = req.user
-
-  const key = ec.keyFromPrivate(privateKey)
-  const tx = new Transaction(from, to, amount)
-  tx.createdBy = username
-  tx.signTransaction(key)
-
-  const transaction = await TransactionModel.create(tx)
-  res.status(201).json({ transaction })
+const getUserTransactions = async (req, res) => {
+  const transactions = await TransactionModel.find({
+    createdBy: req.user.username,
+  })
+  res.status(200).json({ transactions })
 }
 
 const getTransaction = async (req, res) => {
@@ -52,6 +31,20 @@ const getTransaction = async (req, res) => {
   res.status(200).json({ transaction })
 }
 
+const createTransactions = async (req, res) => {
+  const { fromAddress: from, privateKey, toAddress: to, amount } = req.body
+
+  const key = ec.keyFromPrivate(privateKey)
+  const timestamp = new Date().toLocaleString("en-GB")
+
+  req.body.createdBy = req.user.username
+  req.body.timestamp = timestamp
+  req.body.signature = signTransaction(key, from, to, amount, timestamp)
+
+  const transaction = await TransactionModel.create(req.body)
+  res.status(201).json({ transaction })
+}
+
 const validateTransaction = async (req, res) => {
   const { id: transactionID } = req.params
 
@@ -60,18 +53,14 @@ const validateTransaction = async (req, res) => {
     throw new NotFoundError(`No transaction with id ${transactionID}`)
   }
 
-  const isValid = transaction.checkValidity()
-  res.status(200).json({ isValid, transaction })
+  const isValid = checkTransactionValidity(transaction)
+  res.status(200).json({ isValid })
 }
 
 const approveTransaction = async (req, res) => {
   const { id: transactionID } = req.params
   const { isApproved } = req.body
-  const { username, role } = req.user
-
-  if (role !== "Validator") {
-    throw new UnauthenticatedError("Not authorized")
-  }
+  const { username } = req.user
 
   // check if validators approved before
   const approveBefore = await TransactionModel.findOne({
@@ -99,6 +88,64 @@ const approveTransaction = async (req, res) => {
     throw new NotFoundError(`No transaction with id ${transactionID}`)
   }
 
+  transaction = await transactionConsensus(transaction, transactionID)
+
+  let message
+  isApproved
+    ? (message = "You have approved this transaction")
+    : (message = "You have rejected this transaction")
+
+  res.status(200).json({ msg: message, transaction })
+}
+
+function computeTransactionHash(fromAddress, toAddress, amount, timestamp) {
+  return createHash("sha256")
+    .update(fromAddress + toAddress + amount.toString() + timestamp)
+    .digest("hex")
+}
+
+function signTransaction(
+  signingKey,
+  fromAddress,
+  toAddress,
+  amount,
+  timestamp
+) {
+  if (signingKey.getPublic("hex") !== fromAddress) {
+    throw new BadRequestError("Private and Public key do not match!")
+  }
+
+  const hashTx = computeTransactionHash(
+    fromAddress,
+    toAddress,
+    amount,
+    timestamp
+  )
+  const sign = signingKey.sign(hashTx, "base64")
+  return sign.toDER("hex")
+}
+
+function checkTransactionValidity(transaction) {
+  const {
+    fromAddress: from,
+    toAddress: to,
+    amount,
+    timestamp,
+    signature,
+  } = transaction
+
+  if (!signature || signature.length === 0) {
+    throw new BadRequestError("No signature in this transaction")
+  }
+
+  const publicKey = ec.keyFromPublic(from, "hex")
+  return publicKey.verify(
+    computeTransactionHash(from, to, amount, timestamp),
+    signature
+  )
+}
+
+async function transactionConsensus(transaction, id) {
   // only do consensus if consensus have not reached
   if (transaction.status === "Pending") {
     const validators = await UserModel.find({ role: "Validator" })
@@ -106,69 +153,48 @@ const approveTransaction = async (req, res) => {
     const approvedPercentage =
       transaction.approvedBy.length / parseFloat(validators.length)
 
-    if (approvedPercentage >= CONSENSUS_THRESHOLD) {
-      transaction = await TransactionModel.findOneAndUpdate(
-        { _id: transactionID },
-        { status: "Approved" },
-        { new: true }
-      )
-    }
-
     const rejectedPercentage =
       transaction.rejectedBy.length / parseFloat(validators.length)
 
-    if (rejectedPercentage >= CONSENSUS_THRESHOLD) {
+    if (approvedPercentage >= CONSENSUS_THRESHOLD) {
       transaction = await TransactionModel.findOneAndUpdate(
-        { _id: transactionID },
+        { _id: id },
+        { status: "Approved" },
+        { new: true }
+      )
+
+      const hibernatingBlock = await BlockModel.findOne({
+        status: "Hibernating",
+      })
+      if (hibernatingBlock.records.length < MAX_RECORD) {
+        transaction = await TransactionModel.findOneAndUpdate(
+          { _id: id },
+          { status: "inBlock" },
+          { new: true }
+        )
+        await hibernatingBlock.updateOne({
+          $addToSet: { records: transaction },
+          timestamp: new Date().toLocaleString("en-GB"),
+        })
+      }
+    } else if (rejectedPercentage >= CONSENSUS_THRESHOLD) {
+      transaction = await TransactionModel.findOneAndUpdate(
+        { _id: id },
         { status: "Rejected" },
         { new: true }
       )
     }
+    return transaction
   }
-
-  if (transaction.status === "Approved") {
-    const latestBlock = await BlockModel.findOne({ hash: null })
-    transaction = await TransactionModel.findOneAndUpdate(
-      { _id: transactionID },
-      { status: "inBlock" },
-      { new: true }
-    )
-    await latestBlock.updateOne({
-      $push: { records: transaction._id },
-      timestamp: new Date().toLocaleString("en-GB"),
-    })
-  }
-
-  let message
-  isApproved
-    ? (message = "You have approved this transaction")
-    : (message = "You have rejected this transaction")
-
-  res.status(200).json({ message: message, transaction })
-}
-
-async function updateStatus(MAX_RECORD) {
-  const fullStorage = checkMaxRecord(MAX_RECORD)
-  if (!fullStorage) {
-    throw new BadRequestError("Insufficient records...")
-  }
-  const updatedStatus = await TransactionModel.updateMany(
-    { status: "inBlock" },
-    { $set: { status: "inChain" } }
-  )
-  return updatedStatus
-}
-
-async function checkMaxRecord(MAX_RECORD) {
-  const recordInBlock = await TransactionModel.find({ status: "inBlock" })
-  return recordInBlock.length === MAX_RECORD
 }
 
 module.exports = {
-  getAllTransactions,
-  createTransactions,
+  getPendingTransactions,
+  getUserTransactions,
   getTransaction,
+  createTransactions,
   validateTransaction,
   approveTransaction,
-  updateStatus,
+  computeTransactionHash,
+  checkTransactionValidity,
 }

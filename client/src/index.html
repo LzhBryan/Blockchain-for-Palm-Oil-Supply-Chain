@@ -2,6 +2,8 @@
 <html>
   <head>
     <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
   </head>
   <body>
     <section class="main-app">
@@ -15,7 +17,13 @@
             id="minimize"
             onClick="minimizeApp()"
           >
-            &#x2212
+            &#x2212 
+          </span>
+          <span
+            class="nav-link"
+            id="resize"
+            onClick="resizeApp()"
+          >&#x2212
           </span>
           <span
             class="nav-link"
@@ -36,6 +44,10 @@
 
     function minimizeApp(){
       app.window.minimize()
+    }
+
+    function resizeApp(){
+      app.window.resize()
     }
   </script>
 </html>

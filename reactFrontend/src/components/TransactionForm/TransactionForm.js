@@ -22,15 +22,15 @@ const useStyles = makeStyles((theme) => ({
 const TransactionForm = () => {
   const classes = useStyles()
 
-  const [from, setFrom] = useState("")
+  const [fromAddress, setFromAddress] = useState("")
   const [privateKey, setPrivateKey] = useState("")
-  const [to, setTo] = useState("")
+  const [toAddress, setToAddress] = useState("")
   const [amount, setAmount] = useState("")
   const [modal, setModal] = useState(false)
   const [transaction, setTransaction] = useState("")
 
   const handlePopup = () => {
-    if (from && privateKey && to && amount) {
+    if (fromAddress && privateKey && toAddress && amount) {
       setModal(true)
     }
   }
@@ -38,18 +38,18 @@ const TransactionForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault()
 
-    const transaction = { from, privateKey, to, amount }
+    const transaction = { fromAddress, privateKey, toAddress, amount }
 
-    if (from && privateKey && to && amount) {
+    if (fromAddress && privateKey && toAddress && amount) {
       const res = await axios.post(
         "http://localhost:5000/api/transactions",
         transaction
       )
       console.log(res.data)
       setTransaction(res.data.transaction)
-      setFrom("")
+      setFromAddress("")
       setPrivateKey("")
-      setTo("")
+      setToAddress("")
       setAmount("")
     }
   }
@@ -79,8 +79,8 @@ const TransactionForm = () => {
                   name="from"
                   label="Sender's Address"
                   placeholder="Enter public key"
-                  value={from}
-                  onChange={(e) => setFrom(e.target.value)}
+                  value={fromAddress}
+                  onChange={(e) => setFromAddress(e.target.value)}
                   fullWidth
                 />
               </Grid>
@@ -101,8 +101,8 @@ const TransactionForm = () => {
                   name="to"
                   label="Receiver's Address"
                   placeholder="Enter public key"
-                  value={to}
-                  onChange={(e) => setTo(e.target.value)}
+                  value={toAddress}
+                  onChange={(e) => setToAddress(e.target.value)}
                   fullWidth
                 />
               </Grid>

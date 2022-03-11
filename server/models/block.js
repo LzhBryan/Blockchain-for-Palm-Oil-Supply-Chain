@@ -4,34 +4,39 @@ const blockSchema = new mongoose.Schema({
   blockId: {
     type: Number,
     default: null,
-    unique: true,
+    index: {
+      unique: true,
+      partialFilterExpression: { blockId: { $type: "number" } },
+    },
   },
   prevHash: {
     type: String,
     default: null,
-    unique: true,
+    index: {
+      unique: true,
+      partialFilterExpression: { prevHash: { $type: "string" } },
+    },
   },
   hash: {
     type: String,
     default: null,
-    unique: true,
+    index: {
+      unique: true,
+      partialFilterExpression: { prevHash: { $type: "string" } },
+    },
   },
   timestamp: {
     type: String,
     required: [true, "Please provide the timestamp"],
   },
-  records: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      default: [],
-      required: [true, "Please provide a list of transactions"],
-      ref: "Transaction",
-    },
-  ],
+  records: {
+    type: Array,
+    default: [],
+  },
   status: {
     type: String,
-    enum: ["Pending", "Approved", "Rejected", "inChain", "Hibernation"],
-    default: "Hibernation",
+    enum: ["Pending", "Approved", "Rejected", "inChain", "Hibernating"],
+    default: "Hibernating",
   },
   approvedBy: {
     type: Array,

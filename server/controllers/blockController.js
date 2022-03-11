@@ -1,58 +1,58 @@
 const BlockModel = require("../models/block")
 const UserModel = require("../models/user")
-const transactionController = require("./transactionController")
+const TransactionModel = require("../models/transaction")
 const {
-  NotFoundError,
-  BadRequestError,
-  UnauthenticatedError,
-} = require("../errors")
+  computeTransactionHash,
+  checkTransactionValidity,
+} = require("../controllers/transactionController")
+const { NotFoundError, BadRequestError } = require("../errors")
 const CONSENSUS_THRESHOLD = 0.66
-const FIRST_BLOCK = 0
+const GENESIS_BLOCK_ID = 0
 const MAX_RECORD = 2
 const { createHash } = require("crypto")
 
-const getAllBlocks = async (req, res) => {
-  let blockchain = await BlockModel.find({})
+const getBlockchain = async (req, res) => {
+  let blockchain = await BlockModel.find({ status: "inChain" })
   if (blockchain.length == 0) {
-    await createGenesisBlock()
+    blockchain = await createGenesisBlock()
     await createHibernateBlock()
-    blockchain = "Genesis and hibernate blocks are created"
   }
-  res.status(200).json({ Blockchain: blockchain })
+  res.status(200).json({ blockchain })
 }
 
 const getBlock = async (req, res) => {
   const { id: blockID } = req.params
-  let selectedBlock = await BlockModel.findOne({ _id: blockID })
-  if (!selectedBlock) {
-    throw new NotFoundError(`No block with id ${blockID}`)
+  const block = await BlockModel.findOne({ blockId: blockID })
+  if (!block) {
+    throw new NotFoundError(`No block with block id ${blockID}`)
   }
-  res.status(200).json({ details: selectedBlock })
+  res.status(200).json({ block })
+}
+
+const getHibernateBlock = async (req, res) => {
+  const hibernateBlock = await BlockModel.findOne({ status: "Hibernating" })
+  res.status(200).json({ hibernateBlock })
 }
 
 const activateBlock = async (req, res) => {
   const { id: blockID } = req.params
-  const { role } = req.user
 
-  if (role !== "Validator") {
-    throw new UnauthenticatedError("Not authorized")
-  }
+  const selectedBlock = await BlockModel.findOne({
+    _id: blockID,
+    status: "Hibernating",
+  })
 
-  const selectedBlock = await BlockModel.findOne({ _id: blockID })
   if (!selectedBlock) {
-    throw new NotFoundError(`No block with id ${blockID}`)
-  }
-
-  if (selectedBlock.status !== "Hibernation") {
-    throw new BadRequestError(
-      `Block ${selectedBlock.blockId} has been activated`
+    throw new NotFoundError(
+      `No block with id ${blockID} or block has already been activated`
     )
   }
 
-  const isMaxRecord = await checkRecordCapacity(blockID)
+  const isMaxRecord = selectedBlock.records.length === MAX_RECORD
   if (!isMaxRecord) {
-    throw new BadRequestError("Block cannot be activate")
+    throw new BadRequestError("Insufficient records in this block")
   }
+
   const activateBlock = await BlockModel.findOneAndUpdate(
     { _id: blockID },
     {
@@ -64,19 +64,26 @@ const activateBlock = async (req, res) => {
   res.status(200).json({ msg: `Block ${blockID} is activated`, activateBlock })
 }
 
+const validateBlock = async (req, res) => {
+  const { id: blockID } = req.params
+
+  const block = await BlockModel.findOne({
+    _id: blockID,
+  })
+
+  if (!block) {
+    throw new BadRequestError(`No block with id ${blockID}`)
+  }
+
+  isValid = validateBlockRecords(block.records)
+
+  res.status(200).json({ isValid })
+}
+
 const approveBlock = async (req, res) => {
   const { id: blockID } = req.params
   const { isApproved } = req.body
-  const { username, role } = req.user
-
-  if (role !== "Validator") {
-    throw new UnauthenticatedError("Not authorized")
-  }
-
-  const blockStatus = await BlockModel.findOne({ _id: blockID })
-  if (blockStatus.status !== "Pending") {
-    throw new BadRequestError("You are tampering with the block...")
-  }
+  const { username } = req.user
 
   const hasApproveBefore = await BlockModel.findOne({
     $and: [
@@ -90,7 +97,7 @@ const approveBlock = async (req, res) => {
   }
 
   let block = await BlockModel.findOneAndUpdate(
-    { _id: blockID },
+    { _id: blockID, status: "Pending" },
     {
       $addToSet: isApproved
         ? { approvedBy: username }
@@ -100,40 +107,12 @@ const approveBlock = async (req, res) => {
   )
 
   if (!block) {
-    throw new NotFoundError(`No block with id ${blockID}`)
+    throw new NotFoundError(
+      `No pending block with id ${blockID} or block has not been activated`
+    )
   }
 
-  if (block.status === "Pending") {
-    console.log("Doing consensus...")
-    const validators = await UserModel.find({ role: "Validator" })
-
-    const approvedPercentage =
-      block.approvedBy.length / parseFloat(validators.length)
-
-    if (approvedPercentage >= CONSENSUS_THRESHOLD) {
-      block = await BlockModel.findOneAndUpdate(
-        { _id: blockID },
-        { status: "Approved" },
-        { new: true }
-      )
-    }
-
-    const rejectedPercentage =
-      block.rejectedBy.length / parseFloat(validators.length)
-
-    if (rejectedPercentage >= CONSENSUS_THRESHOLD) {
-      block = await BlockModel.findOneAndUpdate(
-        { _id: blockID },
-        { status: "Rejected" },
-        { new: true }
-      )
-    }
-  }
-
-  if (block.status === "Approved") {
-    block = await pushBlock(blockID)
-    await createHibernateBlock()
-  }
+  block = await blockConsensus(block, blockID)
 
   let message
   isApproved
@@ -144,13 +123,13 @@ const approveBlock = async (req, res) => {
 }
 
 async function createGenesisBlock() {
-  const timestamp = new Date().toLocaleString("en-GB")
   const previousHash = ""
-  const noRecord = ""
+  const timestamp = new Date().toLocaleString("en-GB")
+  const record = ""
   const genesisBlock = await BlockModel.create({
-    blockId: FIRST_BLOCK,
+    blockId: GENESIS_BLOCK_ID,
     prevHash: previousHash,
-    hash: await hashing(FIRST_BLOCK, previousHash, timestamp, noRecord),
+    hash: computeBlockHash(GENESIS_BLOCK_ID, previousHash, timestamp, record),
     timestamp: timestamp,
     status: "inChain",
   })
@@ -158,79 +137,165 @@ async function createGenesisBlock() {
 }
 
 async function createHibernateBlock() {
-  const hibernateBlock = await BlockModel.create({
+  let hibernateBlock = await BlockModel.create({
     timestamp: new Date().toLocaleString("en-GB"),
   })
+
+  const waitingTransactions = await TransactionModel.find({
+    status: "Approved",
+  })
+
+  if (waitingTransactions.length > MAX_RECORD) {
+    for (i = 0; i < MAX_RECORD; i++) {
+      waitingTransactions[i].status = "inBlock"
+      await waitingTransactions[i].save()
+    }
+    hibernateBlock = await BlockModel.findOneAndUpdate(
+      { status: "Hibernating" },
+      { records: waitingTransactions.slice(0, MAX_RECORD) },
+      { new: true }
+    )
+  } else {
+    for (i = 0; i < waitingTransactions.length; i++) {
+      waitingTransactions[i].status = "inBlock"
+      await waitingTransactions[i].save()
+    }
+    hibernateBlock = await BlockModel.findOneAndUpdate(
+      { status: "Hibernating" },
+      { records: waitingTransactions },
+      { new: true }
+    )
+  }
   return hibernateBlock
 }
 
-async function checkRecordCapacity(blockID) {
-  const blockRecord = await BlockModel.findOne({ _id: blockID })
-  return blockRecord.records.length === MAX_RECORD
+function computeBlockHash(blockId, prevHash, timestamp, record) {
+  return createHash("sha256")
+    .update(blockId.toString() + prevHash + timestamp + JSON.stringify(record))
+    .digest("hex")
 }
 
-async function pushBlock(blockID) {
-  const blockIndex = await BlockModel.collection.countDocuments()
-  const prevBlock = await BlockModel.findOne({ blockId: blockIndex - 2 })
+async function blockConsensus(block, id) {
+  if (block.status === "Pending") {
+    const validators = await UserModel.find({ role: "Validator" })
+
+    const approvedPercentage =
+      block.approvedBy.length / parseFloat(validators.length)
+
+    const rejectedPercentage =
+      block.rejectedBy.length / parseFloat(validators.length)
+
+    if (approvedPercentage >= CONSENSUS_THRESHOLD) {
+      block = await BlockModel.findOneAndUpdate(
+        { _id: id },
+        { status: "Approved" },
+        { new: true }
+      )
+      await updateRecordsStatus()
+      await updateRecordsStatusInBlock(block)
+      block = await appendToBlockchain(block, id)
+    } else if (rejectedPercentage >= CONSENSUS_THRESHOLD) {
+      block = await BlockModel.findOneAndUpdate(
+        { _id: id },
+        { status: "Rejected", timestamp: new Date().toLocaleString("en-GB") },
+        { new: true }
+      )
+      await rejectRecords()
+      await rejectRecordsStatusInBlock(block)
+      await createHibernateBlock()
+    }
+    return block
+  }
+}
+
+async function appendToBlockchain(block, id) {
+  const blockchain = await BlockModel.find({ status: "inChain" }).sort({
+    blockId: -1,
+  })
+  const blockId = blockchain[0].blockId + 1
+  const prevHash = blockchain[0].hash
   const timestamp = new Date().toLocaleString("en-GB")
-  const block = await BlockModel.findOneAndUpdate(
-    { _id: blockID },
+  const updatedBlock = await BlockModel.findOneAndUpdate(
+    { _id: id, status: "Approved" },
     {
-      blockId: blockIndex - 1,
-      prevHash: prevBlock.hash,
-      hash: await hashing(
-        blockIndex - 1,
-        prevBlock.hash,
-        timestamp,
-        blockID.records
-      ),
-      timestamp: timestamp,
+      blockId: blockId,
+      prevHash: prevHash,
+      hash: computeBlockHash(blockId, prevHash, timestamp, block.records),
+      timestamp,
       status: "inChain",
     },
     { new: true }
   )
-  await transactionController.updateStatus(MAX_RECORD)
-  return block
+  await createHibernateBlock()
+  return updatedBlock
 }
 
-async function hashing(blockIndex, prevBlock, timestamp, record) {
-  return createHash("sha256")
-    .update(String(blockIndex) + prevBlock + timestamp + JSON.stringify(record))
-    .digest("hex")
+async function updateRecordsStatus() {
+  await TransactionModel.updateMany(
+    { status: "inBlock" },
+    { status: "inChain" }
+  )
 }
 
-// create block page process in user interface
-// 1. first validator must check if there already exist a pending block in the database via a "checkBlock" button
-// 2. if yes, then consensus will take place.
-// if no, validator can start fetching transactions to create a block
-// 3. if transactions hit the specific number, validator can initiate a create block request
-// once the request is sent, the initial block structure with only timestamp, transactions and status will be created in the database
-// only after consensus is successful, then we attach the block to the blockchain
-// and fill up the blockId, prevHash, hash and etc.
-// so only a complete block structure document in the database will be considered in the blockchain
+async function rejectRecords() {
+  await TransactionModel.updateMany(
+    { status: "inBlock" },
+    { status: "Rejected" }
+  )
+}
 
-// createBlock pseudocode
+async function updateRecordsStatusInBlock(block) {
+  for (i = 0; i < MAX_RECORD; i++) {
+    block.records[i].status = "inChain"
+  }
+  block.markModified("records")
+  await block.save()
+}
 
-// 1. get the transaction ID of the transactions to be added into the block
-// 2. update the transactions status to "packaging"
-// 3. create the block in the database only with timestamps, transactions and status
+async function rejectRecordsStatusInBlock(block) {
+  for (i = 0; i < MAX_RECORD; i++) {
+    block.records[i].status = "Rejected"
+  }
+  block.markModified("records")
+  await block.save()
+}
 
-// approveBlock pseudocode
+function validateBlockRecords(records) {
+  for (record of records) {
+    if ("amount" in record) {
+      if (!checkTransactionValidity(record)) {
+        return false
+      }
+    }
+  }
+  return true
+}
 
-// 1. get the block id, transactions id from the get request
-// 2. copy paste the transaction controller logic
-// 3. if consensus has reached:
-// 3.1 fetch the blockchain
-// 3.2 find the last block and obtain its previous hash
-// 3.3 if blockchain has not been created, create a genesis block
-// 3.4 create a new Block object and store the data into the object
-// question: should we only store transaction id or the whole transaction data.
-// else just add username into approveBy or rejectedBy
-// question: should we loop through the transactions and validate each of them again?
+function validateBlockchain(blockchain) {
+  for (let i = 1; i < blockchain.length; i++) {
+    const currentBlock = blockchain[i]
+    const prevBlock = this.chain[i - 1]
+
+    if (currentBlock.hash !== computeBlockHash(currentBlock.blockId)) {
+      return false
+    }
+
+    if (currentBlock.prevHash !== prevBlock.hash) {
+      return false
+    }
+
+    if (!currentBlock.hasValidTransactions()) {
+      return false
+    }
+  }
+  return true
+}
 
 module.exports = {
-  getAllBlocks,
+  getBlockchain,
   getBlock,
-  approveBlock,
+  getHibernateBlock,
+  validateBlock,
   activateBlock,
+  approveBlock,
 }

@@ -9,14 +9,16 @@ const {
   getBlockchain,
   getBlock,
   getHibernateBlock,
-  validateBlock,
   activateBlock,
+  validateBlock,
   approveBlock,
 } = require("../controllers/blockController")
 
 router.route("/blockchain").get(authenticateUser, getBlockchain)
 
-router.route("/").get(getHibernateBlock)
+router
+  .route("/")
+  .get(authenticateUser, authorizePermissions("Validator"), getHibernateBlock)
 
 router
   .route("/:id")
@@ -25,7 +27,7 @@ router
 
 router
   .route("/approve/:id")
-  .get(validateBlock)
+  .get(authenticateUser, authorizePermissions("Validator"), validateBlock)
   .put(authenticateUser, authorizePermissions("Validator"), approveBlock)
 
 module.exports = router

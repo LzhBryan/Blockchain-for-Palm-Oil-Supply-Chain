@@ -46,7 +46,7 @@ router
   )
 
 router
-  .route("/user/transaction")
+  .route("/user/transactions")
   .get(
     authenticateUser,
     authorizePermissions([

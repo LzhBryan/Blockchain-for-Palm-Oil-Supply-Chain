@@ -3,11 +3,6 @@
   padding: 0;
 }
 
-body {
-  background-color: transparent;
-  overflow: hidden;
-}
-
 ::-webkit-scrollbar {
   display: none;
 }
@@ -16,13 +11,11 @@ body {
   width: 100vw;
   height: 100vh;
   background-color: white;
-  border-radius: 10px;
   overflow: scroll;
 }
 
 nav {
   -webkit-app-region: drag;
-  border-radius: 8px 8px 0px 0px;
   user-select: none;
   width: 100vw;
   height: 43px;
@@ -40,12 +33,22 @@ nav {
   padding: 15px;
   cursor: pointer;
   font-size: 1.2rem;
-  border-radius: 6px;
   transition: 0.15s;
 }
 
 .nav-link:hover {
-  border-radius: 6px;
   background-color: white;
   color: #222;
+}
+
+#resize {
+  font-size: 1.6rem;
+}
+
+#minimize {
+  font-size: 1.4rem;
+}
+
+#close-app {
+  font-size: 1.1rem;
 }

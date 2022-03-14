@@ -23,7 +23,7 @@
             class="nav-link"
             id="resize"
             onClick="resizeApp()"
-          >&#x2212
+          >&#x25A1
           </span>
           <span
             class="nav-link"
@@ -46,8 +46,17 @@
       app.window.minimize()
     }
 
-    function resizeApp(){
-      app.window.resize()
+    async function resizeApp(){
+      const isRestore = await app.window.resize()
+      if(isRestore){
+        document.getElementById("resize").innerHTML='&#x25A1'
+        document.getElementById("resize").style.fontSize="1.6rem"
+        document.getElementById("resize").style.textAlign="center"
+      }
+      else{
+        document.getElementById("resize").innerHTML='&#x2750'
+        document.getElementById("resize").style.fontSize="1.2rem"
+      }
     }
   </script>
 </html>

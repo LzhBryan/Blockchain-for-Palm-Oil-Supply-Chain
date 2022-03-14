@@ -9,7 +9,13 @@ const CONSENSUS_THRESHOLD = 0.66
 const MAX_RECORD = 2
 
 const getPendingTransactions = async (req, res) => {
-  const transactions = await TransactionModel.find({ status: "Pending" })
+  const { username } = req.user
+  const transactions = await TransactionModel.find({
+    status: "Pending",
+    approvedBy: { $ne: username },
+    rejectedBy: { $ne: username },
+  })
+  // const transactions = await TransactionModel.find({})
   res.status(200).json({ transactions })
 }
 
@@ -71,7 +77,7 @@ const approveTransaction = async (req, res) => {
   })
 
   if (approveBefore) {
-    throw new BadRequestError("Already rejected or approved this transaction")
+    throw new BadRequestError("You have rejected or approved this transaction")
   }
 
   let transaction = await TransactionModel.findOneAndUpdate(

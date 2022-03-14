@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react"
-import axios from "axios"
 import {
   makeStyles,
   Table,
@@ -9,8 +8,10 @@ import {
   TableHead,
   TableRow,
   Paper,
+  TablePagination,
 } from "@material-ui/core"
 import TransactionRows from "./TransactionRows"
+import axios from "axios"
 import Swal from "sweetalert2"
 
 const useRowStyles = makeStyles({
@@ -23,6 +24,17 @@ const useRowStyles = makeStyles({
 const TransactionTable = () => {
   const classes = useRowStyles()
   const [transactions, setTransactions] = useState([])
+  const [rowsPerPage, setRowsPerPage] = useState(5)
+  const [page, setPage] = useState(0)
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage)
+  }
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10))
+    setPage(0)
+  }
 
   const getTransactions = async () => {
     try {
@@ -48,6 +60,10 @@ const TransactionTable = () => {
     getTransactions()
   }, [])
 
+  const emptyRows =
+    rowsPerPage -
+    Math.min(rowsPerPage, transactions.length - page * rowsPerPage)
+
   return (
     <TableContainer component={Paper} className={classes.tableContainer}>
       <h1 style={{ textAlign: "center" }}>Pending Transactions</h1>
@@ -61,11 +77,30 @@ const TransactionTable = () => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {transactions.map((transaction) => (
-            <TransactionRows key={transaction._id} transaction={transaction} />
-          ))}
+          {transactions
+            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+            .map((transaction) => (
+              <TransactionRows
+                key={transaction._id}
+                transaction={transaction}
+              />
+            ))}
+          {emptyRows > 0 && (
+            <TableRow style={{ height: 57 * emptyRows }}>
+              <TableCell colSpan={6} />
+            </TableRow>
+          )}
         </TableBody>
       </Table>
+      <TablePagination
+        rowsPerPageOptions={[5, 10, 15]}
+        component="div"
+        count={transactions.length}
+        rowsPerPage={rowsPerPage}
+        page={page}
+        onPageChange={handleChangePage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+      />
     </TableContainer>
   )
 }

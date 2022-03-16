@@ -8,7 +8,7 @@ const {
 const {
   getBlockchain,
   getBlock,
-  getHibernateBlock,
+  getWaitingBlock,
   activateBlock,
   validateBlock,
   approveBlock,
@@ -18,7 +18,7 @@ router.route("/blockchain").get(authenticateUser, getBlockchain)
 
 router
   .route("/")
-  .get(authenticateUser, authorizePermissions("Validator"), getHibernateBlock)
+  .get(authenticateUser, authorizePermissions("Validator"), getWaitingBlock)
 
 router
   .route("/:id")

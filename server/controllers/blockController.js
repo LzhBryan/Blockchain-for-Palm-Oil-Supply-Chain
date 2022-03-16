@@ -126,10 +126,17 @@ const approveBlock = async (req, res) => {
   res.status(200).json({ message: message, block })
 }
 
+const validateBlockchain = async (req, res) => {
+  const blockchain = await BlockModel.find({ status: "inChain" })
+
+  isValid = validateBlocks(blockchain)
+  res.status(200).json({ isValid, blockchain })
+}
+
 async function createGenesisBlock() {
   const previousHash = ""
   const timestamp = new Date().toLocaleString("en-GB")
-  const record = ""
+  const record = []
   const genesisBlock = await BlockModel.create({
     blockId: GENESIS_BLOCK_ID,
     prevHash: previousHash,
@@ -296,21 +303,59 @@ function validateBlockRecords(records) {
   return true
 }
 
-function validateBlockchain(blockchain) {
-  for (let i = 1; i < blockchain.length; i++) {
-    const currentBlock = blockchain[i]
-    const prevBlock = this.chain[i - 1]
+function validateBlocks(blocks) {
+  for (let i = 0; i < blocks.length; i++) {
+    if (i === 0) {
+      const genesisBlock = blocks[i]
+      const { blockId, prevHash, timestamp, records } = genesisBlock
 
-    if (currentBlock.hash !== computeBlockHash(currentBlock.blockId)) {
-      return false
-    }
+      console.log(genesisBlock)
 
-    if (currentBlock.prevHash !== prevBlock.hash) {
-      return false
-    }
+      console.log(genesisBlock.hash)
+      console.log(computeBlockHash(blockId, prevHash, timestamp, records))
+      if (
+        genesisBlock.hash !==
+        computeBlockHash(blockId, prevHash, timestamp, records)
+      ) {
+        return false
+      }
 
-    if (!currentBlock.hasValidTransactions()) {
-      return false
+      console.log(prevHash)
+
+      if (genesisBlock.prevHash !== "") {
+        return false
+      }
+
+      if (!validateBlockRecords(records)) {
+        return false
+      }
+    } else {
+      const currentBlock = blocks[i]
+      const prevBlock = blocks[i - 1]
+
+      console.log(currentBlock)
+      console.log(prevBlock)
+
+      const { blockId, prevHash, timestamp, records } = currentBlock
+
+      console.log(currentBlock.hash)
+      console.log(computeBlockHash(blockId, prevHash, timestamp, records))
+      if (
+        currentBlock.hash !==
+        computeBlockHash(blockId, prevHash, timestamp, records)
+      ) {
+        return false
+      }
+
+      console.log(prevHash)
+      console.log(prevBlock.hash)
+      if (prevHash !== prevBlock.hash) {
+        return false
+      }
+
+      if (!validateBlockRecords(records)) {
+        return false
+      }
     }
   }
   return true
@@ -323,4 +368,5 @@ module.exports = {
   validateBlock,
   activateBlock,
   approveBlock,
+  validateBlockchain,
 }

@@ -12,9 +12,12 @@ const {
   activateBlock,
   validateBlock,
   approveBlock,
+  validateBlockchain,
 } = require("../controllers/blockController")
 
 router.route("/blockchain").get(authenticateUser, getBlockchain)
+
+router.route("/blockchain/validate").get(validateBlockchain)
 
 router
   .route("/")

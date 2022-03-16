@@ -1,6 +1,7 @@
 const TransactionModel = require("../models/transaction")
 const UserModel = require("../models/user")
 const BlockModel = require("../models/block")
+const ApprovedRecordModel = require("../models/approvedRecord")
 const { NotFoundError, BadRequestError } = require("../errors")
 const EC = require("elliptic").ec
 const ec = new EC("secp256k1")
@@ -175,6 +176,10 @@ async function transactionConsensus(transaction, id) {
         await hibernatingBlock.updateOne({
           $addToSet: { records: transaction },
           timestamp: new Date().toLocaleString("en-GB"),
+        })
+      } else {
+        await ApprovedRecordModel.create({
+          records: transaction,
         })
       }
     } else if (rejectedPercentage >= CONSENSUS_THRESHOLD) {

@@ -1,6 +1,8 @@
 const BlockModel = require("../models/block")
 const UserModel = require("../models/user")
 const TransactionModel = require("../models/transaction")
+const SupplyChainModel = require("../models/supplychain")
+const ApprovedRecordModel = require("../models/approvedRecord")
 const {
   computeTransactionHash,
   checkTransactionValidity,
@@ -29,9 +31,11 @@ const getBlock = async (req, res) => {
   res.status(200).json({ block })
 }
 
-const getHibernateBlock = async (req, res) => {
-  const hibernateBlock = await BlockModel.findOne({ status: "Hibernating" })
-  res.status(200).json({ hibernateBlock })
+const getWaitingBlock = async (req, res) => {
+  const waitingBlock = await BlockModel.findOne({
+    status: "Hibernating" || "Pending",
+  })
+  res.status(200).json({ waitingBlock })
 }
 
 const activateBlock = async (req, res) => {
@@ -137,11 +141,24 @@ async function createGenesisBlock() {
 }
 
 async function createHibernateBlock() {
+  let arr = []
+  const record = await ApprovedRecordModel.find({})
+  if (record.length > 0) {
+    for (i = 0; i < MAX_RECORD; i++) {
+      //records on block (CAN'T WORK)
+      //record[i].status = "inBlock"
+      //await record[i].save()
+      arr.push(record[i].records)
+      await ApprovedRecordModel.deleteOne({ _id: record[i]._id })
+    }
+  }
+
   let hibernateBlock = await BlockModel.create({
+    records: arr,
     timestamp: new Date().toLocaleString("en-GB"),
   })
 
-  const waitingTransactions = await TransactionModel.find({
+  /*const waitingTransactions = await TransactionModel.find({
     status: "Approved",
   })
 
@@ -165,7 +182,7 @@ async function createHibernateBlock() {
       { records: waitingTransactions },
       { new: true }
     )
-  }
+  }*/
   return hibernateBlock
 }
 
@@ -235,10 +252,18 @@ async function updateRecordsStatus() {
     { status: "inBlock" },
     { status: "inChain" }
   )
+  await SupplyChainModel.updateMany(
+    { status: "inBlock" },
+    { status: "inChain" }
+  )
 }
 
 async function rejectRecords() {
   await TransactionModel.updateMany(
+    { status: "inBlock" },
+    { status: "Rejected" }
+  )
+  await SupplyChainModel.updateMany(
     { status: "inBlock" },
     { status: "Rejected" }
   )
@@ -294,7 +319,7 @@ function validateBlockchain(blockchain) {
 module.exports = {
   getBlockchain,
   getBlock,
-  getHibernateBlock,
+  getWaitingBlock,
   validateBlock,
   activateBlock,
   approveBlock,

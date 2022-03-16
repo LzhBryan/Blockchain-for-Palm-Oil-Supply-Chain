@@ -15,6 +15,8 @@ const mongoose = require("mongoose")
 const transactionRouter = require("./routes/transactionRoutes")
 const authRouter = require("./routes/authRoutes")
 const blockRouter = require("./routes/blockRoutes")
+const scmRouter = require("./routes/scmRoutes")
+const productRouter = require("./routes/productRoutes")
 
 // middleware
 const errorHandlerMiddleware = require("./middleware/error-handler")
@@ -26,6 +28,8 @@ app.use(express.json())
 app.use("/api/auth", authRouter)
 app.use("/api/transactions", transactionRouter)
 app.use("/api/blocks", blockRouter)
+app.use("/api/scm", scmRouter)
+app.use("/api/product", productRouter)
 
 app.use(notFoundMiddleware)
 app.use(errorHandlerMiddleware)

@@ -9,7 +9,7 @@
     <section class="main-app">
       <nav>
         <div class="left-nav">
-          <span class="nav-link">&#x2630</span>
+          <span class="nav-link" id="sidebar">&#x2630</span>
         </div>
         <div class="right-nav">
           <span
@@ -52,10 +52,16 @@
         document.getElementById("resize").innerHTML='&#x25A1'
         document.getElementById("resize").style.fontSize="1.6rem"
         document.getElementById("resize").style.textAlign="center"
+        document.getElementById("resize").style.paddingBottom="8px"
+        document.getElementById("minimize").style.paddingBottom="8.6px"
+        document.getElementById("close-app").style.paddingBottom="9.6px"
       }
       else{
         document.getElementById("resize").innerHTML='&#x2750'
         document.getElementById("resize").style.fontSize="1.2rem"
+        document.getElementById("resize").style.paddingBottom="10px"
+        document.getElementById("minimize").style.paddingBottom="8.9px"
+        document.getElementById("close-app").style.paddingBottom="9.9px"
       }
     }
   </script>

@@ -33,7 +33,7 @@ const getBlock = async (req, res) => {
 
 const getWaitingBlock = async (req, res) => {
   const waitingBlock = await BlockModel.findOne({
-    status: "Hibernating" || "Pending",
+    $or: [{ status: "Hibernating" }, { status: "Pending" }],
   })
   res.status(200).json({ waitingBlock })
 }
@@ -65,7 +65,9 @@ const activateBlock = async (req, res) => {
     },
     { new: true }
   )
-  res.status(200).json({ msg: `Block ${blockID} is activated`, activateBlock })
+  res
+    .status(200)
+    .json({ msg: "Block is successfully activated", activateBlock })
 }
 
 const validateBlock = async (req, res) => {

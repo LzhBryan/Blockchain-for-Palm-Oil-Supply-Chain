@@ -74,11 +74,3 @@ ipcMain.handle("app/resize", async () => {
     return false
   }
 })
-
-// mainWindow.on("maximize", () => {
-//   mainWindow.webContents.send("isMaximized")
-// })
-
-// mainWindow.on("unmaximize", () => {
-//   mainWindow.webContents.send("isRestored")
-// })

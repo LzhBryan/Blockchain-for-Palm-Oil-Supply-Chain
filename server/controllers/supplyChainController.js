@@ -2,7 +2,6 @@ const SupplyChainModel = require("../models/supplychain")
 const UserModel = require("../models/user")
 const BlockModel = require("../models/block")
 const TransactionModel = require("../models/transaction")
-const ApprovedRecordModel = require("../models/approvedRecord")
 const ProductModel = require("../models/product")
 const { NotFoundError, BadRequestError } = require("../errors")
 const EC = require("elliptic").ec
@@ -11,59 +10,85 @@ const { createHash } = require("crypto")
 const CONSENSUS_THRESHOLD = 0.66
 const MAX_RECORD = 2
 
-const getAllRecords = async (req, res) => {
-  const records = await SupplyChainModel.find({})
-  res.status(200).json({ Records: records })
+const getPendingRecords = async (req, res) => {
+  const records = await SupplyChainModel.find({ status: "Pending" })
+  res.status(200).json({ records })
+}
+
+const getRecord = async (req, res) => {
+  const { _id: recordID } = req.params
+
+  const record = await TransactionModel.findOne({ _id: recordID })
+  if (!record) {
+    throw new NotFoundError(`No record with id ${recordID}`)
+  }
+
+  res.status(200).json({ createRecord })
 }
 
 const createRecord = async (req, res) => {
-  const { from, privateKey, to, product, prevBatchId, transactionID } = req.body
-  const { role } = req.user
+  const {
+    fromAddress,
+    privateKey,
+    toAddress,
+    products,
+    prevBatchId,
+    transactionId,
+  } = req.body
+  const { role, username } = req.user
 
   const transactionReceipt = await TransactionModel.findOne({
-    _id: transactionID,
+    _id: transactionId,
   })
 
   if (!transactionReceipt) {
     throw new NotFoundError("Transaction receipt cannot be found")
   }
+
   if (transactionReceipt.status == "Pending") {
     throw new BadRequestError("This transaction hasn't been approved")
   } else if (transactionReceipt.status == "Rejected") {
     throw new BadRequestError("This transaction is invalid")
   }
 
-  const previousBatchId = await SupplyChainModel.findOne({
-    batchId: prevBatchId,
-  })
-
   //Only planter is allowed to have a null previous batch ID
   if (role !== "Planter") {
-    if (!previousBatchId) {
+    const previousBatch = await SupplyChainModel.findOne({
+      batchId: prevBatchId,
+    })
+
+    if (!previousBatch) {
       throw new NotFoundError("The previous batch ID cannot be found")
-    } else {
-      //Previous supply chain record has been rejected
-      if (previousBatchId.status === "Rejected") {
-        throw new BadRequestError("Invalid previous batch ID")
-      }
+    }
+
+    if (previousBatch.status === "Rejected") {
+      throw new BadRequestError("Invalid previous batch ID")
     }
   }
 
   const key = ec.keyFromPrivate(privateKey)
   const batchID = await SupplyChainModel.collection.countDocuments()
+  const batchId = role.substring(0, 2).toUpperCase() + batchID
   const timestamp = new Date().toLocaleString("en-GB")
+  req.body.products = products
+  req.body.batchId = batchId
+  req.body.previousBatchId = prevBatchId
+  req.body.transactionReceipt = transactionId
+  req.body.timestamp = timestamp
+  req.body.signature = signRecord(
+    key,
+    fromAddress,
+    toAddress,
+    products,
+    batchId,
+    prevBatchId,
+    transactionId,
+    timestamp
+  )
+  req.body.createdBy = username
 
-  const new_record = await SupplyChainModel.create({
-    fromAddress: from,
-    toAddress: to,
-    product: product,
-    batchId: role.substring(0, 2).toUpperCase() + batchID,
-    previousBatchId: prevBatchId,
-    transactionReceipt: transactionID,
-    timestamp: timestamp,
-    signature: signRecord(key, from, to, product, timestamp),
-  })
-  res.status(201).json({ msg: "Record is created successfully", new_record })
+  const record = await SupplyChainModel.create(req.body)
+  res.status(201).json({ msg: "Record is created successfully", record })
 }
 
 const validateRecord = async (req, res) => {
@@ -117,16 +142,14 @@ const approveRecord = async (req, res) => {
     : (message = "You have rejected this transaction")
 
   if (record.batchId.substring(0, 2) === "WA") {
-    if (record.status === "Approved" || "inBlock") {
-      for (i = 0; i < record.product.length; i++) {
-        for (j = 0; j < record.product[i].quantity; j++) {
-          await ProductModel.create({
-            productName: record.product[i].name,
-            productId: await ProductModel.collection.countDocuments(),
-            prevBatchId: record.batchId,
-            timestamp: new Date().toLocaleString("en-GB"),
-          })
-        }
+    if (record.status === "Approved" || record.status === "inBlock") {
+      for (i = 0; i < record.products.length; i++) {
+        await ProductModel.create({
+          productName: record.products[i].name,
+          productId: await ProductModel.collection.countDocuments(),
+          prevBatchId: record.batchId,
+          timestamp: new Date().toLocaleString("en-GB"),
+        })
       }
     }
   }
@@ -134,38 +157,85 @@ const approveRecord = async (req, res) => {
   res.status(200).json({ msg: message, transaction: record })
 }
 
-function signRecord(signingKey, fromAddress, toAddress, product, timestamp) {
+function signRecord(
+  signingKey,
+  fromAddress,
+  toAddress,
+  product,
+  batchId,
+  prevBatchId,
+  transactionReceipt,
+  timestamp
+) {
   if (signingKey.getPublic("hex") !== fromAddress) {
     throw new BadRequestError("Private and Public key do not match!")
   }
 
-  const hashTx = computeRecordHash(fromAddress, toAddress, product, timestamp)
-  const sign = signingKey.sign(hashTx, "base64")
+  const hashRecord = computeRecordHash(
+    fromAddress,
+    toAddress,
+    product,
+    batchId,
+    prevBatchId,
+    transactionReceipt,
+    timestamp
+  )
+  const sign = signingKey.sign(hashRecord, "base64")
   return sign.toDER("hex")
 }
 
-function computeRecordHash(fromAddress, toAddress, product, timestamp) {
+function computeRecordHash(
+  fromAddress,
+  toAddress,
+  products,
+  batchId,
+  prevBatchId,
+  transactionReceipt,
+  timestamp
+) {
   return createHash("sha256")
-    .update(fromAddress + toAddress + product.toString() + timestamp)
+    .update(
+      fromAddress +
+        toAddress +
+        JSON.stringify(products) +
+        batchId +
+        prevBatchId +
+        transactionReceipt +
+        timestamp
+    )
     .digest("hex")
 }
 
 function checkRecordValidity(record) {
   const {
-    fromAddress: from,
-    toAddress: to,
-    product,
+    fromAddress,
+    toAddress,
+    products,
+    batchId,
+    previousBatchId,
+    transactionReceipt,
     timestamp,
     signature,
   } = record
+
+  const parsedTransactionReceipt = transactionReceipt.toString().match([])
+  const transactionReceiptId = parsedTransactionReceipt.input
 
   if (!signature || signature.length === 0) {
     throw new BadRequestError("No signature in this transaction")
   }
 
-  const publicKey = ec.keyFromPublic(from, "hex")
+  const publicKey = ec.keyFromPublic(fromAddress, "hex")
   return publicKey.verify(
-    computeTransactionHash(from, to, product, timestamp),
+    computeRecordHash(
+      fromAddress,
+      toAddress,
+      products,
+      batchId,
+      previousBatchId,
+      transactionReceiptId,
+      timestamp
+    ),
     signature
   )
 }
@@ -191,20 +261,20 @@ async function recordConsensus(record, id) {
       const hibernatingBlock = await BlockModel.findOne({
         status: "Hibernating",
       })
-      if (hibernatingBlock.records.length < MAX_RECORD) {
-        record = await SupplyChainModel.findOneAndUpdate(
-          { _id: id },
-          { status: "inBlock" },
-          { new: true }
-        )
-        await hibernatingBlock.updateOne({
-          $addToSet: { records: record },
-          timestamp: new Date().toLocaleString("en-GB"),
-        })
-      } else {
-        await ApprovedRecordModel.create({
-          records: record,
-        })
+
+      // only push records to hibernating block, not pending block
+      if (hibernatingBlock) {
+        if (hibernatingBlock.records.length < MAX_RECORD) {
+          record = await SupplyChainModel.findOneAndUpdate(
+            { _id: id },
+            { status: "inBlock" },
+            { new: true }
+          )
+          await hibernatingBlock.updateOne({
+            $addToSet: { records: record },
+            timestamp: new Date().toLocaleString("en-GB"),
+          })
+        }
       }
     } else if (rejectedPercentage >= CONSENSUS_THRESHOLD) {
       record = await SupplyChainModel.findOneAndUpdate(
@@ -218,7 +288,8 @@ async function recordConsensus(record, id) {
 }
 
 module.exports = {
-  getAllRecords,
+  getPendingRecords,
+  getRecord,
   createRecord,
   validateRecord,
   approveRecord,

@@ -1,7 +1,6 @@
 const TransactionModel = require("../models/transaction")
 const UserModel = require("../models/user")
 const BlockModel = require("../models/block")
-const ApprovedRecordModel = require("../models/approvedRecord")
 const { NotFoundError, BadRequestError } = require("../errors")
 const EC = require("elliptic").ec
 const ec = new EC("secp256k1")
@@ -10,20 +9,14 @@ const CONSENSUS_THRESHOLD = 0.66
 const MAX_RECORD = 2
 
 const getPendingTransactions = async (req, res) => {
-  const { username } = req.user
-  const transactions = await TransactionModel.find({
-    status: "Pending",
-    approvedBy: { $ne: username },
-    rejectedBy: { $ne: username },
-  })
-  // const transactions = await TransactionModel.find({})
-  res.status(200).json({ transactions })
-}
+  // const { username } = req.user
 
-const getUserTransactions = async (req, res) => {
-  const transactions = await TransactionModel.find({
-    createdBy: req.user.username,
-  })
+  // const transactions = await TransactionModel.find({
+  //   status: "Pending",
+  //   approvedBy: { $ne: username },
+  //   rejectedBy: { $ne: username },
+  // })
+  const transactions = await TransactionModel.find({})
   res.status(200).json({ transactions })
 }
 
@@ -173,20 +166,20 @@ async function transactionConsensus(transaction, id) {
       const hibernatingBlock = await BlockModel.findOne({
         status: "Hibernating",
       })
-      if (hibernatingBlock.records.length < MAX_RECORD) {
-        transaction = await TransactionModel.findOneAndUpdate(
-          { _id: id },
-          { status: "inBlock" },
-          { new: true }
-        )
-        await hibernatingBlock.updateOne({
-          $addToSet: { records: transaction },
-          timestamp: new Date().toLocaleString("en-GB"),
-        })
-      } else {
-        await ApprovedRecordModel.create({
-          records: transaction,
-        })
+
+      // only push records to hibernating block, not pending block
+      if (hibernatingBlock) {
+        if (hibernatingBlock.records.length < MAX_RECORD) {
+          transaction = await TransactionModel.findOneAndUpdate(
+            { _id: id },
+            { status: "inBlock" },
+            { new: true }
+          )
+          await hibernatingBlock.updateOne({
+            $addToSet: { records: transaction },
+            timestamp: new Date().toLocaleString("en-GB"),
+          })
+        }
       }
     } else if (rejectedPercentage >= CONSENSUS_THRESHOLD) {
       transaction = await TransactionModel.findOneAndUpdate(
@@ -201,7 +194,6 @@ async function transactionConsensus(transaction, id) {
 
 module.exports = {
   getPendingTransactions,
-  getUserTransactions,
   getTransaction,
   createTransactions,
   validateTransaction,

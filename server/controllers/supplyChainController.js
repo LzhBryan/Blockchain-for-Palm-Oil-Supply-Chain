@@ -16,14 +16,14 @@ const getPendingRecords = async (req, res) => {
 }
 
 const getRecord = async (req, res) => {
-  const { _id: recordID } = req.params
+  const { id: recordID } = req.params
 
-  const record = await TransactionModel.findOne({ _id: recordID })
+  const record = await SupplyChainModel.findOne({ _id: recordID })
   if (!record) {
     throw new NotFoundError(`No record with id ${recordID}`)
   }
 
-  res.status(200).json({ createRecord })
+  res.status(200).json({ record })
 }
 
 const createRecord = async (req, res) => {

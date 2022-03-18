@@ -8,6 +8,7 @@ const {
 
 const {
   getPendingRecords,
+  getRecord,
   createRecord,
   validateRecord,
   approveRecord,
@@ -27,6 +28,8 @@ router
     ]),
     createRecord
   )
+
+router.route("/:id").get(authenticateUser, getRecord)
 
 router
   .route("/validate/:id")

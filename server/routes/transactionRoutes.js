@@ -1,5 +1,6 @@
 const express = require("express")
 const router = express.Router()
+
 const {
   authenticateUser,
   authorizePermissions,
@@ -7,7 +8,6 @@ const {
 
 const {
   getPendingTransactions,
-  getUserTransactions,
   getTransaction,
   createTransactions,
   validateTransaction,
@@ -43,21 +43,6 @@ router
     authenticateUser,
     authorizePermissions("Validator"),
     approveTransaction
-  )
-
-router
-  .route("/user/transactions")
-  .get(
-    authenticateUser,
-    authorizePermissions([
-      "Planter",
-      "Miller",
-      "Refiner",
-      "Transporter",
-      "WarehouseManager",
-      "Retailer",
-    ]),
-    getUserTransactions
   )
 
 module.exports = router

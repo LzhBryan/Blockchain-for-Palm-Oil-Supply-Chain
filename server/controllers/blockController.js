@@ -2,16 +2,19 @@ const BlockModel = require("../models/block")
 const UserModel = require("../models/user")
 const TransactionModel = require("../models/transaction")
 const SupplyChainModel = require("../models/supplychain")
-const ApprovedRecordModel = require("../models/approvedRecord")
 const {
   computeTransactionHash,
   checkTransactionValidity,
 } = require("../controllers/transactionController")
+const {
+  computeRecordHash,
+  checkRecordValidity,
+} = require("../controllers/supplyChainController")
 const { NotFoundError, BadRequestError } = require("../errors")
+const { createHash } = require("crypto")
 const CONSENSUS_THRESHOLD = 0.66
 const GENESIS_BLOCK_ID = 0
 const MAX_RECORD = 2
-const { createHash } = require("crypto")
 
 const getBlockchain = async (req, res) => {
   let blockchain = await BlockModel.find({ status: "inChain" })
@@ -150,48 +153,48 @@ async function createGenesisBlock() {
 }
 
 async function createHibernateBlock() {
-  let arr = []
-  const record = await ApprovedRecordModel.find({})
-  if (record.length > 0) {
-    for (i = 0; i < MAX_RECORD; i++) {
-      //records on block (CAN'T WORK)
-      //record[i].status = "inBlock"
-      //await record[i].save()
-      arr.push(record[i].records)
-      await ApprovedRecordModel.deleteOne({ _id: record[i]._id })
-    }
-  }
-
   let hibernateBlock = await BlockModel.create({
-    records: arr,
     timestamp: new Date().toLocaleString("en-GB"),
   })
 
-  /*const waitingTransactions = await TransactionModel.find({
+  const waitingTransactions = await TransactionModel.find({
     status: "Approved",
   })
 
-  if (waitingTransactions.length > MAX_RECORD) {
+  const waitingSupplyChainRecords = await SupplyChainModel.find({
+    status: "Approved",
+  })
+
+  let records = []
+  records = records.concat(waitingTransactions, waitingSupplyChainRecords)
+
+  records.sort(function (a, b) {
+    if (a.timestamp < b.timestamp) return -1
+    else if (a.timestamp > b.timestamp) return 1
+    return 0
+  })
+
+  if (records.length > MAX_RECORD) {
     for (i = 0; i < MAX_RECORD; i++) {
-      waitingTransactions[i].status = "inBlock"
-      await waitingTransactions[i].save()
+      records[i].status = "inBlock"
+      await records[i].save()
     }
     hibernateBlock = await BlockModel.findOneAndUpdate(
       { status: "Hibernating" },
-      { records: waitingTransactions.slice(0, MAX_RECORD) },
+      { records: records.slice(0, MAX_RECORD) },
       { new: true }
     )
   } else {
-    for (i = 0; i < waitingTransactions.length; i++) {
-      waitingTransactions[i].status = "inBlock"
-      await waitingTransactions[i].save()
+    for (i = 0; i < records.length; i++) {
+      records[i].status = "inBlock"
+      await records[i].save()
     }
     hibernateBlock = await BlockModel.findOneAndUpdate(
       { status: "Hibernating" },
-      { records: waitingTransactions },
+      { records: records },
       { new: true }
     )
-  }*/
+  }
   return hibernateBlock
 }
 
@@ -300,6 +303,10 @@ function validateBlockRecords(records) {
       if (!checkTransactionValidity(record)) {
         return false
       }
+    } else if ("batchId" in record) {
+      if (!checkRecordValidity(record)) {
+        return false
+      }
     }
   }
   return true
@@ -311,18 +318,12 @@ function validateBlocks(blocks) {
       const genesisBlock = blocks[i]
       const { blockId, prevHash, timestamp, records } = genesisBlock
 
-      console.log(genesisBlock)
-
-      console.log(genesisBlock.hash)
-      console.log(computeBlockHash(blockId, prevHash, timestamp, records))
       if (
         genesisBlock.hash !==
         computeBlockHash(blockId, prevHash, timestamp, records)
       ) {
         return false
       }
-
-      console.log(prevHash)
 
       if (genesisBlock.prevHash !== "") {
         return false
@@ -335,13 +336,8 @@ function validateBlocks(blocks) {
       const currentBlock = blocks[i]
       const prevBlock = blocks[i - 1]
 
-      console.log(currentBlock)
-      console.log(prevBlock)
-
       const { blockId, prevHash, timestamp, records } = currentBlock
 
-      console.log(currentBlock.hash)
-      console.log(computeBlockHash(blockId, prevHash, timestamp, records))
       if (
         currentBlock.hash !==
         computeBlockHash(blockId, prevHash, timestamp, records)
@@ -349,8 +345,6 @@ function validateBlocks(blocks) {
         return false
       }
 
-      console.log(prevHash)
-      console.log(prevBlock.hash)
       if (prevHash !== prevBlock.hash) {
         return false
       }

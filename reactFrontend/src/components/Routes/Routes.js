@@ -6,6 +6,9 @@ import history from "./History"
 import TransactionTable from "../TransactionPage/TransactionTable"
 import Login from "../Login/Login"
 import SignUp from "../SignUp/Signup"
+import BlockList from "../ViewBlocks/BlockList"
+import BlockDetails from "../ViewBlocks/BlockDetails"
+import CreateBlocks from "../CreateBlocks/CreateBlocks"
 
 export default class Routes extends Component {
   render() {
@@ -17,6 +20,9 @@ export default class Routes extends Component {
           <Route path="/User" exact component={UserPage} />
           <Route path="/Create" exact component={TransactionForm} />
           <Route path="/Transactions" exact component={TransactionTable} />
+          <Route path="/Blocks" exact component={BlockList} />
+          <Route path="/Blocks/:id" exact component={BlockDetails} />
+          <Route path="/CreateBlock" exact component={CreateBlocks} />
         </Switch>
       </Router>
     )

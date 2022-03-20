@@ -17,8 +17,8 @@
   margin: auto;
   padding-top: 30px;
   padding-left: 50px;
-  width: 1070px;
-  height: 500px;
+  width: 800px;
+  height: 580px;
   background-color: white;
   border-color: black;
   border-radius: 10px;
@@ -28,7 +28,9 @@
 }
 
 .content {
+  margin-right: 40px;
   margin-bottom: 20px;
+  word-break: break-all;
 }
 
 .label {
@@ -39,11 +41,4 @@
   display: inline-block;
   margin-top: 5px;
   margin-bottom: 15px;
-}
-
-.exit-btn {
-  text-decoration: none;
-  font-size: 30px;
-  color: red;
-  margin-left: 1020px;
 }

@@ -1,29 +1,34 @@
-import React, { Component } from "react"
-import Transaction from "../TransactionBtn/TransactionBtn"
+import React from "react"
 import AddProcess from "../AddProcess/AddProcess"
-import ViewBlocks from "../ViewBlocks/ViewBlocks"
 import Sidebar from "../Sidebar/Sidebar"
 import { Link } from "react-router-dom"
 import { MdPendingActions } from "react-icons/md"
+import "./userPage.css"
 
-class UserPage extends Component {
-  render() {
-    return (
+const UserPage = () => {
+  return (
+    <div>
       <div>
-        <Transaction />
-        <AddProcess />
-        <ViewBlocks />
-        <Sidebar />
-        <div>
-          <Link to="/Transactions">
-            <MdPendingActions
-              style={{ fontSize: "3.5rem", position: "relative", left: "80%" }}
-            />
-          </Link>
-        </div>
+        <Link to={"/create"}>
+          <button className="transaction">TRANSACTION</button>
+        </Link>
       </div>
-    )
-  }
+      <AddProcess />
+      <div>
+        <Link to="/blocks">
+          <button className="viewBlocks">VIEW BLOCKS</button>
+        </Link>
+      </div>
+      <Sidebar />
+      <div>
+        <Link to="/transactions">
+          <MdPendingActions
+            style={{ fontSize: "3.5rem", position: "relative", left: "80%" }}
+          />
+        </Link>
+      </div>
+    </div>
+  )
 }
 
 export default UserPage

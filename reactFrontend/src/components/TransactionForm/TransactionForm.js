@@ -43,7 +43,12 @@ const TransactionForm = () => {
     if (fromAddress && privateKey && toAddress && amount) {
       const res = await axios.post(
         "http://localhost:5000/api/transactions",
-        transaction
+        transaction,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+          },
+        }
       )
       console.log(res.data)
       setTransaction(res.data.transaction)
@@ -53,10 +58,6 @@ const TransactionForm = () => {
       setAmount("")
     }
   }
-
-  /*const handlePopup = () => {
-    Swal.fire("Your transaction is completed!")
-  }*/
 
   return (
     <div className={classes.root}>
@@ -132,7 +133,7 @@ const TransactionForm = () => {
                   style={{ marginTop: "20px", marginLeft: "20px" }}
                   variant="outlined"
                   color="secondary"
-                  href="/User"
+                  href="/user"
                 >
                   Cancel
                 </Button>

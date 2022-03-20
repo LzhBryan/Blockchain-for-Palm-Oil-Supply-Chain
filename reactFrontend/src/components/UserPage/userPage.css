@@ -1,0 +1,45 @@
+.transaction,
+.viewBlocks {
+  align-items: center;
+  background-color: initial;
+  background-image: linear-gradient(#464d55, #25292e);
+  border-radius: 8px;
+  border-width: 0;
+  width: 400px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1), 0 3px 6px rgba(0, 0, 0, 0.05);
+  box-sizing: border-box;
+  color: #fff;
+  cursor: pointer;
+  display: inline-flex;
+  flex-direction: column;
+  font-family: Nunito, sans-serif;
+  font-size: 25px;
+  font-weight: bold;
+  height: 52px;
+  justify-content: center;
+  line-height: 1;
+  margin: 20px;
+  position: absolute;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  outline: none;
+  overflow: hidden;
+  padding: 0 32px;
+  text-align: center;
+  text-decoration: none;
+  transform: translate3d(0, 0, 0);
+  transition: all 150ms;
+  vertical-align: baseline;
+  white-space: nowrap;
+  z-index: -1;
+}
+
+.transaction {
+  top: 30%;
+  left: 47%;
+}
+
+.viewBlocks {
+  top: 50%;
+  left: 47%;
+}

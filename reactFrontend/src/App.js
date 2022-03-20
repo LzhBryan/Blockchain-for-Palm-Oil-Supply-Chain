@@ -6,6 +6,10 @@ import SignUp from "./components/SignUp/Signup"
 import ProtectedRoute from "./components/Route/ProtectedRoute"
 import UserPage from "./components/UserPage/UserPage"
 import TransactionTable from "./components/TransactionPage/TransactionTable"
+import TransactionForm from "./components/TransactionForm/TransactionForm"
+import BlockList from "./components/ViewBlocks/BlockList"
+import BlockDetails from "./components/ViewBlocks/BlockDetails"
+import CreateBlock from "./components/CreateBlocks/CreateBlock"
 
 const App = () => {
   return (
@@ -19,6 +23,10 @@ const App = () => {
           path="/transactions"
           component={TransactionTable}
         />
+        <ProtectedRoute exact path="/create" component={TransactionForm} />
+        <ProtectedRoute exact path="/blocks" component={BlockList} />
+        <ProtectedRoute exact path="/blocks/:id" component={BlockDetails} />
+        <ProtectedRoute exact path="/createBlock" component={CreateBlock} />
       </Switch>
     </Router>
   )

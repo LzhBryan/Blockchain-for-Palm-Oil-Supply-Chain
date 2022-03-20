@@ -1,15 +1,15 @@
-import { useParams } from "react-router-dom"
-import { useBlockFetch } from "./BlockFetch"
 import React from "react"
+import { useParams } from "react-router-dom"
 import { makeStyles } from "@material-ui/core/styles"
 import Card from "@material-ui/core/Card"
 import CardContent from "@material-ui/core/CardContent"
 import Typography from "@material-ui/core/Typography"
-import RecordsRow from "../CreateBlocks/RecordsRow"
+import { useFetch } from "../../utils/useFetch"
+import RecordsRow from "../../components/CreateBlocks/RecordsRow"
 
 const useStyles = makeStyles({
   root: {
-    width: "50%",
+    width: "60%",
     margin: "auto",
   },
   title: {
@@ -28,7 +28,7 @@ const BlockDetails = () => {
     data: blockData,
     isLoading,
     serverError,
-  } = useBlockFetch("http://localhost:5000/api/blocks/" + id)
+  } = useFetch("http://localhost:5000/api/blocks/" + id)
 
   return (
     <Card className={classes.root}>

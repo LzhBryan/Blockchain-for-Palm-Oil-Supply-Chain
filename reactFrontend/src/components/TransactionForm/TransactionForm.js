@@ -1,6 +1,5 @@
 import React, { useState } from "react"
-import axios from "axios"
-import Modal from "../Modal/Modal"
+import { makeStyles } from "@material-ui/core/styles"
 import {
   Typography,
   Card,
@@ -8,8 +7,9 @@ import {
   Grid,
   TextField,
 } from "@material-ui/core"
-import { makeStyles } from "@material-ui/core/styles"
 import Button from "@material-ui/core/Button"
+import axios from "../../utils/axios"
+import Modal from "../Modal/Modal"
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -41,15 +41,7 @@ const TransactionForm = () => {
     const transaction = { fromAddress, privateKey, toAddress, amount }
 
     if (fromAddress && privateKey && toAddress && amount) {
-      const res = await axios.post(
-        "http://localhost:5000/api/transactions",
-        transaction,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-          },
-        }
-      )
+      const res = await axios.post("/api/transactions", transaction)
       console.log(res.data)
       setTransaction(res.data.transaction)
       setFromAddress("")

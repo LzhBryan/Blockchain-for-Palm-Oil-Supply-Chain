@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"
 import axios from "axios"
 
-export const useBlockFetch = (url) => {
+export const useFetch = (url) => {
   const [data, setData] = useState(null)
   const [isLoading, setIsLoading] = useState(true)
   const [serverError, setServerError] = useState(null)

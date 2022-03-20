@@ -1,13 +1,12 @@
 import React from "react"
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom"
-
 import LoginPage from "./components/Login/Login"
 import SignUp from "./components/SignUp/Signup"
 import ProtectedRoute from "./components/Route/ProtectedRoute"
 import TransactionTable from "./components/TransactionPage/TransactionTable"
 import TransactionForm from "./components/TransactionForm/TransactionForm"
-import BlockList from "./components/ViewBlocks/BlockList"
-import BlockDetails from "./components/ViewBlocks/BlockDetails"
+import BlockList from "./pages/BlockchainPage/BlockList"
+import BlockDetails from "./pages/BlockchainPage/BlockDetails"
 import CreateBlock from "./components/CreateBlocks/CreateBlock"
 
 const App = () => {

@@ -33,8 +33,7 @@ const BlockRows = ({ block }) => {
             to={`/blocks/${block.blockId}`}
             style={{ textDecoration: "none", color: "black" }}
           >
-            <Typography component="div">BLOCK</Typography>
-            <Typography component="div">{block.blockId}</Typography>
+            <Typography component="div">BLOCK {block.blockId}</Typography>
           </Link>
         </StyledTableCell>
         <StyledTableCell component="th" scope="row" align="left">
@@ -58,11 +57,6 @@ const BlockRows = ({ block }) => {
             to={`/blocks/${block.blockId}`}
             style={{ textDecoration: "none", color: "black" }}
           ></Link>
-          {/* <Link to={`/Blocks/${transaction._id}`}>
-            <SiHiveBlockchain
-              style={{ fontSize: "1.5rem", paddingRight: "30px" }}
-            />
-  </Link>*/}
         </StyledTableCell>
       </StyledTableRow>
     </>

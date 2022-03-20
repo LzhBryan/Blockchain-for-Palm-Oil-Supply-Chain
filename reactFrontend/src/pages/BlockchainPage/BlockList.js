@@ -1,14 +1,18 @@
 import React, { useState, useEffect } from "react"
-import axios from "axios"
-import { withStyles, makeStyles } from "@material-ui/core/styles"
-import Table from "@material-ui/core/Table"
-import TableBody from "@material-ui/core/TableBody"
-import TableCell from "@material-ui/core/TableCell"
-import TableContainer from "@material-ui/core/TableContainer"
-import TableHead from "@material-ui/core/TableHead"
-import TableRow from "@material-ui/core/TableRow"
-import Paper from "@material-ui/core/Paper"
-import { Typography } from "@material-ui/core"
+import {
+  withStyles,
+  makeStyles,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  TablePagination,
+  Paper,
+  Typography,
+} from "@material-ui/core"
+import axios from "../../utils/axios"
 import BlockRows from "./BlockRows"
 
 const StyledTableCell = withStyles((theme) => ({
@@ -26,23 +30,28 @@ const useStyles = makeStyles({
   tableContainer: {
     width: "60%",
     margin: "auto",
+    marginTop: "5rem",
   },
 })
 
 const BlockList = () => {
-  const [blocks, setBlocks] = useState([])
   const classes = useStyles()
+  const [blocks, setBlocks] = useState([])
+  const [rowsPerPage, setRowsPerPage] = useState(5)
+  const [page, setPage] = useState(0)
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage)
+  }
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10))
+    setPage(0)
+  }
 
   const getBlocks = async () => {
     try {
-      const response = await axios.get(
-        "http://localhost:5000/api/blocks/blockchain",
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-          },
-        }
-      )
+      const response = await axios.get("/api/blocks/blockchain")
       setBlocks(response.data.blockchain)
     } catch (error) {
       console.log(error.response.data.msg)
@@ -53,9 +62,12 @@ const BlockList = () => {
     getBlocks()
   }, [])
 
+  const emptyRows =
+    rowsPerPage - Math.min(rowsPerPage, blocks.length - page * rowsPerPage)
+
   return (
     <TableContainer component={Paper} className={classes.tableContainer}>
-      <h1 style={{ textAlign: "center" }}>View Blocks</h1>
+      <h1 style={{ textAlign: "center" }}>Blockchain</h1>
       <Table className={classes.table} aria-label="customized table">
         <TableHead>
           <TableRow>
@@ -80,11 +92,27 @@ const BlockList = () => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {blocks.map((block) => (
-            <BlockRows key={block.blockId} block={block} />
-          ))}
+          {blocks
+            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+            .map((block) => (
+              <BlockRows key={block.blockId} block={block} />
+            ))}
+          {emptyRows > 0 && (
+            <TableRow style={{ height: 57 * emptyRows }}>
+              <TableCell colSpan={6} />
+            </TableRow>
+          )}
         </TableBody>
       </Table>
+      <TablePagination
+        rowsPerPageOptions={[5, 10, 15]}
+        component="div"
+        count={blocks.length}
+        rowsPerPage={rowsPerPage}
+        page={page}
+        onPageChange={handleChangePage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+      />
     </TableContainer>
   )
 }

@@ -1,8 +1,8 @@
-import axios from "axios"
 import React, { useEffect, useState } from "react"
 import Button from "@material-ui/core/Button"
-import HibernatingBlock from "./HibernatingBlock"
 import Swal from "sweetalert2"
+import axios from "../../utils/axios"
+import HibernatingBlock from "./HibernatingBlock"
 
 const CreateBlocks = () => {
   const [blocks, setBlocks] = useState([])
@@ -16,11 +16,7 @@ const CreateBlocks = () => {
 
   const getBlocks = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/api/blocks", {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-        },
-      })
+      const response = await axios.get("/api/blocks")
       setBlocks(response.data.waitingBlock)
       if (response.data.waitingBlock.status === "Hibernating") {
         setDisabledActivate(false)
@@ -36,23 +32,25 @@ const CreateBlocks = () => {
 
   const handleActivate = async () => {
     try {
-      const { data } = await axios.patch(
-        `http://localhost:5000/api/blocks/${blocks._id}`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-          },
-        }
-      )
+      const { data } = await axios.patch(`/api/blocks/${blocks._id}`, {})
       console.log(data)
       setBlocks(data.activateBlock)
       setDisabledActivate(true)
       setDisabledValidate(false)
       setIsActivated(true)
+      Swal.fire(
+        "This block has been activated!",
+        "Please proceed with validation",
+        "success"
+      )
     } catch (error) {
       console.log(error.response.data.msg)
       setError(true)
+      Swal.fire(
+        "This block cannot be activated!",
+        "Insufficient records in block",
+        "error"
+      )
     }
   }
 
@@ -86,14 +84,7 @@ const CreateBlocks = () => {
 
   const handleValidate = async () => {
     try {
-      const { data } = await axios.get(
-        `http://localhost:5000/api/blocks/approve/${blocks._id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-          },
-        }
-      )
+      const { data } = await axios.get(`/api/blocks/approve/${blocks._id}`)
       setIsValid(data.isValid)
     } catch (error) {
       console.log(error.response.data.msg)
@@ -102,15 +93,9 @@ const CreateBlocks = () => {
 
   const handleApprove = async () => {
     try {
-      const { data } = await axios.put(
-        `http://localhost:5000/api/blocks/approve/${blocks._id}`,
-        { isApproved },
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-          },
-        }
-      )
+      const { data } = await axios.put(`/api/blocks/approve/${blocks._id}`, {
+        isApproved,
+      })
       console.log(data)
       setBlocks(data.block)
       setMessage(data.message)
@@ -157,7 +142,7 @@ const CreateBlocks = () => {
       <HibernatingBlock block={blocks} />
 
       <Button
-        style={{ marginTop: "40px", marginLeft: "593px" }}
+        style={{ marginTop: "40px", marginLeft: "480px" }}
         type="submit"
         variant="outlined"
         color="primary"

@@ -12,8 +12,8 @@ import {
   Select,
   makeStyles,
 } from "@material-ui/core"
-import axios from "axios"
 import Swal from "sweetalert2"
+import axios from "../../utils/axios"
 import "./signup.css"
 
 const useStyles = makeStyles((theme) => ({
@@ -65,17 +65,15 @@ const SignUp = ({ history }) => {
   const [privateKey, setPrivateKey] = useState("")
   const [error, setError] = useState("")
 
-  useEffect(() => {
-    if (localStorage.getItem("authToken")) {
-      history.push("/user")
-    }
-  }, [history])
+  // useEffect(() => {
+  //   if (localStorage.getItem("authToken")) {
+  //     history.push("/dashboard")
+  //   }
+  // }, [history])
 
   const generateKeys = async () => {
     try {
-      const { data } = await axios.get(
-        "http://localhost:5000/api/auth/register"
-      )
+      const { data } = await axios.get("/api/auth/register")
       const { publicKey, privateKey } = data
       setShowKeys(true)
       setPublicKey(publicKey)
@@ -92,16 +90,20 @@ const SignUp = ({ history }) => {
     e.preventDefault()
 
     try {
-      const { data } = await axios.post(
-        "http://localhost:5000/api/auth/register",
-        { username, password, role, publicKey, privateKey }
-      )
+      const { data } = await axios.post("/api/auth/register", {
+        username,
+        password,
+        role,
+        publicKey,
+        privateKey,
+      })
       localStorage.setItem("authToken", data.token)
       await Swal.fire({
         title: "Successfully registered!",
+        text: "Please proceed to the login page",
         icon: "success",
       })
-      history.push("/user")
+      history.push("/")
     } catch (error) {
       setError(error.response.data.msg)
       setTimeout(() => {

@@ -1,9 +1,7 @@
 import React, { useState } from "react"
 import { Redirect, Route } from "react-router-dom"
 import clsx from "clsx"
-
 import { makeStyles, Container } from "@material-ui/core"
-
 import Navbar from "../Navbar/Navbar"
 
 const drawerWidth = 240
@@ -56,9 +54,7 @@ const ProtectedRoute = ({ component: Component, ...rest }) => {
           )
         } else {
           return (
-            <Redirect
-              to={{ pathname: "/login", state: { from: props.location } }}
-            />
+            <Redirect to={{ pathname: "/", state: { from: props.location } }} />
           )
         }
       }}

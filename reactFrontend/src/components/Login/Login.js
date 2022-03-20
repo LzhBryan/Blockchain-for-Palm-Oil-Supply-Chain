@@ -8,8 +8,8 @@ import {
   Link,
 } from "@material-ui/core"
 import { FaUserCircle } from "react-icons/fa"
-import axios from "axios"
 import Swal from "sweetalert2"
+import axios from "../../utils/axios"
 import "./login.css"
 
 const LoginPage = ({ history }) => {
@@ -19,7 +19,7 @@ const LoginPage = ({ history }) => {
 
   useEffect(() => {
     if (localStorage.getItem("authToken")) {
-      history.push("/user")
+      history.push("/dashboard")
     }
   }, [history])
 
@@ -27,16 +27,16 @@ const LoginPage = ({ history }) => {
     e.preventDefault()
 
     try {
-      const { data } = await axios.post(
-        "http://localhost:5000/api/auth/login",
-        { username, password }
-      )
+      const { data } = await axios.post("/api/auth/login", {
+        username,
+        password,
+      })
       localStorage.setItem("authToken", data.token)
       Swal.fire({
         title: "Successfully Login",
         icon: "success",
       })
-      history.push("/user")
+      history.push("/dashboard")
     } catch (error) {
       setError(error.response.data.msg)
       setTimeout(() => {
@@ -87,7 +87,7 @@ const LoginPage = ({ history }) => {
           </Button>
           <Typography>
             Don't have an account?
-            <Link href="/Signup"> Register here</Link>
+            <Link href="/signup"> Register here</Link>
           </Typography>
         </Paper>
       </Grid>

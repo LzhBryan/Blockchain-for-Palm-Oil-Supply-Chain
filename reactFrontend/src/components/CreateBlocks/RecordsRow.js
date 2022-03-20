@@ -33,7 +33,7 @@ const RecordsRow = ({ records }) => {
             size="small"
             onClick={() => setOpen(!open)}
           >
-            {open ? <MdKeyboardArrowDown /> : <MdKeyboardArrowUp />}
+            {open ? <MdKeyboardArrowUp /> : <MdKeyboardArrowDown />}
           </IconButton>
         </TableCell>
         <TableCell component="th" scope="row">

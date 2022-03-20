@@ -13,7 +13,7 @@ import {
 } from "@material-ui/core"
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md"
 import Swal from "sweetalert2"
-import axios from "axios"
+import axios from "../../utils/axios"
 
 const useRowStyles = makeStyles({
   root: {
@@ -38,14 +38,7 @@ const TransactionRow = ({ transaction }) => {
     setId(id)
     setIsClicked(!isClicked)
     try {
-      const { data } = await axios.get(
-        `http://localhost:5000/api/transactions/validate/${id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-          },
-        }
-      )
+      const { data } = await axios.get(`/api/transactions/validate/${id}`)
       setIsValid(data.isValid)
     } catch (error) {
       console.log(error.response.error.msg)
@@ -57,12 +50,7 @@ const TransactionRow = ({ transaction }) => {
     try {
       const { data } = await axios.patch(
         `http://localhost:5000/api/transactions/validate/${id}`,
-        { isApproved },
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-          },
-        }
+        { isApproved }
       )
       setMessage(data.msg)
     } catch (error) {
@@ -127,7 +115,7 @@ const TransactionRow = ({ transaction }) => {
             size="small"
             onClick={() => setOpen(!open)}
           >
-            {open ? <MdKeyboardArrowDown /> : <MdKeyboardArrowUp />}
+            {open ? <MdKeyboardArrowUp /> : <MdKeyboardArrowDown />}
           </IconButton>
         </TableCell>
         <TableCell component="th" scope="row">

@@ -16,11 +16,17 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
+  Collapse,
 } from "@material-ui/core"
-import { MdDashboard, MdAccountCircle } from "react-icons/md"
+import {
+  MdDashboard,
+  MdAccountCircle,
+  MdExpandLess,
+  MdExpandMore,
+} from "react-icons/md"
 import { GiHamburgerMenu } from "react-icons/gi"
 
-const drawerWidth = 240
+const drawerWidth = 300
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -72,6 +78,7 @@ const Navbar = ({ open, setOpen }) => {
   const classes = useStyles()
   const [anchorEl, setAnchorEl] = useState(null)
   const openMenu = Boolean(anchorEl)
+  const [openList, setOpenList] = useState(false)
 
   const handleDrawerOpen = () => {
     setOpen(!open)
@@ -87,23 +94,55 @@ const Navbar = ({ open, setOpen }) => {
 
   const handleLogout = () => {
     localStorage.removeItem("authToken")
-    history.push("/login")
+    history.push("/")
+  }
+
+  const handleExpand = () => {
+    setOpenList(!openList)
   }
 
   const itemList = [
     {
       text: "Dashboard",
       icon: <MdDashboard style={{ fontSize: "2rem" }} />,
-      onClick: () => history.push("/user"),
+      onClick: () => history.push("/dashboard"),
     },
-    { text: "Blockchain", icon: <MdDashboard /> },
     {
-      text: "Transaction",
-      icon: <MdDashboard />,
-      onClick: () => history.push("/transactions"),
+      text: "Blockchain",
+      icon: <MdDashboard style={{ fontSize: "2rem" }} />,
+      onClick: () => history.push("/blockchain"),
     },
-    { text: "SupplyChain", icon: <MdDashboard /> },
-    { text: "User", icon: <MdDashboard /> },
+    {
+      text: "Pending block",
+      icon: <MdDashboard style={{ fontSize: "2rem" }} />,
+      onClick: () => history.push("/pendingBlock"),
+    },
+    {
+      text: "Create transaction",
+      icon: <MdDashboard style={{ fontSize: "2rem" }} />,
+      onClick: () => history.push("/createTransaction"),
+    },
+    {
+      text: "Pending transaction",
+      icon: <MdDashboard style={{ fontSize: "2rem" }} />,
+      onClick: () => history.push("/pendingTransactions"),
+    },
+    {
+      text: "Create supply-chain record",
+      icon: <MdDashboard style={{ fontSize: "2rem" }} />,
+    },
+    {
+      text: "Pending supply-chain record",
+      icon: <MdDashboard style={{ fontSize: "2rem" }} />,
+    },
+    {
+      text: "Products",
+      icon: <MdDashboard style={{ fontSize: "2rem" }} />,
+    },
+    {
+      text: "User list",
+      icon: <MdDashboard style={{ fontSize: "2rem" }} />,
+    },
   ]
 
   return (
@@ -178,10 +217,27 @@ const Navbar = ({ open, setOpen }) => {
           {itemList.map((item) => {
             const { text, icon, onClick } = item
             return (
-              <ListItem button key={text} onClick={onClick}>
-                {icon && <ListItemIcon>{icon}</ListItemIcon>}
-                <ListItemText primary={text} />
-              </ListItem>
+              <>
+                <ListItem button key={text} onClick={onClick}>
+                  {icon && <ListItemIcon>{icon}</ListItemIcon>}
+                  <ListItemText primary={text} />
+                  {/* {openList ? (
+                    <MdExpandLess onClick={handleExpand} />
+                  ) : (
+                    <MdExpandMore onClick={handleExpand} />
+                  )} */}
+                </ListItem>
+                {/* <Collapse in={openList} timeout="auto" unmountOnExit>
+                  <List component="div" disablePadding>
+                    <ListItem button className={classes.nested}>
+                      <ListItemIcon>
+                        <MdDashboard />
+                      </ListItemIcon>
+                      <ListItemText primary="Starred" />
+                    </ListItem>
+                  </List>
+                </Collapse> */}
+              </>
             )
           })}
         </List>

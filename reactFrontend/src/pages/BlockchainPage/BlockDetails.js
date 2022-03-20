@@ -11,6 +11,7 @@ const useStyles = makeStyles({
   root: {
     width: "60%",
     margin: "auto",
+    marginTop: "5rem",
   },
   title: {
     fontSize: 18,

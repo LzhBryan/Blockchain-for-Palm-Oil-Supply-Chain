@@ -30,7 +30,7 @@ const BlockRows = ({ block }) => {
       <StyledTableRow>
         <StyledTableCell component="th" scope="row" align="left">
           <Link
-            to={`/blocks/${block.blockId}`}
+            to={`/block/${block.blockId}`}
             style={{ textDecoration: "none", color: "black" }}
           >
             <Typography component="div">BLOCK {block.blockId}</Typography>
@@ -38,7 +38,7 @@ const BlockRows = ({ block }) => {
         </StyledTableCell>
         <StyledTableCell component="th" scope="row" align="left">
           <Link
-            to={`/blocks/${block.blockId}`}
+            to={`/block/${block.blockId}`}
             style={{ textDecoration: "none", color: "black" }}
           >
             <Typography component="div">{block.timestamp}</Typography>
@@ -46,7 +46,7 @@ const BlockRows = ({ block }) => {
         </StyledTableCell>
         <StyledTableCell component="th" scope="row" align="left">
           <Link
-            to={`/blocks/${block.blockId}`}
+            to={`/block/${block.blockId}`}
             style={{ textDecoration: "none", color: "black" }}
           >
             <Typography component="div">{block.status}</Typography>
@@ -54,7 +54,7 @@ const BlockRows = ({ block }) => {
         </StyledTableCell>
         <StyledTableCell component="th" scope="row" align="left">
           <Link
-            to={`/blocks/${block.blockId}`}
+            to={`/block/${block.blockId}`}
             style={{ textDecoration: "none", color: "black" }}
           ></Link>
         </StyledTableCell>

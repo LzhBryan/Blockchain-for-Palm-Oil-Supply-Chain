@@ -11,7 +11,7 @@ import {
   TablePagination,
 } from "@material-ui/core"
 import TransactionRows from "./TransactionRows"
-import axios from "axios"
+import axios from "../../utils/axios"
 import Swal from "sweetalert2"
 
 const useRowStyles = makeStyles({
@@ -40,19 +40,11 @@ const TransactionTable = () => {
 
   const getTransactions = async () => {
     try {
-      const response = await axios.get(
-        "http://localhost:5000/api/transactions",
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-          },
-        }
-      )
+      const response = await axios.get("/api/transactions")
       setTransactions(response.data.transactions)
     } catch (error) {
-      localStorage.removeItem("authToken")
       await Swal.fire({
-        title: "You are not authorized to this route",
+        title: error.response.data.msg,
         icon: "error",
       })
     }

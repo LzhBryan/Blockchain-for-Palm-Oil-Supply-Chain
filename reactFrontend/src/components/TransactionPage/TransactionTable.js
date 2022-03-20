@@ -16,8 +16,10 @@ import Swal from "sweetalert2"
 
 const useRowStyles = makeStyles({
   tableContainer: {
-    width: "70%",
-    margin: "auto",
+    width: "60vw",
+    marginTop: "5rem",
+    marginLeft: "auto",
+    marginRight: "auto",
   },
 })
 

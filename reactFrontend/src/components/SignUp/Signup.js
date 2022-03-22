@@ -186,7 +186,7 @@ const SignUp = ({ history }) => {
           </Button>
           <Typography style={{ margin: "1rem 0" }}>
             Already have an account?
-            <Link href="/login"> Login here</Link>
+            <Link href="/"> Login here</Link>
           </Typography>
         </Paper>
       </Grid>

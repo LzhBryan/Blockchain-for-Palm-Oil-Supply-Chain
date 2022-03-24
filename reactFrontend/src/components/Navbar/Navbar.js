@@ -134,6 +134,7 @@ const Navbar = ({ open, setOpen }) => {
     {
       text: "Pending supply-chain record",
       icon: <MdDashboard style={{ fontSize: "2rem" }} />,
+      onClick: () => history.push("/pendingRecords"),
     },
     {
       text: "Products",

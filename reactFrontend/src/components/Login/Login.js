@@ -17,11 +17,11 @@ const LoginPage = ({ history }) => {
   const [password, setPassword] = useState("")
   const [error, setError] = useState("")
 
-  useEffect(() => {
-    if (localStorage.getItem("authToken")) {
-      history.push("/dashboard")
-    }
-  }, [history])
+  // useEffect(() => {
+  //   if (localStorage.getItem("authToken")) {
+  //     history.push("/dashboard")
+  //   }
+  // }, [history])
 
   const login = async (e) => {
     e.preventDefault()
@@ -81,7 +81,7 @@ const LoginPage = ({ history }) => {
             style={{ margin: "2rem 0" }}
             onClick={(e) => login(e)}
             fullWidth
-            href="/User"
+            href="/dashboard"
           >
             Sign in
           </Button>

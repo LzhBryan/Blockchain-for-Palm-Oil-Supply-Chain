@@ -4,7 +4,7 @@ import clsx from "clsx"
 import { makeStyles, Container } from "@material-ui/core"
 import Navbar from "../Navbar/Navbar"
 
-const drawerWidth = 240
+const drawerWidth = 300
 
 const useStyles = makeStyles((theme) => ({
   container: {

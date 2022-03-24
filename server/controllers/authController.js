@@ -30,9 +30,8 @@ const register = async (req, res) => {
     throw new BadRequestError("Username already exists")
   }
 
-  const user = await UserModel.create(req.body)
-  const token = user.createJWT()
-  res.status(201).json({ user: { name: user.username }, token })
+  await UserModel.create(req.body)
+  res.status(201).json({ msg: "Successfuly registered user" })
 }
 
 const login = async (req, res) => {

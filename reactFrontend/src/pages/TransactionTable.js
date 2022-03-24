@@ -40,11 +40,12 @@ const TransactionTable = () => {
 
   const getTransactions = async () => {
     try {
-      const response = await axios.get("/api/transactions")
+      const response = await axios.get("/api/transactionss")
       setTransactions(response.data.transactions)
     } catch (error) {
-      await Swal.fire({
-        title: error.response.data.msg,
+      console.log(error.response)
+      Swal.fire({
+        title: error.response.data,
         icon: "error",
       })
     }

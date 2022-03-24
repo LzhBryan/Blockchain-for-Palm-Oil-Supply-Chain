@@ -143,6 +143,7 @@ const Navbar = ({ open, setOpen }) => {
     {
       text: "User list",
       icon: <MdDashboard style={{ fontSize: "2rem" }} />,
+      onClick: () => history.push("/users"),
     },
   ]
 

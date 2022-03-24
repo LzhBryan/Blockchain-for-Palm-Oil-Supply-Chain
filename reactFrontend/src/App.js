@@ -10,6 +10,7 @@ import BlockDetails from "./pages/BlockchainPage/BlockDetails"
 import CreateBlock from "./components/CreateBlocks/CreateBlock"
 import DashboardPage from "./pages/DashboardPage"
 import RecordTable from "./pages/RecordTable"
+import UserTable from "./components/UserList/UserTable"
 
 const App = () => {
   return (
@@ -32,6 +33,7 @@ const App = () => {
         <ProtectedRoute exact path="/block/:id" component={BlockDetails} />
         <ProtectedRoute exact path="/pendingBlock" component={CreateBlock} />
         <ProtectedRoute exact path="/pendingRecords" component={RecordTable} />
+        <ProtectedRoute exact path="/users" component={UserTable} />
       </Switch>
     </Router>
   )

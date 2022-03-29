@@ -122,49 +122,96 @@ const PendingRecords = ({ record, type, api }) => {
           </IconButton>
         </TableCell>
         <TableCell component="th" scope="row">
-          {record._id}
+          <Typography component="div">{record._id}</Typography>
         </TableCell>
-        <TableCell margin="auto">{record.timestamp}</TableCell>
-        <TableCell margin="auto">{record.status}</TableCell>
+        <TableCell margin="auto">
+          <Typography component="div">{record.timestamp}</Typography>
+        </TableCell>
+        <TableCell margin="auto">
+          <Typography component="div">{record.status}</Typography>
+        </TableCell>
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box margin={1}>
-              <Typography variant="h4" gutterBottom component="div">
+              <Typography
+                style={{
+                  marginTop: "20px",
+                  marginLeft: "15px",
+                  fontSize: "20px",
+                  fontWeight: "bolder",
+                  color: "#000",
+                }}
+              >
                 {type}
               </Typography>
               <Table size="small" aria-label="purchases">
                 <TableHead>
                   <TableRow className={classes.root}>
                     <TableCell className={classes.root}>
-                      <h4>Sender Address</h4>
+                      <Typography
+                        style={{
+                          paddingTop: "15px",
+                          fontSize: "15px",
+                          fontWeight: "bold",
+                          color: "#000",
+                        }}
+                      >
+                        Sender Address
+                      </Typography>
                     </TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell colSpan={2} style={{ wordBreak: "break-all" }}>
-                      {record.fromAddress}
+                      <Typography component="div">
+                        {record.fromAddress}
+                      </Typography>
                     </TableCell>
                   </TableRow>
                   <TableRow className={classes.root}>
                     <TableCell className={classes.root}>
-                      <h4>Receiver Address</h4>
+                      <Typography
+                        style={{
+                          paddingTop: "15px",
+                          fontSize: "15px",
+                          fontWeight: "bold",
+                          color: "#000",
+                        }}
+                      >
+                        Receiver Address
+                      </Typography>
                     </TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell colSpan={2} style={{ wordBreak: "break-all" }}>
-                      {record.toAddress}
+                      <Typography component="div">
+                        {record.toAddress}
+                      </Typography>
                     </TableCell>
                   </TableRow>
                   {record.amount && (
                     <>
                       <TableRow className={classes.root}>
                         <TableCell className={classes.root}>
-                          <h4>Amount</h4>
+                          <Typography
+                            style={{
+                              paddingTop: "15px",
+                              fontSize: "15px",
+                              fontWeight: "bold",
+                              color: "#000",
+                            }}
+                          >
+                            Amount
+                          </Typography>
                         </TableCell>
                       </TableRow>
                       <TableRow>
-                        <TableCell>{record.amount}</TableCell>
+                        <TableCell>
+                          <Typography component="div">
+                            {record.amount}
+                          </Typography>
+                        </TableCell>
                       </TableRow>
                     </>
                   )}
@@ -172,17 +219,42 @@ const PendingRecords = ({ record, type, api }) => {
                     <>
                       <TableRow className={classes.root}>
                         <TableCell className={classes.root}>
-                          <h4>Products</h4>
+                          <Typography
+                            style={{
+                              paddingTop: "15px",
+                              fontSize: "15px",
+                              fontWeight: "bold",
+                              color: "#000",
+                            }}
+                          >
+                            Products
+                          </Typography>
                         </TableCell>
                       </TableRow>
                       <TableRow>
                         <TableCell>
                           <TableRow>
                             <TableCell className={classes.product}>
-                              Product name
+                              <Typography
+                                style={{
+                                  fontSize: "14px",
+                                  fontWeight: "bold",
+                                  color: "#37474f",
+                                }}
+                              >
+                                Product name
+                              </Typography>
                             </TableCell>
                             <TableCell className={classes.product}>
-                              Product quantity
+                              <Typography
+                                style={{
+                                  fontSize: "14px",
+                                  fontWeight: "bold",
+                                  color: "#37474f",
+                                }}
+                              >
+                                Product quantity
+                              </Typography>
                             </TableCell>
                           </TableRow>
                           {record.products.map((product, index) => {
@@ -190,10 +262,14 @@ const PendingRecords = ({ record, type, api }) => {
                             return (
                               <TableRow key={index}>
                                 <TableCell className={classes.product}>
-                                  {name}
+                                  <Typography component="div">
+                                    {name}
+                                  </Typography>
                                 </TableCell>
                                 <TableCell className={classes.product}>
-                                  {quantity}
+                                  <Typography component="div">
+                                    {quantity}
+                                  </Typography>
                                 </TableCell>
                               </TableRow>
                             )
@@ -206,11 +282,24 @@ const PendingRecords = ({ record, type, api }) => {
                     <>
                       <TableRow className={classes.root}>
                         <TableCell className={classes.root}>
-                          <h4>Batch ID</h4>
+                          <Typography
+                            style={{
+                              paddingTop: "15px",
+                              fontSize: "15px",
+                              fontWeight: "bold",
+                              color: "#000",
+                            }}
+                          >
+                            Batch ID
+                          </Typography>
                         </TableCell>
                       </TableRow>
                       <TableRow>
-                        <TableCell>{record.batchId}</TableCell>
+                        <TableCell>
+                          <Typography component="div">
+                            {record.batchId}
+                          </Typography>
+                        </TableCell>
                       </TableRow>
                     </>
                   )}
@@ -218,11 +307,24 @@ const PendingRecords = ({ record, type, api }) => {
                     <>
                       <TableRow className={classes.root}>
                         <TableCell className={classes.root}>
-                          <h4>Previous batch ID</h4>
+                          <Typography
+                            style={{
+                              paddingTop: "15px",
+                              fontSize: "15px",
+                              fontWeight: "bold",
+                              color: "#000",
+                            }}
+                          >
+                            Previous batch ID
+                          </Typography>
                         </TableCell>
                       </TableRow>
                       <TableRow>
-                        <TableCell>{record.previousBatchId}</TableCell>
+                        <TableCell>
+                          <Typography component="div">
+                            {record.previousBatchId}
+                          </Typography>
+                        </TableCell>
                       </TableRow>
                     </>
                   )}
@@ -230,30 +332,57 @@ const PendingRecords = ({ record, type, api }) => {
                     <>
                       <TableRow className={classes.root}>
                         <TableCell className={classes.root}>
-                          <h4>Transaction Receipt</h4>
+                          <Typography
+                            style={{
+                              paddingTop: "15px",
+                              fontSize: "15px",
+                              fontWeight: "bold",
+                              color: "#000",
+                            }}
+                          >
+                            Transaction Receipt
+                          </Typography>
                         </TableCell>
                       </TableRow>
                       <TableRow>
-                        <TableCell>{record.transactionReceipt}</TableCell>
+                        <TableCell>
+                          <Typography component="div">
+                            {record.transactionReceipt}
+                          </Typography>
+                        </TableCell>
                       </TableRow>
                     </>
                   )}
                   <TableRow className={classes.root}>
                     <TableCell className={classes.root}>
-                      <h4>Digital signature</h4>
+                      <Typography
+                        style={{
+                          paddingTop: "15px",
+                          fontSize: "15px",
+                          fontWeight: "bold",
+                          color: "#000",
+                        }}
+                      >
+                        Digital signature
+                      </Typography>
                     </TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell colSpan={2} style={{ wordBreak: "break-all" }}>
-                      {record.signature}
+                      <Typography component="div">
+                        {record.signature}
+                      </Typography>
                     </TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell>
                       <Button
-                        style={{ margin: "2rem 0rem" }}
+                        style={{
+                          margin: "2rem 0rem",
+                        }}
                         onClick={() => validateRecord(record._id)}
-                        variant="contained"
+                        variant="outlined"
+                        color="primary"
                         disabled={isDisabled}
                       >
                         {`Validate ${type}`}

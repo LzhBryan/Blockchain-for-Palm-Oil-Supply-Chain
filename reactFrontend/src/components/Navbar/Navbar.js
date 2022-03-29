@@ -19,6 +19,9 @@ import { MdDashboard, MdAccountCircle } from "react-icons/md"
 import { GiHamburgerMenu } from "react-icons/gi"
 import { useRole } from "../../utils/UserContext"
 import { BiCalculator } from "react-icons/bi"
+import { SiHiveBlockchain } from "react-icons/si"
+import { AiOutlineTransaction } from "react-icons/ai"
+import { FaUserFriends } from "react-icons/fa"
 
 const drawerWidth = 300
 
@@ -64,6 +67,9 @@ const useStyles = makeStyles((theme) => ({
     // necessary for content to be below app bar
     ...theme.mixins.toolbar,
   },
+  drawerPaper: {
+    background: theme.palette.primary.dark,
+  },
 }))
 
 const Navbar = ({ open, setOpen }) => {
@@ -83,8 +89,21 @@ const Navbar = ({ open, setOpen }) => {
 
   const itemList = [
     {
-      text: "Dashboard",
-      icon: <MdDashboard style={{ fontSize: "2rem" }} />,
+      text: (
+        <Typography
+          style={{
+            fontSize: "16px",
+            color: "#fff",
+          }}
+        >
+          Dashboard
+        </Typography>
+      ),
+      icon: (
+        <MdDashboard
+          style={{ color: "white", fontSize: "1.8rem", paddingLeft: "6px" }}
+        />
+      ),
       allowedRole: [
         "Planter",
         "Miller",
@@ -96,8 +115,21 @@ const Navbar = ({ open, setOpen }) => {
       onClick: () => history.push("/dashboard"),
     },
     {
-      text: "Blockchain",
-      icon: <MdDashboard style={{ fontSize: "2rem" }} />,
+      text: (
+        <Typography
+          style={{
+            fontSize: "16px",
+            color: "#fff",
+          }}
+        >
+          Blockchain
+        </Typography>
+      ),
+      icon: (
+        <SiHiveBlockchain
+          style={{ color: "white", fontSize: "1.8rem", paddingLeft: "6px" }}
+        />
+      ),
       allowedRole: [
         "Planter",
         "Miller",
@@ -109,14 +141,40 @@ const Navbar = ({ open, setOpen }) => {
       onClick: () => history.push("/blockchain"),
     },
     {
-      text: "Pending block",
-      icon: <MdDashboard style={{ fontSize: "2rem" }} />,
+      text: (
+        <Typography
+          style={{
+            fontSize: "16px",
+            color: "#fff",
+          }}
+        >
+          Pending block
+        </Typography>
+      ),
+      icon: (
+        <MdDashboard
+          style={{ color: "white", fontSize: "1.8rem", paddingLeft: "6px" }}
+        />
+      ),
       allowedRole: ["Validator"],
       onClick: () => history.push("/pendingBlock"),
     },
     {
-      text: "Create transaction",
-      icon: <MdDashboard style={{ fontSize: "2rem" }} />,
+      text: (
+        <Typography
+          style={{
+            fontSize: "16px",
+            color: "#fff",
+          }}
+        >
+          Create transaction
+        </Typography>
+      ),
+      icon: (
+        <AiOutlineTransaction
+          style={{ color: "white", fontSize: "1.8rem", paddingLeft: "6px" }}
+        />
+      ),
       allowedRole: [
         "Planter",
         "Miller",
@@ -127,15 +185,40 @@ const Navbar = ({ open, setOpen }) => {
       onClick: () => history.push("/createTransaction"),
     },
     {
-      text: "Pending transaction",
-      icon: <MdDashboard style={{ fontSize: "2rem" }} />,
+      text: (
+        <Typography
+          style={{
+            fontSize: "16px",
+            color: "#fff",
+          }}
+        >
+          Pending transaction
+        </Typography>
+      ),
+      icon: (
+        <MdDashboard
+          style={{ color: "white", fontSize: "1.8rem", paddingLeft: "6px" }}
+        />
+      ),
       allowedRole: ["Validator"],
       onClick: () => history.push("/pendingTransactions"),
     },
     {
-      text: "Create supply-chain record",
-      icon: <MdDashboard style={{ fontSize: "2rem" }} />,
-      onClick: () => history.push("/createSupplyChainRecord"),
+      text: (
+        <Typography
+          style={{
+            fontSize: "16px",
+            color: "#fff",
+          }}
+        >
+          Create supply-chain record
+        </Typography>
+      ),
+      icon: (
+        <MdDashboard
+          style={{ color: "white", fontSize: "1.8rem", paddingLeft: "6px" }}
+        />
+      ),
       allowedRole: [
         "Planter",
         "Miller",
@@ -145,14 +228,40 @@ const Navbar = ({ open, setOpen }) => {
       ],
     },
     {
-      text: "Pending supply-chain record",
-      icon: <MdDashboard style={{ fontSize: "2rem" }} />,
+      text: (
+        <Typography
+          style={{
+            fontSize: "16px",
+            color: "#fff",
+          }}
+        >
+          Pending supply-chain record
+        </Typography>
+      ),
+      icon: (
+        <MdDashboard
+          style={{ color: "white", fontSize: "1.8rem", paddingLeft: "6px" }}
+        />
+      ),
       allowedRole: ["Validator"],
       onClick: () => history.push("/pendingRecords"),
     },
     {
-      text: "Products",
-      icon: <MdDashboard style={{ fontSize: "2rem" }} />,
+      text: (
+        <Typography
+          style={{
+            fontSize: "16px",
+            color: "#fff",
+          }}
+        >
+          Products
+        </Typography>
+      ),
+      icon: (
+        <MdDashboard
+          style={{ color: "white", fontSize: "1.8rem", paddingLeft: "6px" }}
+        />
+      ),
       allowedRole: [
         "Planter",
         "Miller",
@@ -163,8 +272,21 @@ const Navbar = ({ open, setOpen }) => {
       ],
     },
     {
-      text: "User list",
-      icon: <MdDashboard style={{ fontSize: "2rem" }} />,
+      text: (
+        <Typography
+          style={{
+            fontSize: "16px",
+            color: "#fff",
+          }}
+        >
+          User list
+        </Typography>
+      ),
+      icon: (
+        <FaUserFriends
+          style={{ color: "white", fontSize: "1.8rem", paddingLeft: "6px" }}
+        />
+      ),
       allowedRole: [
         "Planter",
         "Miller",
@@ -197,7 +319,7 @@ const Navbar = ({ open, setOpen }) => {
             <GiHamburgerMenu />
           </IconButton>
           <Typography variant="h6" noWrap style={{ flexGrow: 1 }}>
-            Palm oil Blockchain
+            Palm Oil Blockchain
           </Typography>
           <div>
             <IconButton color="inherit">
@@ -213,7 +335,7 @@ const Navbar = ({ open, setOpen }) => {
           [classes.drawerClose]: !open,
         })}
         classes={{
-          paper: clsx({
+          paper: clsx(classes.drawerPaper, {
             [classes.drawerOpen]: open,
             [classes.drawerClose]: !open,
           }),
@@ -247,9 +369,20 @@ const Navbar = ({ open, setOpen }) => {
             <Divider />
             <ListItem button onClick={handleLogout}>
               <ListItemIcon>
-                {<MdDashboard style={{ fontSize: "2rem" }} />}
+                {
+                  <MdDashboard
+                    style={{
+                      color: "white",
+                      fontSize: "1.8rem",
+                      paddingLeft: "6px",
+                    }}
+                  />
+                }
               </ListItemIcon>
-              <ListItemText primary={"Logout"} />
+              <ListItemText
+                primary={"Logout"}
+                style={{ fontSize: "16px", color: "#fff" }}
+              />
             </ListItem>
           </List>
         </div>

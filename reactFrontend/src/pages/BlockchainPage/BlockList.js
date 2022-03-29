@@ -11,13 +11,14 @@ import {
   TablePagination,
   Paper,
   Typography,
+  CircularProgress,
 } from "@material-ui/core"
 import axios from "../../utils/axios"
 import BlockRows from "./BlockRows"
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
-    backgroundColor: theme.palette.common.black,
+    backgroundColor: theme.palette.common.white,
     color: theme.palette.common.white,
     fontSize: 16,
   },
@@ -26,17 +27,19 @@ const StyledTableCell = withStyles((theme) => ({
   },
 }))(TableCell)
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   tableContainer: {
-    width: "60%",
-    margin: "auto",
+    width: "60vw",
     marginTop: "5rem",
+    marginLeft: "auto",
+    marginRight: "auto",
   },
-})
+}))
 
 const BlockList = () => {
   const classes = useStyles()
   const [blocks, setBlocks] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
   const [rowsPerPage, setRowsPerPage] = useState(5)
   const [page, setPage] = useState(0)
 
@@ -53,8 +56,10 @@ const BlockList = () => {
     try {
       const response = await axios.get("/api/blocks/blockchain")
       setBlocks(response.data.blockchain)
+      setIsLoading(false)
     } catch (error) {
       console.log(error.response.data.msg)
+      setIsLoading(false)
     }
   }
 
@@ -66,62 +71,90 @@ const BlockList = () => {
     rowsPerPage - Math.min(rowsPerPage, blocks.length - page * rowsPerPage)
 
   return (
-    <TableContainer component={Paper} className={classes.tableContainer}>
-      <Typography
-        variant="h4"
-        component="h1"
-        align="center"
-        gutterBottom
-        style={{ marginTop: "2.5rem", marginBottom: "2rem" }}
-      >
-        Blockchain
-      </Typography>
-      <Table className={classes.table} aria-label="customized table">
-        <TableHead>
-          <TableRow>
-            <StyledTableCell align="left">
-              <Typography variant="h6" component="div">
-                Block ID
-              </Typography>
-            </StyledTableCell>
-            <StyledTableCell align="left">
-              <Typography variant="h6" component="div">
-                Timestamp
-              </Typography>
-            </StyledTableCell>
-            <StyledTableCell align="left">
-              <Typography variant="h6" component="div">
-                Status
-              </Typography>
-            </StyledTableCell>
-            <StyledTableCell align="center">
-              <Typography variant="h6" component="div"></Typography>
-            </StyledTableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {blocks
-            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-            .map((block) => (
-              <BlockRows key={block.blockId} block={block} />
-            ))}
-          {emptyRows > 0 && (
-            <TableRow style={{ height: 57 * emptyRows }}>
-              <TableCell colSpan={6} />
+    <>
+      {isLoading ? (
+        <div
+          style={{
+            alignItems: "center",
+            display: "flex",
+            justifyContent: "center",
+            width: "60vw",
+            paddingTop: "250px",
+            paddingLeft: "300px",
+          }}
+        >
+          <CircularProgress />
+        </div>
+      ) : (
+        []
+      )}
+
+      <TableContainer component={Paper} className={classes.tableContainer}>
+        <Typography
+          style={{
+            textAlign: "center",
+            marginTop: "20px",
+            marginBottom: "15px",
+            fontSize: "20px",
+            fontWeight: "bolder",
+            color: "#000",
+          }}
+        >
+          BLOCKCHAIN
+        </Typography>
+        <Table className={classes.table} aria-label="customized table">
+          <TableHead>
+            <TableRow>
+              <StyledTableCell align="left">
+                <Typography
+                  style={{
+                    fontSize: "15px",
+                    color: "#37474f",
+                    paddingLeft: "33px",
+                  }}
+                >
+                  Block ID
+                </Typography>
+              </StyledTableCell>
+              <StyledTableCell align="left">
+                <Typography style={{ fontSize: "15px", color: "#37474f" }}>
+                  Timestamp
+                </Typography>
+              </StyledTableCell>
+              <StyledTableCell align="left">
+                <Typography style={{ fontSize: "15px", color: "#37474f" }}>
+                  Status
+                </Typography>
+              </StyledTableCell>
+              <StyledTableCell align="center">
+                <Typography variant="h6" component="div"></Typography>
+              </StyledTableCell>
             </TableRow>
-          )}
-        </TableBody>
-      </Table>
-      <TablePagination
-        rowsPerPageOptions={[5, 10, 15]}
-        component="div"
-        count={blocks.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-      />
-    </TableContainer>
+          </TableHead>
+          <TableBody>
+            {blocks
+              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              .map((block) => (
+                <BlockRows key={block.blockId} block={block} />
+              ))}
+            {emptyRows > 0 && (
+              <TableRow style={{ height: 57 * emptyRows }}>
+                <TableCell colSpan={6} />
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+        <TablePagination
+          rowsPerPageOptions={[5, 10, 15]}
+          component="div"
+          count={blocks.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
+      </TableContainer>
+    </>
   )
 }
 

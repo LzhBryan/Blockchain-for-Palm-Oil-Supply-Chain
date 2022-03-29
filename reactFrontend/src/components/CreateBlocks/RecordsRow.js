@@ -8,6 +8,8 @@ import {
   TableCell,
   TableHead,
   TableRow,
+  TableContainer,
+  Typography,
 } from "@material-ui/core"
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md"
 
@@ -15,7 +17,7 @@ const useRowStyles = makeStyles({
   root: {
     "& > *": {
       borderBottom: "unset",
-      width: "39.4%",
+      width: "40.3%",
     },
   },
 })
@@ -37,10 +39,14 @@ const RecordsRow = ({ records }) => {
           </IconButton>
         </TableCell>
         <TableCell component="th" scope="row">
-          {records._id}
+          <Typography component="div">{records._id}</Typography>
         </TableCell>
-        <TableCell margin="auto">{records.timestamp}</TableCell>
-        <TableCell margin="auto">{records.status}</TableCell>
+        <TableCell margin="auto">
+          <Typography component="div">{records.timestamp}</Typography>
+        </TableCell>
+        <TableCell margin="auto">
+          <Typography component="div">{records.status}</Typography>
+        </TableCell>
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
@@ -50,40 +56,270 @@ const RecordsRow = ({ records }) => {
                 <TableHead>
                   <TableRow className={classes.root}>
                     <TableCell className={classes.root}>
-                      <h4>Sender Address</h4>
+                      <Typography
+                        style={{
+                          paddingTop: "15px",
+                          fontSize: "15px",
+                          fontWeight: "bold",
+                          color: "#000",
+                        }}
+                      >
+                        Sender Address
+                      </Typography>
                     </TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell colSpan={2} style={{ wordBreak: "break-all" }}>
-                      {records.fromAddress}
+                      <Typography component="div">
+                        {records.fromAddress}
+                      </Typography>
                     </TableCell>
                   </TableRow>
                   <TableRow className={classes.root}>
                     <TableCell className={classes.root}>
-                      <h4>Receiver Address</h4>
+                      <Typography
+                        style={{
+                          paddingTop: "15px",
+                          fontSize: "15px",
+                          fontWeight: "bold",
+                          color: "#000",
+                        }}
+                      >
+                        Receiver Address
+                      </Typography>
                     </TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell colSpan={2} style={{ wordBreak: "break-all" }}>
-                      {records.toAddress}
+                      <Typography component="div">
+                        {records.toAddress}
+                      </Typography>
                     </TableCell>
                   </TableRow>
+                  {records.amount && (
+                    <>
+                      <TableRow className={classes.root}>
+                        <TableCell className={classes.root}>
+                          <Typography
+                            style={{
+                              paddingTop: "15px",
+                              fontSize: "15px",
+                              fontWeight: "bold",
+                              color: "#000",
+                            }}
+                          >
+                            Amount
+                          </Typography>
+                        </TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell>
+                          <Typography component="div">
+                            {records.amount}
+                          </Typography>
+                        </TableCell>
+                      </TableRow>
+                    </>
+                  )}
+                  {records.products && (
+                    <>
+                      <TableRow className={classes.root}>
+                        <TableCell className={classes.root}>
+                          <Typography
+                            style={{
+                              paddingTop: "15px",
+                              fontSize: "15px",
+                              fontWeight: "bold",
+                              color: "#000",
+                            }}
+                          >
+                            Products
+                          </Typography>
+                        </TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell>
+                          <TableRow>
+                            <TableCell className={classes.product}>
+                              <Typography
+                                style={{
+                                  fontSize: "14px",
+                                  fontWeight: "bold",
+                                  color: "#37474f",
+                                }}
+                              >
+                                Product name
+                              </Typography>
+                            </TableCell>
+                            <TableCell className={classes.product}>
+                              <Typography
+                                style={{
+                                  fontSize: "14px",
+                                  fontWeight: "bold",
+                                  color: "#37474f",
+                                }}
+                              >
+                                Product quantity
+                              </Typography>
+                            </TableCell>
+                          </TableRow>
+                          {records.products.map((product) => {
+                            const { name, quantity } = product
+                            return (
+                              <TableRow>
+                                <TableCell className={classes.product}>
+                                  <Typography component="div" align="center">
+                                    {name}
+                                  </Typography>
+                                </TableCell>
+                                <TableCell className={classes.product}>
+                                  <Typography component="div" align="center">
+                                    {quantity}
+                                  </Typography>
+                                </TableCell>
+                              </TableRow>
+                            )
+                          })}
+                        </TableCell>
+                      </TableRow>
+                    </>
+                  )}
+                  {records.batchId && (
+                    <>
+                      <TableRow className={classes.root}>
+                        <TableCell className={classes.root}>
+                          <Typography
+                            style={{
+                              paddingTop: "15px",
+                              fontSize: "15px",
+                              fontWeight: "bold",
+                              color: "#000",
+                            }}
+                          >
+                            Batch ID
+                          </Typography>
+                        </TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell>
+                          <Typography component="div">
+                            {records.batchId}
+                          </Typography>
+                        </TableCell>
+                      </TableRow>
+                    </>
+                  )}
+                  {records.previousBatchId && (
+                    <>
+                      <TableRow className={classes.root}>
+                        <TableCell className={classes.root}>
+                          <Typography
+                            style={{
+                              paddingTop: "15px",
+                              fontSize: "15px",
+                              fontWeight: "bold",
+                              color: "#000",
+                            }}
+                          >
+                            Previous batch ID
+                          </Typography>
+                        </TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell>
+                          <Typography component="div">
+                            {records.previousBatchId}
+                          </Typography>
+                        </TableCell>
+                      </TableRow>
+                    </>
+                  )}
+                  {records.transactionReceipt && (
+                    <>
+                      <TableRow className={classes.root}>
+                        <TableCell className={classes.root}>
+                          <Typography
+                            style={{
+                              paddingTop: "15px",
+                              fontSize: "15px",
+                              fontWeight: "bold",
+                              color: "#000",
+                            }}
+                          >
+                            Transaction Receipt
+                          </Typography>
+                        </TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell>
+                          <Typography component="div">
+                            {records.transactionReceipt}
+                          </Typography>
+                        </TableCell>
+                      </TableRow>
+                    </>
+                  )}
                   <TableRow className={classes.root}>
                     <TableCell className={classes.root}>
-                      <h4>Amount</h4>
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell>{records.amount}</TableCell>
-                  </TableRow>
-                  <TableRow className={classes.root}>
-                    <TableCell className={classes.root}>
-                      <h4>Digital signature</h4>
+                      <Typography
+                        style={{
+                          paddingTop: "15px",
+                          fontSize: "15px",
+                          fontWeight: "bold",
+                          color: "#000",
+                        }}
+                      >
+                        Digital signature
+                      </Typography>
                     </TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell colSpan={2} style={{ wordBreak: "break-all" }}>
-                      {records.signature}
+                      <Typography component="div">
+                        {records.signature}
+                      </Typography>
+                    </TableCell>
+                  </TableRow>
+                  <TableRow className={classes.root}>
+                    <TableCell className={classes.root}>
+                      <Typography
+                        style={{
+                          paddingTop: "15px",
+                          fontSize: "15px",
+                          fontWeight: "bold",
+                          color: "#000",
+                        }}
+                      >
+                        Created By
+                      </Typography>
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell colSpan={2} style={{ wordBreak: "break-all" }}>
+                      <Typography component="div">
+                        {records.createdBy}
+                      </Typography>
+                    </TableCell>
+                  </TableRow>
+                  <TableRow className={classes.root}>
+                    <TableCell className={classes.root}>
+                      <Typography
+                        style={{
+                          paddingTop: "15px",
+                          fontSize: "15px",
+                          fontWeight: "bold",
+                          color: "#000",
+                        }}
+                      >
+                        Approved By
+                      </Typography>
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell colSpan={2} style={{ wordBreak: "break-all" }}>
+                      <Typography component="div">
+                        {records.approvedBy + ""}
+                      </Typography>
                     </TableCell>
                   </TableRow>
                 </TableHead>

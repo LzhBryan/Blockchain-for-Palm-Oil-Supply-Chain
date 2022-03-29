@@ -7,12 +7,9 @@ import RecordsRow from "./RecordsRow"
 
 const useStyles = makeStyles({
   root: {
-    width: "60%",
+    width: "60vw",
     margin: "auto",
     marginTop: "5rem",
-  },
-  title: {
-    fontSize: 18,
   },
   pos: {
     marginBottom: 10,
@@ -26,19 +23,27 @@ const HibernatingBlock = ({ block }) => {
       <Card className={classes.root}>
         <CardContent>
           <Typography
-            className={classes.title}
-            color="textPrimary"
-            gutterBottom
+            style={{
+              textAlign: "center",
+              marginTop: "20px",
+              marginBottom: "15px",
+              fontSize: "20px",
+              fontWeight: "bolder",
+              color: "#000",
+            }}
           >
             HIBERNATING BLOCK
           </Typography>
 
-          <Typography className={classes.pos} color="textSecondary">
+          <Typography
+            className={classes.pos}
+            color="textSecondary"
+            style={{ paddingTop: "15px" }}
+          >
             Block ID:
           </Typography>
           <Typography
-            variant="body2"
-            component="p"
+            component="div"
             gutterBottom
             style={{ paddingBottom: "15px" }}
           >
@@ -49,8 +54,7 @@ const HibernatingBlock = ({ block }) => {
             Previous Hash:
           </Typography>
           <Typography
-            variant="body2"
-            component="p"
+            component="div"
             gutterBottom
             style={{ paddingBottom: "15px" }}
           >
@@ -61,8 +65,7 @@ const HibernatingBlock = ({ block }) => {
             Current Hash:
           </Typography>
           <Typography
-            variant="body2"
-            component="p"
+            component="div"
             gutterBottom
             style={{ paddingBottom: "15px" }}
           >
@@ -73,8 +76,7 @@ const HibernatingBlock = ({ block }) => {
             Timestamp:
           </Typography>
           <Typography
-            variant="body2"
-            component="p"
+            component="div"
             gutterBottom
             style={{ paddingBottom: "15px" }}
           >
@@ -85,8 +87,7 @@ const HibernatingBlock = ({ block }) => {
             Status:
           </Typography>
           <Typography
-            variant="body2"
-            component="p"
+            component="div"
             gutterBottom
             style={{ paddingBottom: "15px" }}
           >
@@ -97,8 +98,7 @@ const HibernatingBlock = ({ block }) => {
             Approved By:
           </Typography>
           <Typography
-            variant="body2"
-            component="p"
+            component="div"
             gutterBottom
             style={{ paddingBottom: "15px" }}
           >

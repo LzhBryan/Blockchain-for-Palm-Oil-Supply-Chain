@@ -1,5 +1,5 @@
 import React from "react"
-import { TableCell, TableRow } from "@material-ui/core"
+import { makeStyles, TableCell, TableRow, Typography } from "@material-ui/core"
 import { BiUser } from "react-icons/bi"
 
 const UserRow = (props) => {
@@ -12,11 +12,13 @@ const UserRow = (props) => {
           <BiUser style={{ fontSize: "2rem" }} />
         </TableCell>
         <TableCell component="th" scope="row">
-          {users.username}
+          <Typography component="div">{users.username}</Typography>
         </TableCell>
-        <TableCell margin="auto">{users.role}</TableCell>
+        <TableCell margin="auto">
+          <Typography component="div">{users.role}</Typography>
+        </TableCell>
         <TableCell colSpan={3} style={{ wordBreak: "break-all" }} margin="auto">
-          {users.publicKey}
+          <Typography component="div">{users.publicKey} </Typography>
         </TableCell>
       </TableRow>
     </>

@@ -53,21 +53,36 @@ const TransactionTable = () => {
   return (
     <TableContainer component={Paper} className={classes.tableContainer}>
       <Typography
-        variant="h4"
-        component="h1"
-        align="center"
-        gutterBottom
-        style={{ marginTop: "2.5rem" }}
+        style={{
+          textAlign: "center",
+          marginTop: "20px",
+          marginBottom: "15px",
+          fontSize: "20px",
+          fontWeight: "bolder",
+          color: "#000",
+        }}
       >
-        Pending Transactions
+        PENDING TRANSACTIONS
       </Typography>
       <Table aria-label="collapsible table">
         <TableHead>
           <TableRow>
             <TableCell />
-            <TableCell margin="auto">Transaction ID</TableCell>
-            <TableCell margin="auto">Timestamp</TableCell>
-            <TableCell margin="auto">Status</TableCell>
+            <TableCell margin="auto">
+              <Typography style={{ fontSize: "15px", color: "#37474f" }}>
+                Transaction ID
+              </Typography>
+            </TableCell>
+            <TableCell margin="auto">
+              <Typography style={{ fontSize: "15px", color: "#37474f" }}>
+                Timestamp
+              </Typography>
+            </TableCell>
+            <TableCell margin="auto">
+              <Typography style={{ fontSize: "15px", color: "#37474f" }}>
+                Status
+              </Typography>
+            </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>

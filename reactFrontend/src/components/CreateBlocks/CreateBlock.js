@@ -101,6 +101,9 @@ const CreateBlocks = () => {
       setMessage(data.message)
       setDisabledValidate(true)
       setDisabledActivate(true)
+      // if (data.block.status === "inChain") {
+      //   Swal.fire("This block has been appended to the chain!", "", "success")
+      // }
     } catch (error) {
       setError(error.response.data.msg)
       setError(true)

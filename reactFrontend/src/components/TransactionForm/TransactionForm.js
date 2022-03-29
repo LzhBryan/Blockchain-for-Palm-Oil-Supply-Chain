@@ -8,8 +8,8 @@ import {
   TextField,
 } from "@material-ui/core"
 import Button from "@material-ui/core/Button"
+import Swal from "sweetalert2"
 import axios from "../../utils/axios"
-import Modal from "../Modal/Modal"
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -26,12 +26,15 @@ const TransactionForm = () => {
   const [privateKey, setPrivateKey] = useState("")
   const [toAddress, setToAddress] = useState("")
   const [amount, setAmount] = useState("")
-  const [modal, setModal] = useState(false)
   const [transaction, setTransaction] = useState("")
 
   const handlePopup = () => {
     if (fromAddress && privateKey && toAddress && amount) {
-      setModal(true)
+      Swal.fire(
+        "Transaction Completed!",
+        "You can view your transaction record in your profile.",
+        "success"
+      )
     }
   }
 
@@ -55,7 +58,7 @@ const TransactionForm = () => {
     <div className={classes.root}>
       <Card
         style={{
-          maxWidth: 600,
+          maxWidth: "60vw",
           margin: "130px auto",
           padding: "50px 50px 50px",
         }}
@@ -129,7 +132,6 @@ const TransactionForm = () => {
                 >
                   Cancel
                 </Button>
-                {modal && <Modal transaction={transaction} />}
               </Grid>
             </Grid>
           </form>

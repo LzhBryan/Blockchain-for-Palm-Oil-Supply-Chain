@@ -92,20 +92,25 @@ const UserTable = () => {
   return (
     <TableContainer component={Paper} className={classes.tableContainer}>
       <Typography
-        variant="h4"
-        component="h1"
-        align="center"
-        gutterBottom
-        style={{ marginTop: "2.5rem" }}
+        style={{
+          textAlign: "center",
+          marginTop: "20px",
+          marginBottom: "15px",
+          fontSize: "20px",
+          fontWeight: "bolder",
+          color: "#000",
+        }}
       >
-        User list
+        USER LIST
       </Typography>
       <Table aria-label="collapsible table">
         <TableHead>
           <TableRow>
             <TableCell />
             <TableCell margin="auto" width="20%">
-              User name
+              <Typography style={{ fontSize: "15px", color: "#37474f" }}>
+                Username
+              </Typography>
             </TableCell>
             <TableCell margin="auto" width="20%">
               <TableSortLabel
@@ -113,10 +118,16 @@ const UserTable = () => {
                 direction={orderBy === "role" ? order : "asc"}
                 onClick={() => handleSortRequest()}
               >
-                Role
+                <Typography style={{ fontSize: "15px", color: "#37474f" }}>
+                  Role
+                </Typography>
               </TableSortLabel>
             </TableCell>
-            <TableCell margin="auto">Public Key</TableCell>
+            <TableCell margin="auto">
+              <Typography style={{ fontSize: "15px", color: "#37474f" }}>
+                Public Key
+              </Typography>
+            </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -126,7 +137,7 @@ const UserTable = () => {
               <UserRows key={users._id} users={users} />
             ))}
           {emptyRows > 0 && (
-            <TableRow style={{ height: 93 * emptyRows }}>
+            <TableRow style={{ height: 100 * emptyRows }}>
               <TableCell colSpan={6} />
             </TableRow>
           )}

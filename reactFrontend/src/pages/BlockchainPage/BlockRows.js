@@ -8,18 +8,18 @@ import { Typography } from "@material-ui/core"
 const StyledTableCell = withStyles((theme) => ({
   head: {
     backgroundColor: theme.palette.common.black,
-    color: theme.palette.common.white,
+    color: theme.palette.primary.dark,
   },
   body: {
     width: "40%",
-    fontSize: 15,
+    fontSize: 13,
   },
 }))(TableCell)
 
 const StyledTableRow = withStyles((theme) => ({
   root: {
     "&:nth-of-type(odd)": {
-      backgroundColor: theme.palette.action.hover,
+      backgroundColor: theme.palette.primary.light,
     },
   },
 }))(TableRow)
@@ -28,7 +28,12 @@ const BlockRows = ({ block }) => {
   return (
     <>
       <StyledTableRow>
-        <StyledTableCell component="th" scope="row" align="left">
+        <StyledTableCell
+          component="th"
+          scope="row"
+          align="left"
+          style={{ paddingLeft: "50px" }}
+        >
           <Link
             to={`/block/${block.blockId}`}
             style={{ textDecoration: "none", color: "black" }}

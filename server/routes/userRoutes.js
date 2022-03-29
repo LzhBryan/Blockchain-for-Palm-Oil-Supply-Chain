@@ -15,7 +15,7 @@ const {
 
 router.route("/").get(authenticateUser, getAllUsers)
 
-router.route("/:id").get(authenticateUser, showCurrentUserProfile)
+router.route("/profile").get(authenticateUser, showCurrentUserProfile)
 
 router
   .route("/transactions/history")

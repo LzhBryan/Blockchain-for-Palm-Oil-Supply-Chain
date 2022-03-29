@@ -29,7 +29,7 @@ const Modal = ({ transaction }) => {
           <h3 className="label">Timestamp:</h3>
           <p className="content">{transaction.timestamp}</p>
           <br></br>
-          <Button variant="outlined" color="primary" href="/user">
+          <Button variant="outlined" color="primary" href="/dashboard">
             Confirm
           </Button>
         </div>

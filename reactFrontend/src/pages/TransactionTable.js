@@ -40,7 +40,7 @@ const TransactionTable = () => {
 
   const getTransactions = async () => {
     try {
-      const response = await axios.get("/api/transactionss")
+      const response = await axios.get("/api/transactions")
       setTransactions(response.data.transactions)
     } catch (error) {
       console.log(error.response)

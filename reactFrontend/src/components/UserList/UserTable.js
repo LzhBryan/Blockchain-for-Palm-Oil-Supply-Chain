@@ -10,13 +10,14 @@ import {
   Paper,
   TablePagination,
   TableSortLabel,
+  Typography,
 } from "@material-ui/core"
 import axios from "../../utils/axios"
 import UserRows from "./UserRows"
 
 const useRowStyles = makeStyles({
   tableContainer: {
-    width: "70vw",
+    width: "60vw",
     marginTop: "5rem",
     marginLeft: "auto",
     marginRight: "auto",
@@ -76,7 +77,6 @@ const UserTable = () => {
     try {
       const response = await axios.get("/api/users")
       setUsers(response.data.users)
-      console.log(response.data.users)
     } catch (error) {
       console.log(error)
     }
@@ -91,13 +91,23 @@ const UserTable = () => {
 
   return (
     <TableContainer component={Paper} className={classes.tableContainer}>
-      <h1 style={{ textAlign: "center" }}>User List</h1>
+      <Typography
+        variant="h4"
+        component="h1"
+        align="center"
+        gutterBottom
+        style={{ marginTop: "2.5rem" }}
+      >
+        User list
+      </Typography>
       <Table aria-label="collapsible table">
         <TableHead>
           <TableRow>
             <TableCell />
-            <TableCell margin="auto">User name</TableCell>
-            <TableCell margin="auto">
+            <TableCell margin="auto" width="20%">
+              User name
+            </TableCell>
+            <TableCell margin="auto" width="20%">
               <TableSortLabel
                 active={orderBy === "role"}
                 direction={orderBy === "role" ? order : "asc"}
@@ -116,7 +126,7 @@ const UserTable = () => {
               <UserRows key={users._id} users={users} />
             ))}
           {emptyRows > 0 && (
-            <TableRow style={{ height: 57 * emptyRows }}>
+            <TableRow style={{ height: 93 * emptyRows }}>
               <TableCell colSpan={6} />
             </TableRow>
           )}

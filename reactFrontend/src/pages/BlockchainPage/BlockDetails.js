@@ -29,7 +29,7 @@ const BlockDetails = () => {
     data: blockData,
     isLoading,
     serverError,
-  } = useFetch("http://localhost:5000/api/blocks/" + id)
+  } = useFetch("/api/blocks/" + id)
 
   return (
     <Card className={classes.root}>

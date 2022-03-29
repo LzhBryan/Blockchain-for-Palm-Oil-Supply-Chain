@@ -11,17 +11,20 @@ import { FaUserCircle } from "react-icons/fa"
 import Swal from "sweetalert2"
 import axios from "../../utils/axios"
 import "./login.css"
+import { useRole } from "../../utils/UserContext"
 
 const LoginPage = ({ history }) => {
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
   const [error, setError] = useState("")
+  const { setRole } = useRole()
 
-  // useEffect(() => {
-  //   if (localStorage.getItem("authToken")) {
-  //     history.push("/dashboard")
-  //   }
-  // }, [history])
+  useEffect(() => {
+    if (localStorage.getItem("authToken")) {
+      history.push("/dashboard")
+    }
+    return () => {}
+  }, [])
 
   const login = async (e) => {
     e.preventDefault()
@@ -32,10 +35,12 @@ const LoginPage = ({ history }) => {
         password,
       })
       localStorage.setItem("authToken", data.token)
-      Swal.fire({
-        title: "Successfully Login",
-        icon: "success",
-      })
+      localStorage.setItem("role", data.user.role)
+      setRole(data.user.role)
+      // Swal.fire({
+      //   title: "Successfully Login",
+      //   icon: "success",
+      // })
       history.push("/dashboard")
     } catch (error) {
       setError(error.response.data.msg)

@@ -67,7 +67,15 @@ const BlockList = () => {
 
   return (
     <TableContainer component={Paper} className={classes.tableContainer}>
-      <h1 style={{ textAlign: "center" }}>Blockchain</h1>
+      <Typography
+        variant="h4"
+        component="h1"
+        align="center"
+        gutterBottom
+        style={{ marginTop: "2.5rem", marginBottom: "2rem" }}
+      >
+        Blockchain
+      </Typography>
       <Table className={classes.table} aria-label="customized table">
         <TableHead>
           <TableRow>

@@ -11,7 +11,7 @@ const CONSENSUS_THRESHOLD = 0.66
 const MAX_RECORD = 2
 
 const getPendingRecords = async (req, res) => {
-  const records = await SupplyChainModel.find({ status: "Pending" })
+  const records = await SupplyChainModel.find({})
   res.status(200).json({ records })
 }
 

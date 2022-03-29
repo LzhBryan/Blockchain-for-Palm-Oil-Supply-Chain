@@ -10,7 +10,7 @@ const useStyles = makeStyles((theme) => ({
   container: {
     padding: 0,
     marginTop: "4.55em",
-    marginLeft: "5.2em",
+    marginLeft: "10.4em",
     marginRight: "0px",
     flexGrow: 1,
     height: "100%",
@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
   containerShift: {
     padding: 0,
     marginTop: "4.55em",
-    marginLeft: drawerWidth,
+    marginLeft: drawerWidth - 50,
     marginRight: "0px",
     transition: theme.transitions.create("margin", {
       easing: theme.transitions.easing.easeOut,

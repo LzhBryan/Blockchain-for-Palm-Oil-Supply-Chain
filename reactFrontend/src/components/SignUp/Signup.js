@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useState } from "react"
 import {
   Button,
   TextField,
@@ -65,12 +65,6 @@ const SignUp = ({ history }) => {
   const [privateKey, setPrivateKey] = useState("")
   const [error, setError] = useState("")
 
-  // useEffect(() => {
-  //   if (localStorage.getItem("authToken")) {
-  //     history.push("/dashboard")
-  //   }
-  // }, [history])
-
   const generateKeys = async () => {
     try {
       const { data } = await axios.get("/api/auth/register")
@@ -97,10 +91,9 @@ const SignUp = ({ history }) => {
         publicKey,
         privateKey,
       })
-      localStorage.setItem("authToken", data.token)
-      await Swal.fire({
-        title: "Successfully registered!",
-        text: "Please proceed to the login page",
+      Swal.fire({
+        title: data.msg,
+        text: "Please login to proceed",
         icon: "success",
       })
       history.push("/")

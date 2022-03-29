@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState } from "react"
 import {
   makeStyles,
   Table,
@@ -9,9 +9,10 @@ import {
   TableRow,
   Paper,
   TablePagination,
+  Typography,
 } from "@material-ui/core"
 import Swal from "sweetalert2"
-import axios from "../utils/axios"
+import { useFetch } from "../utils/useFetch"
 import PendingRecords from "../components/PendingRecords/PendingRecords"
 
 const useRowStyles = makeStyles({
@@ -25,9 +26,9 @@ const useRowStyles = makeStyles({
 
 const RecordTable = () => {
   const classes = useRowStyles()
-  const [records, setRecords] = useState([])
   const [rowsPerPage, setRowsPerPage] = useState(5)
   const [page, setPage] = useState(0)
+  const { data, isLoading, serverError } = useFetch("/api/supply-chain")
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage)
@@ -38,28 +39,28 @@ const RecordTable = () => {
     setPage(0)
   }
 
-  const getRecords = async () => {
-    try {
-      const { data } = await axios.get("/api/supply-chain")
-      setRecords(data.records)
-    } catch (error) {
-      await Swal.fire({
-        title: error.response.data.msg,
-        icon: "error",
-      })
-    }
+  if (serverError) {
+    Swal.fire({
+      title: serverError.response.data.msg,
+      icon: "error",
+    })
   }
 
-  useEffect(() => {
-    getRecords()
-  }, [])
-
   const emptyRows =
-    rowsPerPage - Math.min(rowsPerPage, records.length - page * rowsPerPage)
+    rowsPerPage -
+    Math.min(rowsPerPage, data?.records.length - page * rowsPerPage)
 
   return (
     <TableContainer component={Paper} className={classes.tableContainer}>
-      <h1 style={{ textAlign: "center" }}>Pending Records</h1>
+      <Typography
+        variant="h4"
+        component="h1"
+        align="center"
+        gutterBottom
+        style={{ marginTop: "2.5rem" }}
+      >
+        Pending Records
+      </Typography>
       <Table aria-label="collapsible table">
         <TableHead>
           <TableRow>
@@ -70,7 +71,7 @@ const RecordTable = () => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {records
+          {data?.records
             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
             .map((record) => (
               <PendingRecords
@@ -90,7 +91,7 @@ const RecordTable = () => {
       <TablePagination
         rowsPerPageOptions={[5, 10, 15]}
         component="div"
-        count={records.length}
+        count={data?.records.length}
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}

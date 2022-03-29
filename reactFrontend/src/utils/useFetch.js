@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import axios from "axios"
+import axios from "../utils/axios"
 
 export const useFetch = (url) => {
   const [data, setData] = useState(null)
@@ -8,14 +8,11 @@ export const useFetch = (url) => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get(url, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-        },
-      })
+      const response = await axios.get(url)
       const blockData = await response?.data
       setData(blockData)
       setIsLoading(false)
+      console.log(blockData)
     } catch (error) {
       console.log(error.response.data.msg)
       setServerError(error)

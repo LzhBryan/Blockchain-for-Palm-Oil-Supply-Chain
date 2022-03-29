@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React from "react"
 import { useHistory } from "react-router-dom"
 import clsx from "clsx"
 import {
@@ -8,23 +8,17 @@ import {
   Toolbar,
   IconButton,
   Typography,
-  Menu,
-  MenuItem,
   Drawer,
   Divider,
   List,
   ListItem,
   ListItemIcon,
   ListItemText,
-  Collapse,
 } from "@material-ui/core"
-import {
-  MdDashboard,
-  MdAccountCircle,
-  MdExpandLess,
-  MdExpandMore,
-} from "react-icons/md"
+import { MdDashboard, MdAccountCircle } from "react-icons/md"
 import { GiHamburgerMenu } from "react-icons/gi"
+import { useRole } from "../../utils/UserContext"
+import { BiCalculator } from "react-icons/bi"
 
 const drawerWidth = 300
 
@@ -66,7 +60,6 @@ const useStyles = makeStyles((theme) => ({
   toolbar: {
     display: "flex",
     alignItems: "center",
-    justifyContent: "flex-end",
     padding: theme.spacing(0, 1),
     // necessary for content to be below app bar
     ...theme.mixins.toolbar,
@@ -76,74 +69,110 @@ const useStyles = makeStyles((theme) => ({
 const Navbar = ({ open, setOpen }) => {
   const history = useHistory()
   const classes = useStyles()
-  const [anchorEl, setAnchorEl] = useState(null)
-  const openMenu = Boolean(anchorEl)
-  const [openList, setOpenList] = useState(false)
+  const { role } = useRole()
 
   const handleDrawerOpen = () => {
     setOpen(!open)
   }
 
-  const handleMenu = (event) => {
-    setAnchorEl(event.currentTarget)
-  }
-
-  const handleClose = () => {
-    setAnchorEl(null)
-  }
-
   const handleLogout = () => {
     localStorage.removeItem("authToken")
+    localStorage.removeItem("role")
     history.push("/")
-  }
-
-  const handleExpand = () => {
-    setOpenList(!openList)
   }
 
   const itemList = [
     {
       text: "Dashboard",
       icon: <MdDashboard style={{ fontSize: "2rem" }} />,
+      allowedRole: [
+        "Planter",
+        "Miller",
+        "Refiner",
+        "WarehouseManager",
+        "Retailer",
+        "Validator",
+      ],
       onClick: () => history.push("/dashboard"),
     },
     {
       text: "Blockchain",
       icon: <MdDashboard style={{ fontSize: "2rem" }} />,
+      allowedRole: [
+        "Planter",
+        "Miller",
+        "Refiner",
+        "WarehouseManager",
+        "Retailer",
+        "Validator",
+      ],
       onClick: () => history.push("/blockchain"),
     },
     {
       text: "Pending block",
       icon: <MdDashboard style={{ fontSize: "2rem" }} />,
+      allowedRole: ["Validator"],
       onClick: () => history.push("/pendingBlock"),
     },
     {
       text: "Create transaction",
       icon: <MdDashboard style={{ fontSize: "2rem" }} />,
+      allowedRole: [
+        "Planter",
+        "Miller",
+        "Refiner",
+        "WarehouseManager",
+        "Retailer",
+      ],
       onClick: () => history.push("/createTransaction"),
     },
     {
       text: "Pending transaction",
       icon: <MdDashboard style={{ fontSize: "2rem" }} />,
+      allowedRole: ["Validator"],
       onClick: () => history.push("/pendingTransactions"),
     },
     {
       text: "Create supply-chain record",
       icon: <MdDashboard style={{ fontSize: "2rem" }} />,
       onClick: () => history.push("/createSupplyChainRecord"),
+      allowedRole: [
+        "Planter",
+        "Miller",
+        "Refiner",
+        "WarehouseManager",
+        "Retailer",
+      ],
     },
     {
       text: "Pending supply-chain record",
       icon: <MdDashboard style={{ fontSize: "2rem" }} />,
+      allowedRole: ["Validator"],
       onClick: () => history.push("/pendingRecords"),
     },
     {
       text: "Products",
       icon: <MdDashboard style={{ fontSize: "2rem" }} />,
+      allowedRole: [
+        "Planter",
+        "Miller",
+        "Refiner",
+        "WarehouseManager",
+        "Retailer",
+        "Validator",
+      ],
     },
     {
       text: "User list",
       icon: <MdDashboard style={{ fontSize: "2rem" }} />,
+      allowedRole: [
+        "Planter",
+        "Miller",
+        "Refiner",
+        "WarehouseManager",
+        "Retailer",
+        "Validator",
+      ],
       onClick: () => history.push("/users"),
     },
   ]
@@ -171,33 +200,9 @@ const Navbar = ({ open, setOpen }) => {
             Palm oil Blockchain
           </Typography>
           <div>
-            <IconButton
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleMenu}
-              color="inherit"
-            >
-              <MdAccountCircle />
+            <IconButton color="inherit">
+              <MdAccountCircle style={{ fontSize: "2.3rem" }} />
             </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorEl}
-              anchorOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              open={openMenu}
-              onClose={handleClose}
-            >
-              <MenuItem onClick={handleClose}>Profile</MenuItem>
-              <MenuItem onClick={handleLogout}>Logout</MenuItem>
-            </Menu>
           </div>
         </Toolbar>
       </AppBar>
@@ -214,36 +219,40 @@ const Navbar = ({ open, setOpen }) => {
           }),
         }}
       >
-        <div className={classes.toolbar}></div>
-        <Divider />
-        <List>
-          {itemList.map((item) => {
-            const { text, icon, onClick } = item
-            return (
-              <>
-                <ListItem button key={text} onClick={onClick}>
-                  {icon && <ListItemIcon>{icon}</ListItemIcon>}
-                  <ListItemText primary={text} />
-                  {/* {openList ? (
-                    <MdExpandLess onClick={handleExpand} />
-                  ) : (
-                    <MdExpandMore onClick={handleExpand} />
-                  )} */}
-                </ListItem>
-                {/* <Collapse in={openList} timeout="auto" unmountOnExit>
-                  <List component="div" disablePadding>
-                    <ListItem button className={classes.nested}>
-                      <ListItemIcon>
-                        <MdDashboard />
-                      </ListItemIcon>
-                      <ListItemText primary="Starred" />
+        <div className={classes.toolbar}> </div>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            flexDirection: "column",
+            height: "100%",
+          }}
+        >
+          <List>
+            {itemList.map((item, index) => {
+              const { text, icon, allowedRole, onClick } = item
+              return (
+                <React.Fragment key={index}>
+                  {allowedRole.includes(role) && (
+                    <ListItem button key={index} onClick={onClick}>
+                      <ListItemIcon>{icon}</ListItemIcon>
+                      <ListItemText primary={text} />
                     </ListItem>
-                  </List>
-                </Collapse> */}
-              </>
-            )
-          })}
-        </List>
+                  )}
+                </React.Fragment>
+              )
+            })}
+          </List>
+          <List>
+            <Divider />
+            <ListItem button onClick={handleLogout}>
+              <ListItemIcon>
+                {<MdDashboard style={{ fontSize: "2rem" }} />}
+              </ListItemIcon>
+              <ListItemText primary={"Logout"} />
+            </ListItem>
+          </List>
+        </div>
       </Drawer>
     </>
   )

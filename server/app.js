@@ -18,6 +18,7 @@ const blockRouter = require("./routes/blockRoutes")
 const supplychainRouter = require("./routes/supplyChainRoutes")
 const productRouter = require("./routes/productRoutes")
 const userRouter = require("./routes/userRoutes")
+const dashboardRouter = require("./routes/dashboardRoutes")
 
 // middleware
 const errorHandlerMiddleware = require("./middleware/error-handler")
@@ -32,6 +33,7 @@ app.use("/api/blocks", blockRouter)
 app.use("/api/supply-chain", supplychainRouter)
 app.use("/api/products", productRouter)
 app.use("/api/users", userRouter)
+app.use("/api/dashboard", dashboardRouter)
 
 app.use(notFoundMiddleware)
 app.use(errorHandlerMiddleware)

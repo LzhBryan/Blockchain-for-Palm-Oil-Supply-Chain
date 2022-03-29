@@ -12,36 +12,43 @@ import CreateBlock from "./components/CreateBlocks/CreateBlock"
 import DashboardPage from "./pages/DashboardPage"
 import RecordTable from "./pages/RecordTable"
 import UserTable from "./components/UserList/UserTable"
+import { UserProvider } from "./utils/UserContext"
 
 const App = () => {
   return (
-    <Router>
-      <Switch>
-        <Route exact path="/" component={LoginPage} />
-        <Route exact path="/signup" component={SignUp} />
-        <ProtectedRoute exact path="/dashboard" component={DashboardPage} />
-        <ProtectedRoute
-          exact
-          path="/pendingTransactions"
-          component={TransactionTable}
-        />
-        <ProtectedRoute
-          exact
-          path="/createTransaction"
-          component={TransactionForm}
-        />
-        <ProtectedRoute
-          exact
-          path="/createSupplyChainRecord"
-          component={SupplyChainForm}
-        />
-        <ProtectedRoute exact path="/blockchain" component={BlockList} />
-        <ProtectedRoute exact path="/block/:id" component={BlockDetails} />
-        <ProtectedRoute exact path="/pendingBlock" component={CreateBlock} />
-        <ProtectedRoute exact path="/pendingRecords" component={RecordTable} />
-        <ProtectedRoute exact path="/users" component={UserTable} />
-      </Switch>
-    </Router>
+    <UserProvider>
+      <Router>
+        <Switch>
+          <Route exact path="/" component={LoginPage} />
+          <Route exact path="/signup" component={SignUp} />
+          <ProtectedRoute exact path="/dashboard" component={DashboardPage} />
+          <ProtectedRoute
+            exact
+            path="/pendingTransactions"
+            component={TransactionTable}
+          />
+          <ProtectedRoute
+            exact
+            path="/createTransaction"
+            component={TransactionForm}
+          />
+          <ProtectedRoute
+            exact
+            path="/createSupplyChainRecord"
+            component={SupplyChainForm}
+          />
+          <ProtectedRoute exact path="/blockchain" component={BlockList} />
+          <ProtectedRoute exact path="/block/:id" component={BlockDetails} />
+          <ProtectedRoute exact path="/pendingBlock" component={CreateBlock} />
+          <ProtectedRoute
+            exact
+            path="/pendingRecords"
+            component={RecordTable}
+          />
+          <ProtectedRoute exact path="/users" component={UserTable} />
+        </Switch>
+      </Router>
+    </UserProvider>
   )
 }
 

@@ -185,10 +185,10 @@ const PendingRecords = ({ record, type, api }) => {
                               Product quantity
                             </TableCell>
                           </TableRow>
-                          {record.products.map((product) => {
+                          {record.products.map((product, index) => {
                             const { name, quantity } = product
                             return (
-                              <TableRow>
+                              <TableRow key={index}>
                                 <TableCell className={classes.product}>
                                   {name}
                                 </TableCell>

@@ -135,7 +135,7 @@ const validateBlockchain = async (req, res) => {
   const blockchain = await BlockModel.find({ status: "inChain" })
 
   isValid = validateBlocks(blockchain)
-  res.status(200).json({ isValid, blockchain })
+  res.status(200).json({ isValid })
 }
 
 async function createGenesisBlock() {

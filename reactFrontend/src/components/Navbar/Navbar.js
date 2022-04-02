@@ -324,7 +324,12 @@ const Navbar = ({ open, setOpen }) => {
             Palm Oil Blockchain
           </Typography>
           <div>
-            <IconButton color="inherit">
+            <IconButton
+              color="inherit"
+              onClick={() => {
+                history.push("/page/profile")
+              }}
+            >
               <MdAccountCircle style={{ fontSize: "2.3rem" }} />
             </IconButton>
           </div>

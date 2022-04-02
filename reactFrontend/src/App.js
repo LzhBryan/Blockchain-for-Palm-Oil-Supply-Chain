@@ -15,6 +15,7 @@ import CreateBlock from "./components/CreateBlocks/CreateBlock"
 import DashboardPage from "./pages/DashboardPage"
 import RecordTable from "./pages/RecordTable"
 import UserTable from "./components/UserList/UserTable"
+import ProfilePage from "./pages/ProfilePage"
 import { UserProvider } from "./utils/UserContext"
 
 const theme = createTheme({
@@ -88,6 +89,11 @@ const App = () => {
               component={RecordTable}
             />
             <ProtectedRoute exact path="/users" component={UserTable} />
+            <ProtectedRoute
+              exact
+              path="/page/profile"
+              component={ProfilePage}
+            />
           </Switch>
         </Router>
       </ThemeProvider>

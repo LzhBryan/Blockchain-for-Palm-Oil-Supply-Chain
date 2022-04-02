@@ -142,21 +142,6 @@ const approveRecord = async (req, res) => {
     : (message = "You have rejected this transaction")
 
   if (record.batchId.substring(0, 2) === "WA") {
-    if (record.status === "Approved" || "inBlock") {
-      for (i = 0; i < record.product.length; i++) {
-        for (j = 0; j < record.product[i].quantity; j++) {
-          await ProductModel.create({
-            productName: record.product[i].name,
-            productId: await ProductModel.collection.countDocuments(),
-            prevBatchId: record.batchId,
-            timestamp: new Date().toLocaleString("en-GB"),
-          })
-        }
-      }
-    }
-  }
-
-  if (record.batchId.substring(0, 2) === "WA") {
     if (record.status === "Approved" || record.status === "inBlock") {
       for (i = 0; i < record.products.length; i++) {
         for (j = 0; j < record.products[i].quantity; j++) {

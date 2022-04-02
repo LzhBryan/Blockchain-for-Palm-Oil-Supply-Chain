@@ -8,6 +8,6 @@ const {
 
 const { searchProduct } = require("../controllers/productController")
 
-router.route("/").get(authenticateUser, searchProduct)
+router.route("/:id").get(authenticateUser, searchProduct)
 
 module.exports = router

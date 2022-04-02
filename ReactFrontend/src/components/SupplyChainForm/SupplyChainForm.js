@@ -52,7 +52,6 @@ const SupplyChainForm = () => {
 
   const [modal, setModal] = useState(false)
   const [supplyChainRecord, setSupplyChainRecord] = useState("")
-  const [error, setError] = useState("")
 
   const handleOnSubmit = async (values) => {
     try {

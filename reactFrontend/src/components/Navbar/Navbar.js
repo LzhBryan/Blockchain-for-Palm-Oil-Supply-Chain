@@ -226,6 +226,7 @@ const Navbar = ({ open, setOpen }) => {
         "WarehouseManager",
         "Retailer",
       ],
+      onClick: () => history.push("/createSupplyChainRecord"),
     },
     {
       text: (
@@ -270,6 +271,7 @@ const Navbar = ({ open, setOpen }) => {
         "Retailer",
         "Validator",
       ],
+      onClick: () => history.push("/products"),
     },
     {
       text: (

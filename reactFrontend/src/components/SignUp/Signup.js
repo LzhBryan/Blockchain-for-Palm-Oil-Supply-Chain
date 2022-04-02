@@ -1,11 +1,10 @@
 import React, { useState } from "react"
 import {
   Button,
+  CardMedia,
   TextField,
-  Link,
   Grid,
   Typography,
-  Paper,
   InputLabel,
   MenuItem,
   FormControl,
@@ -15,6 +14,7 @@ import {
 import Swal from "sweetalert2"
 import axios from "../../utils/axios"
 import "./signup.css"
+import logo from "../../assets/logo.png"
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -24,32 +24,49 @@ const useStyles = makeStyles((theme) => ({
   selectEmpty: {
     marginTop: theme.spacing(2),
   },
+  root: {
+    flexGrow: 1,
+  },
+  bg: {
+    background: "linear-gradient(135deg, #3f51b5, #4a78d0)",
+    height: "100vh",
+  },
+  media: {
+    width: 550,
+    height: 550,
+    marginTop: "105px",
+    marginLeft: "200px",
+  },
 }))
 
 const Keys = ({ publicKey, privateKey }) => {
   return (
     <div>
-      <TextField
-        id="publicKey"
-        label="Public key"
-        value={publicKey}
-        InputProps={{
-          readOnly: true,
-        }}
-        variant="outlined"
-        fullWidth
-      />
-      <TextField
-        id="privateKey"
-        label="Private key"
-        value={privateKey}
-        InputProps={{
-          readOnly: true,
-        }}
-        variant="outlined"
-        style={{ margin: "1rem 0" }}
-        fullWidth
-      />
+      <Grid align="center">
+        <TextField
+          id="publicKey"
+          label="Public key"
+          value={publicKey}
+          InputProps={{
+            readOnly: true,
+          }}
+          variant="outlined"
+          style={{ width: "25vw", margin: "1rem 0" }}
+          align="center"
+        />
+      </Grid>
+      <Grid align="center">
+        <TextField
+          id="privateKey"
+          label="Private key"
+          value={privateKey}
+          InputProps={{
+            readOnly: true,
+          }}
+          variant="outlined"
+          style={{ width: "25vw", margin: "1rem 0" }}
+        />
+      </Grid>
     </div>
   )
 }
@@ -113,75 +130,120 @@ const SignUp = ({ history }) => {
   }
 
   return (
-    <div>
-      <h1>Welcome to palm oil blockchain</h1>
-      <Grid>
-        <Paper elevation={10} className="paper">
-          <Grid align="center"></Grid>
-          <h1 className="title">Sign up</h1>
-          <TextField
-            label="Username"
-            placeholder="Enter username"
-            value={username}
-            style={{ margin: "1rem 0" }}
-            fullWidth
-            required
-            onChange={(e) => setUsername(e.target.value)}
-          />
-          <TextField
-            label="Password"
-            placeholder="Enter password"
-            type="password"
-            value={password}
-            fullWidth
-            required
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <FormControl required className={classes.formControl} fullWidth>
-            <InputLabel id="demo-simple-select-required-label">
-              Supply chain role
-            </InputLabel>
-            <Select
-              labelId="demo-simple-select-required-label"
-              id="demo-simple-select-required"
-              value={role}
-              onChange={(e) => setRole(e.target.value)}
-              className={classes.selectEmpty}
-            >
-              <MenuItem value={"Planter"}>Planter</MenuItem>
-              <MenuItem value={"Miller"}>Miller</MenuItem>
-              <MenuItem value={"Refiner"}>Refiner</MenuItem>
-              <MenuItem value={"Transporter"}>Transporter</MenuItem>
-              <MenuItem value={"WarehouseManager"}>WarehouseManager</MenuItem>
-              <MenuItem value={"Retailer"}>Retailer</MenuItem>
-              <MenuItem value={"Validator"}>Validator</MenuItem>
-            </Select>
-          </FormControl>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={() => generateKeys()}
-            style={{ marginTop: "0.5rem", marginBottom: "1.5rem" }}
+    <div className={classes.root}>
+      <Grid container>
+        <Grid item xs={8} className={classes.bg}>
+          <CardMedia image={logo} className={classes.media} />
+        </Grid>
+        <Grid item xs={4}>
+          <Typography
+            align="center"
+            style={{
+              marginTop: "95px",
+              fontSize: "25px",
+              fontWeight: "bolder",
+              color: "#000",
+            }}
           >
-            Generate keys
-          </Button>
-          {showKeys && <Keys publicKey={publicKey} privateKey={privateKey} />}
-          {error && <p className="error">{error}</p>}
-          <Button
-            type="submit"
-            color="primary"
-            variant="contained"
-            style={{ margin: "0.5rem 0" }}
-            fullWidth
-            onClick={(e) => registerUser(e)}
-          >
-            Sign up
-          </Button>
-          <Typography style={{ margin: "1rem 0" }}>
-            Already have an account?
-            <Link href="/"> Login here</Link>
+            SIGN UP
           </Typography>
-        </Paper>
+          <Grid align="center">
+            <TextField
+              label="Username"
+              placeholder="Enter username"
+              value={username}
+              style={{ width: "25vw", marginTop: "2rem" }}
+              variant="standard"
+              required
+              onChange={(e) => setUsername(e.target.value)}
+            />
+          </Grid>
+          <Grid align="center">
+            <TextField
+              label="Password"
+              placeholder="Enter password"
+              type="password"
+              value={password}
+              style={{ width: "25vw", marginTop: "15px" }}
+              variant="standard"
+              required
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </Grid>
+          <Grid align="center">
+            <FormControl
+              required
+              className={classes.formControl}
+              style={{ width: "25vw" }}
+            >
+              <InputLabel id="demo-simple-select-required-label">
+                Supply chain role
+              </InputLabel>
+              <Select
+                labelId="demo-simple-select-required-label"
+                id="demo-simple-select-required"
+                value={role}
+                onChange={(e) => setRole(e.target.value)}
+                className={classes.selectEmpty}
+                align="left"
+              >
+                <MenuItem value={"Planter"}>Planter</MenuItem>
+                <MenuItem value={"Miller"}>Miller</MenuItem>
+                <MenuItem value={"Refiner"}>Refiner</MenuItem>
+                <MenuItem value={"Transporter"}>Transporter</MenuItem>
+                <MenuItem value={"WarehouseManager"}>WarehouseManager</MenuItem>
+                <MenuItem value={"Retailer"}>Retailer</MenuItem>
+                <MenuItem value={"Validator"}>Validator</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+          <Grid align="center">
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => generateKeys()}
+              style={{ width: "20vm", margin: "1rem 0" }}
+            >
+              Generate keys
+            </Button>
+            {showKeys && <Keys publicKey={publicKey} privateKey={privateKey} />}
+            {error && (
+              <p
+                className="error"
+                style={{
+                  marginTop: "2rem",
+                  color: "red",
+                  textAlign: "center",
+                  fontWeight: "bold",
+                  fontSize: "1.1em",
+                }}
+              >
+                {error}
+              </p>
+            )}
+          </Grid>
+          <Grid align="center">
+            <Button
+              type="submit"
+              color="primary"
+              variant="contained"
+              style={{ width: "20vm" }}
+              onClick={(e) => registerUser(e)}
+            >
+              Sign up
+            </Button>
+          </Grid>
+          <Grid align="center">
+            <Button
+              color="primary"
+              variant="outlined"
+              style={{ width: "20vm", marginTop: "1rem" }}
+              href="/"
+            >
+              Already have an account? Login here
+            </Button>
+          </Grid>
+        </Grid>
       </Grid>
     </div>
   )

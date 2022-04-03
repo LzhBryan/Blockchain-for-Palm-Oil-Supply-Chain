@@ -16,7 +16,7 @@ const useStyles = makeStyles({
     flexGrow: 1,
   },
   bg: {
-    background: "linear-gradient(135deg, #3f51b5, #4a78d0)",
+    background: "linear-gradient(135deg, #3f51b5, #4a78d0, #f0edff)",
     height: "100vh",
   },
   media: {
@@ -24,7 +24,7 @@ const useStyles = makeStyles({
     height: "60%",
     marginLeft: "auto",
     marginRight: "auto",
-    marginTop: "5rem",
+    marginTop: "9rem",
   },
 })
 

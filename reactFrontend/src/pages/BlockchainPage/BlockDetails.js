@@ -4,7 +4,7 @@ import { makeStyles } from "@material-ui/core/styles"
 import Card from "@material-ui/core/Card"
 import CardContent from "@material-ui/core/CardContent"
 import Typography from "@material-ui/core/Typography"
-import { Grid } from "@material-ui/core"
+import { Grid, TableRow, TableCell } from "@material-ui/core"
 import Swal from "sweetalert2"
 import { useFetch } from "../../utils/useFetch"
 import RecordsRow from "../../components/CreateBlocks/RecordsRow"
@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme) => ({
   root: {
     width: "60vw",
     margin: "auto",
-    marginTop: "5rem",
+    marginTop: "3rem",
   },
   title: {
     fontSize: 18,
@@ -173,7 +173,18 @@ const BlockDetails = () => {
                 >
                   Records:
                 </Typography>
-
+                <TableRow>
+                  <TableCell margin="auto" align="center" width="5%" />
+                  <TableCell margin="auto" align="center" width="40%">
+                    Records ID
+                  </TableCell>
+                  <TableCell margin="auto" align="center" width="20%">
+                    Timestamp
+                  </TableCell>
+                  <TableCell margin="auto" align="center" width="20%">
+                    Status
+                  </TableCell>
+                </TableRow>
                 {blockData.block.records?.map((record) => (
                   <RecordsRow key={record._id} records={record} />
                 ))}

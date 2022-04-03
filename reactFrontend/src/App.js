@@ -44,6 +44,15 @@ const theme = createTheme({
       contrastText: "#fff",
     },
   },
+  breakpoints: {
+    values: {
+      xs: 1000,
+      sm: 1100,
+      md: 1200,
+      lg: 1280,
+      xl: 1380,
+    },
+  },
 })
 
 const App = () => {

@@ -219,7 +219,7 @@ const getWeeklyCreatedProducts = async (req, res) => {
   }).count()
 
   res.status(200).json({
-    products: [
+    weeklyProducts: [
       firstDayProducts,
       secondDayProducts,
       thirdDayProducts,

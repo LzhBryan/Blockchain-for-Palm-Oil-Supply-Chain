@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState } from "react"
 import {
   makeStyles,
   Box,
@@ -11,9 +11,6 @@ import {
   Typography,
 } from "@material-ui/core"
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md"
-import axios from "../../utils/axios"
-import { FcPlus } from "react-icons/fc"
-import { FiMinusCircle } from "react-icons/fi"
 
 const useRowStyles = makeStyles({
   root: {
@@ -27,32 +24,9 @@ const useRowStyles = makeStyles({
   },
 })
 
-const UserTransactionHistory = ({ userTransaction }) => {
+const UserTransactionHistory = ({ userTransaction, username }) => {
   const classes = useRowStyles()
   const [open, setOpen] = useState(false)
-  const [username, setUsername] = useState("")
-
-  const getUsername = async () => {
-    try {
-      const response = await axios.get("/api/users/transactions/history")
-      console.log(response.data)
-      setUsername(response.data.username)
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
-  useEffect(() => {
-    getUsername()
-  }, [])
-
-  const addOrsubtract = (() => {
-    if (userTransaction.createdBy === username) {
-      return <FiMinusCircle />
-    } else {
-      return <FcPlus />
-    }
-  })()
 
   return (
     <>
@@ -66,17 +40,25 @@ const UserTransactionHistory = ({ userTransaction }) => {
             {open ? <MdKeyboardArrowUp /> : <MdKeyboardArrowDown />}
           </IconButton>
         </TableCell>
-        <TableCell component="th" scope="row">
+        <TableCell component="th" scope="row" width="30%" align="center">
           <Typography component="div">{userTransaction._id}</Typography>
         </TableCell>
-        <TableCell margin="auto">
+        <TableCell margin="auto" width="25%" align="center">
           <Typography component="div">{userTransaction.timestamp}</Typography>
         </TableCell>
-        <TableCell margin="auto">
+        <TableCell margin="auto" width="25%" align="center">
           <Typography component="div">{userTransaction.status}</Typography>
         </TableCell>
-        <TableCell margin="auto">
-          <Typography component="div">{addOrsubtract}</Typography>
+        <TableCell margin="auto" width="15%" align="center">
+          {userTransaction.createdBy === username ? (
+            <Typography style={{ color: "#EF4D61" }}>
+              ${userTransaction.amount}
+            </Typography>
+          ) : (
+            <Typography style={{ color: "#54C097" }}>
+              ${userTransaction.amount}
+            </Typography>
+          )}
         </TableCell>
       </TableRow>
       <TableRow>

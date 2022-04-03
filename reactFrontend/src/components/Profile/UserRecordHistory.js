@@ -40,13 +40,13 @@ const UserRecordHistory = ({ records }) => {
             {open ? <MdKeyboardArrowUp /> : <MdKeyboardArrowDown />}
           </IconButton>
         </TableCell>
-        <TableCell component="th" scope="row">
+        <TableCell component="th" scope="row" width="40%" align="center">
           <Typography component="div">{records._id}</Typography>
         </TableCell>
-        <TableCell margin="auto">
+        <TableCell margin="auto" width="25%" align="center">
           <Typography component="div">{records.timestamp}</Typography>
         </TableCell>
-        <TableCell margin="auto">
+        <TableCell margin="auto" width="25%" align="center">
           <Typography component="div">{records.status}</Typography>
         </TableCell>
       </TableRow>

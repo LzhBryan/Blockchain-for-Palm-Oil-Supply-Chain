@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React from "react"
 import { Bar } from "react-chartjs-2"
 import {
   BarElement,
@@ -6,25 +6,12 @@ import {
   Chart as ChartJS,
   LinearScale,
 } from "chart.js"
-import axios from "../../utils/axios"
+import { useFetch } from "../../utils/useFetch"
 
 ChartJS.register(BarElement, CategoryScale, LinearScale)
 
 const WeeklyProducts = () => {
-  const [weeklyProducts, setWeeklyProducts] = useState([])
-
-  const fetchWeeklyProducts = async () => {
-    try {
-      const { data } = await axios.get("/api/dashboard/weeklyProducts")
-      setWeeklyProducts(data.products)
-    } catch (error) {
-      console.log(error.response)
-    }
-  }
-
-  useEffect(() => {
-    fetchWeeklyProducts()
-  }, [])
+  const { data } = useFetch("/api/dashboard/weeklyProducts")
 
   return (
     <Bar
@@ -41,7 +28,7 @@ const WeeklyProducts = () => {
         datasets: [
           {
             label: "Products",
-            data: weeklyProducts,
+            data: data?.weeklyProducts,
             backgroundColor: ["rgba(255, 99, 132, 0.2)"],
             borderColor: ["rgba(255, 99, 132, 1)"],
             borderWidth: 1,

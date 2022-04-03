@@ -28,12 +28,7 @@ const BlockRows = ({ block }) => {
   return (
     <>
       <StyledTableRow>
-        <StyledTableCell
-          component="th"
-          scope="row"
-          align="left"
-          style={{ paddingLeft: "50px" }}
-        >
+        <StyledTableCell component="th" scope="row" align="center" width="25%">
           <Link
             to={`/block/${block.blockId}`}
             style={{ textDecoration: "none", color: "black" }}
@@ -41,7 +36,7 @@ const BlockRows = ({ block }) => {
             <Typography component="div">BLOCK {block.blockId}</Typography>
           </Link>
         </StyledTableCell>
-        <StyledTableCell component="th" scope="row" align="left">
+        <StyledTableCell component="th" scope="row" align="center" width="20%">
           <Link
             to={`/block/${block.blockId}`}
             style={{ textDecoration: "none", color: "black" }}
@@ -49,7 +44,7 @@ const BlockRows = ({ block }) => {
             <Typography component="div">{block.timestamp}</Typography>
           </Link>
         </StyledTableCell>
-        <StyledTableCell component="th" scope="row" align="left">
+        <StyledTableCell component="th" scope="row" align="center" width="20%">
           <Link
             to={`/block/${block.blockId}`}
             style={{ textDecoration: "none", color: "black" }}

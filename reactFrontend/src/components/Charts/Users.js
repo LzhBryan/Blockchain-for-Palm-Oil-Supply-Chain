@@ -1,25 +1,12 @@
-import React, { useState, useEffect } from "react"
+import React from "react"
 import { Pie } from "react-chartjs-2"
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js"
-import axios from "../../utils/axios"
+import { useFetch } from "../../utils/useFetch"
 
 ChartJS.register(ArcElement, Tooltip, Legend)
 
 const Users = () => {
-  const [users, setUsers] = useState([])
-
-  const fetchUsers = async () => {
-    try {
-      const { data } = await axios.get("/api/dashboard/users")
-      setUsers(data.users)
-    } catch (error) {
-      console.log(error.response)
-    }
-  }
-
-  useEffect(() => {
-    fetchUsers()
-  }, [])
+  const { data } = useFetch("/api/dashboard/users")
 
   return (
     <Pie
@@ -32,7 +19,19 @@ const Users = () => {
           "Retailer",
           "Validator",
         ],
-        datasets: [{ data: users }],
+        datasets: [
+          {
+            data: data?.users,
+            backgroundColor: [
+              "#49C7EC",
+              "#4C79F6",
+              "#E0E7FD",
+              "#FF5DA0",
+              "#6978C9",
+              "#62BEB6",
+            ],
+          },
+        ],
       }}
       width={300}
       height={310}

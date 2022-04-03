@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState } from "react"
 import {
   makeStyles,
   Table,
@@ -11,12 +11,14 @@ import {
   TablePagination,
   Typography,
 } from "@material-ui/core"
-import axios from "../../utils/axios"
-import UserRecordHistory from ".//UserRecordHistory"
+import Swal from "sweetalert2"
+import { useFetch } from "../../utils/useFetch"
+import Loading from "../Loading/Loading"
+import UserRecordHistory from "./UserRecordHistory"
 
 const useRowStyles = makeStyles({
   tableContainer: {
-    width: "70vw",
+    width: "60vw",
     marginTop: "1rem",
     marginLeft: "auto",
     marginRight: "auto",
@@ -28,9 +30,11 @@ const useRowStyles = makeStyles({
 
 const UserRecordTable = () => {
   const classes = useRowStyles()
-  const [recordHistory, setRecordHistory] = useState([])
   const [rowsPerPage, setRowsPerPage] = useState(5)
   const [page, setPage] = useState(0)
+  const { data, isLoading, serverError } = useFetch(
+    "/api/users/records/history"
+  )
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage)
@@ -41,45 +45,55 @@ const UserRecordTable = () => {
     setPage(0)
   }
 
-  const getRecordHistory = async () => {
-    try {
-      const response = await axios.get("/api/users/records/history")
-      setRecordHistory(response.data.records)
-    } catch (error) {
-      console.log(error)
-    }
+  if (isLoading) {
+    return <Loading />
   }
 
-  useEffect(() => {
-    getRecordHistory()
-  }, [])
+  if (serverError) {
+    Swal.fire({
+      customClass: { container: "z-index: 2000" },
+      title: serverError.response.data.msg,
+      icon: "error",
+    })
+  }
 
   const emptyRows =
     rowsPerPage -
-    Math.min(rowsPerPage, recordHistory.length - page * rowsPerPage)
+    Math.min(rowsPerPage, data?.records.length - page * rowsPerPage)
 
   return (
     <TableContainer component={Paper} className={classes.tableContainer}>
-      <h1 style={{ textAlign: "center" }}>User Records</h1>
+      <Typography
+        style={{
+          textAlign: "center",
+          marginTop: "20px",
+          marginBottom: "15px",
+          fontSize: "20px",
+          fontWeight: "bolder",
+          color: "#000",
+        }}
+      >
+        USERS RECORDS
+      </Typography>
       <Table aria-label="collapsible table">
         <TableHead className={classes.tableHead}>
           <TableRow>
-            <TableCell />
-            <TableCell margin="auto">
+            <TableCell align="center" width="5%" />
+            <TableCell margin="auto" align="center" width="40%">
               <Typography
                 style={{ fontSize: "15px", color: "white", fontWeight: "bold" }}
               >
                 Record ID
               </Typography>
             </TableCell>
-            <TableCell margin="auto">
+            <TableCell margin="auto" align="center" width="25%">
               <Typography
                 style={{ fontSize: "15px", color: "white", fontWeight: "bold" }}
               >
                 Timestamp
               </Typography>
             </TableCell>
-            <TableCell margin="auto">
+            <TableCell margin="auto" align="center" width="25%">
               <Typography
                 style={{ fontSize: "15px", color: "white", fontWeight: "bold" }}
               >
@@ -89,7 +103,7 @@ const UserRecordTable = () => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {recordHistory
+          {data?.records
             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
             .map((records) => (
               <UserRecordHistory key={records._id} records={records} />
@@ -104,7 +118,7 @@ const UserRecordTable = () => {
       <TablePagination
         rowsPerPageOptions={[5, 10, 15]}
         component="div"
-        count={recordHistory.length}
+        count={data?.records.length}
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}

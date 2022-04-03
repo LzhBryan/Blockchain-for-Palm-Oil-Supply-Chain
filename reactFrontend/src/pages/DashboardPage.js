@@ -24,8 +24,8 @@ const useStyles = makeStyles({
     height: 450,
   },
   media: {
-    width: 294,
-    height: 300,
+    maxWidth: "100%",
+    height: "70%",
   },
 })
 
@@ -47,6 +47,7 @@ const DashboardPage = () => {
   useEffect(() => {
     if (isChainValid !== null)
       Swal.fire({
+        customClass: { container: "z-index: 2000" },
         title: isChainValid ? "Blockchain is valid" : "Blockchain is invalid!",
         icon: isChainValid ? "success" : "error",
       })
@@ -55,8 +56,8 @@ const DashboardPage = () => {
   return (
     <Container style={{ marginLeft: "3.1rem", marginTop: "5rem" }}>
       <Grid container spacing={2}>
-        <Grid item xs={8}>
-          <Card variant="outline">
+        <Grid item xl={8} lg={7} md={7} sm={7} xs={6}>
+          <Card elevation={3}>
             <CardHeader
               title={
                 <Typography variant="h4" component="h1" align="center">
@@ -70,8 +71,8 @@ const DashboardPage = () => {
             </CardContent>
           </Card>
         </Grid>
-        <Grid item xs={3}>
-          <Card className={classes.root}>
+        <Grid item xl={3} lg={2} md={2} sm={2} xs={2}>
+          <Card className={classes.root} elevation={3}>
             <CardHeader
               title={
                 <Typography variant="h5" align="center">
@@ -87,8 +88,8 @@ const DashboardPage = () => {
             </CardContent>
           </Card>
         </Grid>
-        <Grid item xs={8}>
-          <Card variant="outline">
+        <Grid item xl={8} lg={7} md={7} sm={7} xs={6}>
+          <Card elevation={3}>
             <CardHeader
               title={
                 <Typography variant="h4" component="h1" align="center">
@@ -101,12 +102,12 @@ const DashboardPage = () => {
             </CardContent>
           </Card>
         </Grid>
-        <Grid item xs={3}>
-          <Card>
+        <Grid item xl={3} lg={2} md={2} sm={2} xs={2}>
+          <Card elevation={3}>
             <CardHeader
               title={
                 <Typography variant="h5" align="center">
-                  Approve Reject
+                  Approved/Rejected
                 </Typography>
               }
             />
@@ -115,8 +116,8 @@ const DashboardPage = () => {
             </CardContent>
           </Card>
         </Grid>
-        <Grid item xs={8}>
-          <Card variant="outline">
+        <Grid item xl={8} lg={7} md={7} sm={7} xs={6}>
+          <Card elevation={3}>
             <CardHeader
               title={
                 <Typography variant="h4" component="h1" align="center">
@@ -129,8 +130,8 @@ const DashboardPage = () => {
             </CardContent>
           </Card>
         </Grid>
-        <Grid item xs={3}>
-          <Card>
+        <Grid item xl={3} lg={2} md={2} sm={2} xs={2}>
+          <Card elevation={3}>
             <CardHeader
               title={
                 <Typography variant="h5" align="center">

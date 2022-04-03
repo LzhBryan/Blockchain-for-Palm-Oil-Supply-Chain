@@ -13,7 +13,6 @@ import {
 } from "@material-ui/core"
 import Swal from "sweetalert2"
 import axios from "../../utils/axios"
-import "./signup.css"
 import logo from "../../assets/logo.png"
 
 const useStyles = makeStyles((theme) => ({
@@ -32,10 +31,11 @@ const useStyles = makeStyles((theme) => ({
     height: "100vh",
   },
   media: {
-    width: 550,
-    height: 550,
-    marginTop: "105px",
-    marginLeft: "200px",
+    maxWidth: "60%",
+    height: "60%",
+    marginLeft: "auto",
+    marginRight: "auto",
+    marginTop: "5rem",
   },
 }))
 
@@ -51,7 +51,7 @@ const Keys = ({ publicKey, privateKey }) => {
             readOnly: true,
           }}
           variant="outlined"
-          style={{ width: "25vw", margin: "1rem 0" }}
+          style={{ width: "25vw", margin: "0rem 0" }}
           align="center"
         />
       </Grid>
@@ -64,7 +64,7 @@ const Keys = ({ publicKey, privateKey }) => {
             readOnly: true,
           }}
           variant="outlined"
-          style={{ width: "25vw", margin: "1rem 0" }}
+          style={{ width: "25vw", margin: "1rem 0", marginBottom: "1.5rem" }}
         />
       </Grid>
     </div>
@@ -190,7 +190,6 @@ const SignUp = ({ history }) => {
                 <MenuItem value={"Planter"}>Planter</MenuItem>
                 <MenuItem value={"Miller"}>Miller</MenuItem>
                 <MenuItem value={"Refiner"}>Refiner</MenuItem>
-                <MenuItem value={"Transporter"}>Transporter</MenuItem>
                 <MenuItem value={"WarehouseManager"}>WarehouseManager</MenuItem>
                 <MenuItem value={"Retailer"}>Retailer</MenuItem>
                 <MenuItem value={"Validator"}>Validator</MenuItem>
@@ -211,11 +210,11 @@ const SignUp = ({ history }) => {
               <p
                 className="error"
                 style={{
-                  marginTop: "2rem",
                   color: "red",
                   textAlign: "center",
                   fontWeight: "bold",
                   fontSize: "1.1em",
+                  width: "30vw",
                 }}
               >
                 {error}
@@ -227,7 +226,7 @@ const SignUp = ({ history }) => {
               type="submit"
               color="primary"
               variant="contained"
-              style={{ width: "20vm" }}
+              style={{ width: "20vm", marginTop: "0.5rem" }}
               onClick={(e) => registerUser(e)}
             >
               Sign up
@@ -237,8 +236,8 @@ const SignUp = ({ history }) => {
             <Button
               color="primary"
               variant="outlined"
-              style={{ width: "20vm", marginTop: "1rem" }}
-              href="/"
+              style={{ width: "20vm", marginTop: "1.5rem" }}
+              onClick={() => history.push("/")}
             >
               Already have an account? Login here
             </Button>

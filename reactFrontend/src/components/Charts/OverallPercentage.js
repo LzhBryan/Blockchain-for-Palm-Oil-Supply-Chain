@@ -1,25 +1,12 @@
-import React, { useEffect, useState } from "react"
+import React from "react"
 import { Doughnut } from "react-chartjs-2"
 import { ArcElement, Chart as ChartJS, Tooltip, Legend } from "chart.js"
-import axios from "../../utils/axios"
+import { useFetch } from "../../utils/useFetch"
 
 ChartJS.register(ArcElement, Tooltip, Legend)
 
 const OverallPercentage = () => {
-  const [percentage, setPercentage] = useState({})
-
-  const fetchPercentage = async () => {
-    try {
-      const { data } = await axios.get("/api/dashboard/approveReject")
-      setPercentage(data)
-    } catch (error) {
-      console.log(error.response)
-    }
-  }
-
-  useEffect(() => {
-    fetchPercentage()
-  }, [])
+  const { data } = useFetch("/api/dashboard/approveReject")
 
   return (
     <Doughnut
@@ -28,9 +15,9 @@ const OverallPercentage = () => {
         datasets: [
           {
             label: "Approved Reject percentage",
-            data: [percentage.approvedTotal, percentage.rejectedTotal],
-            backgroundColor: ["#21B783", "#EF4D56"],
-            borderColor: ["#21B783", "#EF4D56"],
+            data: [data?.approvedTotal, data?.rejectedTotal],
+            backgroundColor: ["#0B9A8D", "#EF4D56"],
+            borderColor: ["#0B9A8D", "#EF4D56"],
             borderWidth: 1,
             hoverOffset: 7,
           },
@@ -41,6 +28,12 @@ const OverallPercentage = () => {
       options={{
         maintainAspectRatio: false,
         responsive: true,
+        layout: {
+          padding: {
+            left: 20,
+            right: 20,
+          },
+        },
         legend: {
           labels: {
             fontSize: 25,

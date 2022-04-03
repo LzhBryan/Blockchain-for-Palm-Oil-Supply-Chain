@@ -10,11 +10,8 @@ export const useFetch = (url) => {
     try {
       const response = await axios.get(url)
       const blockData = await response?.data
-      console.log(blockData)
-      setTimeout(blockData, 0.0001)
       setData(blockData)
       setIsLoading(false)
-      console.log(blockData)
     } catch (error) {
       console.log(error.response.data.msg)
       setServerError(error)

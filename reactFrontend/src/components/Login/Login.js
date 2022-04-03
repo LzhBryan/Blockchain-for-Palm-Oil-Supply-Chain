@@ -7,9 +7,7 @@ import {
   Typography,
   makeStyles,
 } from "@material-ui/core"
-import Swal from "sweetalert2"
 import axios from "../../utils/axios"
-import "./login.css"
 import { useRole } from "../../utils/UserContext"
 import logo from "../../assets/logo.png"
 
@@ -22,10 +20,11 @@ const useStyles = makeStyles({
     height: "100vh",
   },
   media: {
-    width: 550,
-    height: 550,
-    marginTop: "105px",
-    marginLeft: "200px",
+    maxWidth: "60%",
+    height: "60%",
+    marginLeft: "auto",
+    marginRight: "auto",
+    marginTop: "5rem",
   },
 })
 
@@ -54,87 +53,93 @@ const LoginPage = ({ history }) => {
       localStorage.setItem("authToken", data.token)
       localStorage.setItem("role", data.user.role)
       setRole(data.user.role)
-      // Swal.fire({
-      //   title: "Successfully Login",
-      //   icon: "success",
-      // })
       history.push("/dashboard")
     } catch (error) {
       setError(error.response.data.msg)
-      setTimeout(() => {
-        setError("")
-      }, 5000)
     }
     setUsername("")
     setPassword("")
   }
 
   return (
-    <div className={classes.root}>
-      <Grid container>
-        <Grid item xs={8} className={classes.bg}>
-          <CardMedia image={logo} className={classes.media} />
+    <Grid container>
+      <Grid item xs={8} className={classes.bg}>
+        <CardMedia className={classes.media} image={logo} />
+      </Grid>
+      <Grid item xs={4}>
+        <Typography
+          align="center"
+          style={{
+            marginTop: "10rem",
+            fontSize: "25px",
+            fontWeight: "bolder",
+            color: "#000",
+          }}
+        >
+          LOGIN
+        </Typography>
+        <Grid align="center">
+          <TextField
+            label="Username"
+            placeholder="Enter username"
+            style={{ width: "25vw", margin: "2rem 0" }}
+            variant="standard"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            required
+          />
         </Grid>
-        <Grid item xs={4}>
-          <Typography
-            align="center"
+        <Grid align="center">
+          <TextField
+            label="Password"
+            placeholder="Enter password"
+            type="password"
+            style={{ width: "25vw" }}
+            variant="standard"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            fullWidth
+            required
+          />
+          {error && (
+            <p
+              style={{
+                marginTop: "2rem",
+                color: "red",
+                textAlign: "center",
+                fontWeight: "bold",
+                fontSize: "1.1em",
+              }}
+            >
+              {error}
+            </p>
+          )}
+        </Grid>
+        <Grid align="center">
+          <Button
+            type="submit"
+            color="primary"
+            variant="contained"
             style={{
-              marginTop: "13rem",
-              fontSize: "25px",
-              fontWeight: "bolder",
-              color: "#000",
+              width: "20vw",
+              margin: "3rem 0",
             }}
+            onClick={(e) => login(e)}
+            href="/dashboard"
           >
-            LOGIN
-          </Typography>
-          <Grid align="center">
-            <TextField
-              label="Username"
-              placeholder="Enter username"
-              style={{ width: "25vw", margin: "2rem 0" }}
-              variant="standard"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              required
-            />
-          </Grid>
-          <Grid align="center">
-            <TextField
-              label="Password"
-              placeholder="Enter password"
-              type="password"
-              style={{ width: "25vw" }}
-              variant="standard"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              fullWidth
-              required
-            />
-            {error && <p className="error">{error}</p>}
-          </Grid>
-          <Grid align="left">
-            <Button
-              type="submit"
-              color="primary"
-              variant="contained"
-              style={{ width: "20vm", margin: "3rem 0", marginLeft: "64px" }}
-              onClick={(e) => login(e)}
-              href="/dashboard"
-            >
-              Login
-            </Button>
-            <Button
-              color="primary"
-              variant="outlined"
-              style={{ width: "20vm", marginLeft: "18px" }}
-              href="/signup"
-            >
-              Don't have an account? Register here
-            </Button>
-          </Grid>
+            Login
+          </Button>
+          <Button
+            color="primary"
+            variant="outlined"
+            style={{ width: "20vw" }}
+            onClick={() => history.push("/signup")}
+          >
+            Don't have an account? Register here
+          </Button>
         </Grid>
       </Grid>
-    </div>
+    </Grid>
   )
 }
 

@@ -15,13 +15,19 @@ import {
   ListItemIcon,
   ListItemText,
 } from "@material-ui/core"
-import { MdDashboard, MdAccountCircle } from "react-icons/md"
+import {
+  MdDashboard,
+  MdAccountCircle,
+  MdPendingActions,
+  MdLogout,
+} from "react-icons/md"
 import { GiHamburgerMenu } from "react-icons/gi"
 import { useRole } from "../../utils/UserContext"
-import { BiCalculator } from "react-icons/bi"
 import { SiHiveBlockchain } from "react-icons/si"
 import { AiOutlineTransaction } from "react-icons/ai"
 import { FaUserFriends } from "react-icons/fa"
+import { ImStatsDots } from "react-icons/im"
+import { GiMagnifyingGlass } from "react-icons/gi"
 
 const drawerWidth = 300
 
@@ -30,6 +36,7 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
   },
   appBar: {
+    background: "#0B51B7",
     zIndex: theme.zIndex.drawer + 1,
   },
   menuButton: {
@@ -68,7 +75,7 @@ const useStyles = makeStyles((theme) => ({
     ...theme.mixins.toolbar,
   },
   drawerPaper: {
-    background: theme.palette.primary.dark,
+    background: "#4A78D0",
   },
 }))
 
@@ -100,7 +107,7 @@ const Navbar = ({ open, setOpen }) => {
         </Typography>
       ),
       icon: (
-        <MdDashboard
+        <ImStatsDots
           style={{ color: "white", fontSize: "1.8rem", paddingLeft: "6px" }}
         />
       ),
@@ -138,7 +145,9 @@ const Navbar = ({ open, setOpen }) => {
         "Retailer",
         "Validator",
       ],
-      onClick: () => history.push("/blockchain"),
+      onClick: () => {
+        history.push("/blockchain")
+      },
     },
     {
       text: (
@@ -196,7 +205,7 @@ const Navbar = ({ open, setOpen }) => {
         </Typography>
       ),
       icon: (
-        <MdDashboard
+        <AiOutlineTransaction
           style={{ color: "white", fontSize: "1.8rem", paddingLeft: "6px" }}
         />
       ),
@@ -215,7 +224,7 @@ const Navbar = ({ open, setOpen }) => {
         </Typography>
       ),
       icon: (
-        <MdDashboard
+        <MdPendingActions
           style={{ color: "white", fontSize: "1.8rem", paddingLeft: "6px" }}
         />
       ),
@@ -240,7 +249,7 @@ const Navbar = ({ open, setOpen }) => {
         </Typography>
       ),
       icon: (
-        <MdDashboard
+        <MdPendingActions
           style={{ color: "white", fontSize: "1.8rem", paddingLeft: "6px" }}
         />
       ),
@@ -255,11 +264,11 @@ const Navbar = ({ open, setOpen }) => {
             color: "#fff",
           }}
         >
-          Products
+          Products traceability
         </Typography>
       ),
       icon: (
-        <MdDashboard
+        <GiMagnifyingGlass
           style={{ color: "white", fontSize: "1.8rem", paddingLeft: "6px" }}
         />
       ),
@@ -323,16 +332,18 @@ const Navbar = ({ open, setOpen }) => {
           <Typography variant="h6" noWrap style={{ flexGrow: 1 }}>
             Palm Oil Blockchain
           </Typography>
-          <div>
-            <IconButton
-              color="inherit"
-              onClick={() => {
-                history.push("/page/profile")
-              }}
-            >
-              <MdAccountCircle style={{ fontSize: "2.3rem" }} />
-            </IconButton>
-          </div>
+          {role !== "Validator" && (
+            <div>
+              <IconButton
+                color="inherit"
+                onClick={() => {
+                  history.push("/page/profile")
+                }}
+              >
+                <MdAccountCircle style={{ fontSize: "2.3rem" }} />
+              </IconButton>
+            </div>
+          )}
         </Toolbar>
       </AppBar>
       <Drawer
@@ -377,7 +388,7 @@ const Navbar = ({ open, setOpen }) => {
             <ListItem button onClick={handleLogout}>
               <ListItemIcon>
                 {
-                  <MdDashboard
+                  <MdLogout
                     style={{
                       color: "white",
                       fontSize: "1.8rem",

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState } from "react"
 import {
   makeStyles,
   Table,
@@ -11,12 +11,14 @@ import {
   TablePagination,
   Typography,
 } from "@material-ui/core"
-import axios from "../../utils/axios"
-import UserTransactionHistory from ".//UserTransactionHistory"
+import Swal from "sweetalert2"
+import { useFetch } from "../../utils/useFetch"
+import Loading from "../Loading/Loading"
+import UserTransactionHistory from "./UserTransactionHistory"
 
 const useRowStyles = makeStyles({
   tableContainer: {
-    width: "70vw",
+    width: "60vw",
     marginTop: "1rem",
     marginLeft: "auto",
     marginRight: "auto",
@@ -28,9 +30,11 @@ const useRowStyles = makeStyles({
 
 const UserTransactionTable = () => {
   const classes = useRowStyles()
-  const [transactionHistory, setTransactionHistory] = useState([])
   const [rowsPerPage, setRowsPerPage] = useState(5)
   const [page, setPage] = useState(0)
+  const { data, isLoading, serverError } = useFetch(
+    "/api/users/transactions/history"
+  )
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage)
@@ -41,62 +45,78 @@ const UserTransactionTable = () => {
     setPage(0)
   }
 
-  const getTransactionHistory = async () => {
-    try {
-      const response = await axios.get("/api/users/transactions/history")
-      console.log(response.data)
-      setTransactionHistory(response.data.transactions)
-    } catch (error) {
-      console.log(error)
-    }
+  if (isLoading) {
+    return <Loading />
   }
 
-  useEffect(() => {
-    getTransactionHistory()
-  }, [])
+  if (serverError) {
+    Swal.fire({
+      customClass: { container: "z-index: 2000" },
+      title: serverError.response.data.msg,
+      icon: "error",
+    })
+  }
 
   const emptyRows =
     rowsPerPage -
-    Math.min(rowsPerPage, transactionHistory.length - page * rowsPerPage)
+    Math.min(rowsPerPage, data?.transactions.length - page * rowsPerPage)
 
   return (
     <TableContainer component={Paper} className={classes.tableContainer}>
-      <h1 style={{ textAlign: "center" }}>User Transactions</h1>
+      <Typography
+        style={{
+          textAlign: "center",
+          marginTop: "20px",
+          marginBottom: "15px",
+          fontSize: "20px",
+          fontWeight: "bolder",
+          color: "#000",
+        }}
+      >
+        USERS TRANSACTIONS
+      </Typography>
       <Table aria-label="collapsible table">
         <TableHead className={classes.tableHead}>
           <TableRow>
-            <TableCell />
-            <TableCell margin="auto">
+            <TableCell align="center" width="5%" />
+            <TableCell margin="auto" align="center" width="30%">
               <Typography
                 style={{ fontSize: "15px", color: "white", fontWeight: "bold" }}
               >
                 Transaction ID
               </Typography>
             </TableCell>
-            <TableCell margin="auto">
+            <TableCell margin="auto" align="center" width="25%">
               <Typography
                 style={{ fontSize: "15px", color: "white", fontWeight: "bold" }}
               >
                 Timestamp
               </Typography>
             </TableCell>
-            <TableCell margin="auto">
+            <TableCell margin="auto" align="center" width="25%">
               <Typography
                 style={{ fontSize: "15px", color: "white", fontWeight: "bold" }}
               >
                 Status
               </Typography>
             </TableCell>
-            <TableCell margin="auto"></TableCell>
+            <TableCell margin="auto" align="center" width="15%">
+              <Typography
+                style={{ fontSize: "15px", color: "white", fontWeight: "bold" }}
+              >
+                Amount
+              </Typography>
+            </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {transactionHistory
+          {data?.transactions
             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
             .map((userTransaction) => (
               <UserTransactionHistory
                 key={userTransaction._id}
                 userTransaction={userTransaction}
+                username={data?.username}
               />
             ))}
           {emptyRows > 0 && (
@@ -109,7 +129,7 @@ const UserTransactionTable = () => {
       <TablePagination
         rowsPerPageOptions={[5, 10, 15]}
         component="div"
-        count={transactionHistory.length}
+        count={data?.transactions.length}
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}

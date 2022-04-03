@@ -26,6 +26,7 @@ axiosInstance.interceptors.response.use(
   async (error) => {
     if (error.response.status === 401) {
       const response = await Swal.fire({
+        customClass: { container: "z-index: 2000" },
         title: "Session Expired",
         icon: "warning",
         text: "Your token has expired. Please login again to refresh the token",
@@ -37,12 +38,14 @@ axiosInstance.interceptors.response.use(
       }
     } else if (error.response.status === 403) {
       Swal.fire({
+        customClass: { container: "z-index: 2000" },
         title: "Unauthorized role",
         icon: "error",
         text: "Your role is not allowed to access this route",
       })
     } else if (error.response.status === 404 && !error.response.data.msg) {
       Swal.fire({
+        customClass: { container: "z-index: 2000" },
         title: "Error 404",
         icon: "error",
         text: "Route does not exist",

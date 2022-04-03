@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import Button from "@material-ui/core/Button"
+import { Grid, Button, Container } from "@material-ui/core"
 import Swal from "sweetalert2"
 import axios from "../../utils/axios"
 import HibernatingBlock from "./HibernatingBlock"
@@ -38,19 +38,21 @@ const CreateBlocks = () => {
       setDisabledActivate(true)
       setDisabledValidate(false)
       setIsActivated(true)
-      Swal.fire(
-        "This block has been activated!",
-        "Please proceed with validation",
-        "success"
-      )
+      Swal.fire({
+        customClass: { container: "z-index: 2000" },
+        title: "This block has been activated!",
+        text: "Please proceed with validation",
+        icon: "success",
+      })
     } catch (error) {
       console.log(error.response.data.msg)
       setError(true)
-      Swal.fire(
-        "This block cannot be activated!",
-        "Insufficient records in block",
-        "error"
-      )
+      Swal.fire({
+        customClass: { container: "z-index: 2000" },
+        title: "This block cannot be activated!",
+        text: error.response.data.msg,
+        icon: "error",
+      })
     }
   }
 
@@ -69,6 +71,7 @@ const CreateBlocks = () => {
 
     if (message !== "") {
       Swal.fire({
+        customClass: { container: "z-index: 2000" },
         title: message,
         icon: error ? "warning" : "success",
       })
@@ -112,6 +115,7 @@ const CreateBlocks = () => {
 
   const validatorPopup = async () => {
     const validateResponse = await Swal.fire({
+      customClass: { container: "z-index: 2000" },
       title: isValid
         ? "Hibernating block is valid, data has not been tampered"
         : "Hibernating block is invalid, data has been tampered!",
@@ -124,6 +128,7 @@ const CreateBlocks = () => {
     })
     if (validateResponse.isConfirmed) {
       const approveResponse = await Swal.fire({
+        customClass: { container: "z-index: 2000" },
         title: "Approve or reject this pending block?",
         icon: "question",
         confirmButtonText: "Approve",
@@ -141,29 +146,53 @@ const CreateBlocks = () => {
   }
 
   return (
-    <div>
-      <HibernatingBlock block={blocks} />
-
-      <Button
-        style={{ marginTop: "40px", marginLeft: "480px" }}
-        type="submit"
-        variant="outlined"
-        color="primary"
-        disabled={disabledActivate}
-        onClick={() => handleActivate()}
-      >
-        Activate Block
-      </Button>
-      <Button
-        style={{ marginTop: "40px", marginLeft: "20px" }}
-        variant="outlined"
-        color="primary"
-        disabled={disabledValidate}
-        onClick={() => handleValidate()}
-      >
-        Validate Block
-      </Button>
-    </div>
+    <Grid container>
+      <Grid item xl={12} lg={11} md={10} sm={10} xs={10}>
+        <HibernatingBlock block={blocks} />
+      </Grid>
+      <Grid item xl={12} lg={11} md={10} sm={10} xs={10}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            width: "40vw",
+            marginLeft: "auto",
+            marginRight: "auto",
+            alignItems: "center",
+            marginTop: "1.5rem",
+          }}
+        >
+          <Button
+            style={{
+              display: "flex",
+              marginLeft: "auto",
+              marginRight: "auto",
+            }}
+            type="submit"
+            variant="outlined"
+            color="primary"
+            disabled={disabledActivate}
+            onClick={() => handleActivate()}
+          >
+            Activate Block
+          </Button>
+          <Button
+            // style={{ marginTop: "40px", marginLeft: "20px" }}
+            style={{
+              display: "flex",
+              marginLeft: "auto",
+              marginRight: "auto",
+            }}
+            variant="outlined"
+            color="primary"
+            disabled={disabledValidate}
+            onClick={() => handleValidate()}
+          >
+            Validate Block
+          </Button>
+        </div>
+      </Grid>
+    </Grid>
   )
 }
 

@@ -64,6 +64,7 @@ const PendingRecords = ({ record, type, api }) => {
 
   const popup = async () => {
     const response = await Swal.fire({
+      customClass: { container: "z-index: 2000" },
       title: isValid
         ? `${type} is valid, data has not been tampered`
         : `${type}  is not valid, data has been tampered!`,
@@ -76,6 +77,7 @@ const PendingRecords = ({ record, type, api }) => {
     })
     if (response.isConfirmed) {
       const secondResponse = await Swal.fire({
+        customClass: { container: "z-index: 2000" },
         title: `Approve or reject this ${type} ?`,
         icon: "question",
         showCloseButton: true,
@@ -103,6 +105,7 @@ const PendingRecords = ({ record, type, api }) => {
 
     if (message !== "") {
       Swal.fire({
+        customClass: { container: "z-index: 2000" },
         title: message,
         icon: error ? "warning" : "success",
       })
@@ -121,13 +124,13 @@ const PendingRecords = ({ record, type, api }) => {
             {open ? <MdKeyboardArrowUp /> : <MdKeyboardArrowDown />}
           </IconButton>
         </TableCell>
-        <TableCell component="th" scope="row">
+        <TableCell component="th" scope="row" width="40%" align="center">
           <Typography component="div">{record._id}</Typography>
         </TableCell>
-        <TableCell margin="auto">
+        <TableCell margin="auto" width="25%" align="center">
           <Typography component="div">{record.timestamp}</Typography>
         </TableCell>
-        <TableCell margin="auto">
+        <TableCell margin="auto" width="25%" align="center">
           <Typography component="div">{record.status}</Typography>
         </TableCell>
       </TableRow>

@@ -2,14 +2,12 @@ import React, { useState } from "react"
 import {
   Card,
   CardContent,
-  InputBase,
   makeStyles,
   TextField,
   Grid,
   IconButton,
 } from "@material-ui/core"
 import { MdSearch } from "react-icons/md"
-import { Link } from "react-router-dom"
 import Swal from "sweetalert2"
 import axios from "../../utils/axios"
 
@@ -21,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-const Products = () => {
+const Products = ({ history }) => {
   const classes = useStyles()
 
   const [productId, setProductId] = useState("")
@@ -30,8 +28,10 @@ const Products = () => {
     try {
       const res = await axios.get(`/api/products/${productId}`)
       console.log(res.data)
+      history.push(`/products/${productId}`)
     } catch (error) {
       await Swal.fire({
+        customClass: { container: "z-index: 2000" },
         title: error.response.data.msg,
         icon: "error",
       })
@@ -39,30 +39,31 @@ const Products = () => {
   }
 
   return (
-    <div className={classes.root}>
-      <Card
-        style={{
-          maxWidth: 600,
-          margin: "280px auto",
-          padding: "50px 50px 50px",
-        }}
-      >
-        <CardContent>
-          <Grid container spacing={1}>
-            <Grid xs={11} item>
-              <TextField
-                name="productId"
-                label="Search product"
-                placeholder="Enter product ID"
-                value={productId}
-                onChange={(e) => setProductId(e.target.value)}
-                autoComplete="off"
-                fullWidth
-              />
-            </Grid>
+    <Grid container className={classes.root}>
+      <Grid item xl={12} lg={11} md={10} sm={10} xs={10}>
+        <Card
+          style={{
+            maxWidth: "50vw",
+            margin: "12rem auto",
+            padding: "50px 50px 50px",
+          }}
+          elevation={3}
+        >
+          <CardContent>
+            <Grid container spacing={1}>
+              <Grid xs={11} item>
+                <TextField
+                  name="productId"
+                  label="Search product"
+                  placeholder="Enter product ID"
+                  value={productId}
+                  onChange={(e) => setProductId(e.target.value)}
+                  autoComplete="off"
+                  fullWidth
+                />
+              </Grid>
 
-            <Grid xs={1} item>
-              <Link to={`/products/${productId}`}>
+              <Grid xs={1} item>
                 <IconButton
                   type="submit"
                   style={{ marginTop: "5px" }}
@@ -72,12 +73,12 @@ const Products = () => {
                 >
                   <MdSearch />
                 </IconButton>
-              </Link>
+              </Grid>
             </Grid>
-          </Grid>
-        </CardContent>
-      </Card>
-    </div>
+          </CardContent>
+        </Card>
+      </Grid>
+    </Grid>
   )
 }
 

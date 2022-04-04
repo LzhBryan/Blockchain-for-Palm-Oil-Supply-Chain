@@ -192,6 +192,27 @@ const SupplyChainForm = ({ history }) => {
                                           BIOFUEL
                                         </MenuItem>,
                                       ]}
+
+                                      {role === "WarehouseManager" && [
+                                        <MenuItem
+                                          value="PALM OIL"
+                                          key={"PALM OIL " + index}
+                                        >
+                                          PALM OIL
+                                        </MenuItem>,
+                                        <MenuItem
+                                          value="PALM KERNEL OIL"
+                                          key={"PALM KERNEL OIL " + index}
+                                        >
+                                          PALM KERNEL OIL
+                                        </MenuItem>,
+                                        <MenuItem
+                                          value="BIOFUEL"
+                                          key={"BIOFUEL " + index}
+                                        >
+                                          BIOFUEL
+                                        </MenuItem>,
+                                      ]}
                                     </Field>
                                   </FormControl>
                                 </Grid>

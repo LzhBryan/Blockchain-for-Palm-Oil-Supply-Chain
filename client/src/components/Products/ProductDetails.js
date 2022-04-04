@@ -53,6 +53,10 @@ const useStyles = makeStyles((theme) => ({
       borderBottom: "unset",
     },
   },
+  product: {
+    textAlign: "center",
+    width: "10vw",
+  },
 }))
 
 const Trace = () => {
@@ -282,6 +286,65 @@ const Trace = () => {
                                   <Typography component="div">
                                     {record.toAddress}
                                   </Typography>
+                                </TableCell>
+                              </TableRow>
+                              <TableRow className={classes.table}>
+                                <TableCell className={classes.table}>
+                                  <Typography
+                                    style={{
+                                      paddingTop: "15px",
+                                      fontSize: "15px",
+                                      fontWeight: "bold",
+                                      color: "#000",
+                                    }}
+                                  >
+                                    Products
+                                  </Typography>
+                                </TableCell>
+                              </TableRow>
+                              <TableRow>
+                                <TableCell>
+                                  <TableRow>
+                                    <TableCell className={classes.product}>
+                                      <Typography
+                                        style={{
+                                          fontSize: "14px",
+                                          fontWeight: "bold",
+                                          color: "#37474f",
+                                        }}
+                                      >
+                                        Product name
+                                      </Typography>
+                                    </TableCell>
+                                    <TableCell className={classes.product}>
+                                      <Typography
+                                        style={{
+                                          fontSize: "14px",
+                                          fontWeight: "bold",
+                                          color: "#37474f",
+                                        }}
+                                      >
+                                        Product quantity
+                                      </Typography>
+                                    </TableCell>
+                                  </TableRow>
+                                  {record.products.map((product, index) => {
+                                    const { name, quantity } = product
+                                    return (
+                                      <TableRow key={index}>
+                                        <TableCell className={classes.product}>
+                                          <Typography component="div">
+                                            {name}
+                                          </Typography>
+                                        </TableCell>
+                                        <TableCell className={classes.product}>
+                                          <Typography component="div">
+                                            {quantity}
+                                          </Typography>
+                                        </TableCell>
+                                      </TableRow>
+                                    )
+                                  })}
                                 </TableCell>
                               </TableRow>
                               <TableRow className={classes.table}>

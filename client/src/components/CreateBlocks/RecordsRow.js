@@ -19,6 +19,10 @@ const useRowStyles = makeStyles({
       width: "40.3%",
     },
   },
+  product: {
+    textAlign: "center",
+    width: "10vw",
+  },
 })
 
 const RecordsRow = ({ records }) => {

@@ -111,7 +111,11 @@ const DashboardPage = () => {
           <Card elevation={3} style={{ paddingBottom: "1.8px" }}>
             <CardHeader
               title={
-                <Typography variant="h5" align="center">
+                <Typography
+                  variant="h5"
+                  align="center"
+                  style={{ alignItems: "center" }}
+                >
                   Approved/Rejected
                 </Typography>
               }

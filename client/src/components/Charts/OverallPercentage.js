@@ -27,7 +27,6 @@ const OverallPercentage = () => {
       height={310}
       options={{
         maintainAspectRatio: false,
-        responsive: true,
         layout: {
           padding: {
             left: 20,

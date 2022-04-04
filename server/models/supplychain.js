@@ -44,7 +44,6 @@ const supplyChainSchema = new mongoose.Schema(
     },
     previousBatchId: {
       type: String,
-      minlength: 3,
     },
     transactionReceipt: {
       type: mongoose.Schema.Types.ObjectId,

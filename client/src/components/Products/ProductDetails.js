@@ -112,7 +112,7 @@ const Trace = () => {
             <>
               <Typography
                 className={classes.pos}
-                color="textSecondary"
+                color="textPrimary"
                 style={{ paddingTop: "10px" }}
               >
                 Product Name: {data?.product.productName}
@@ -120,7 +120,7 @@ const Trace = () => {
 
               <Typography
                 className={classes.pos}
-                color="textSecondary"
+                color="textPrimary"
                 style={{ paddingTop: "10px" }}
               >
                 Product ID: {data?.product.productId}
@@ -128,7 +128,7 @@ const Trace = () => {
 
               <Typography
                 className={classes.pos}
-                color="textSecondary"
+                color="textPrimary"
                 style={{ paddingTop: "10px" }}
               >
                 Previous Batch ID: {data?.product.prevBatchId}
@@ -136,7 +136,7 @@ const Trace = () => {
 
               <Typography
                 className={classes.pos}
-                color="textSecondary"
+                color="textPrimary"
                 style={{ paddingTop: "10px" }}
               >
                 Timestamp: {data?.product.timestamp}

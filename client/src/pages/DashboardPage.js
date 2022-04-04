@@ -57,10 +57,10 @@ const DashboardPage = () => {
     <Container style={{ marginLeft: "3.1rem", marginTop: "5rem" }}>
       <Grid container spacing={2}>
         <Grid item xl={8} lg={7} md={7} sm={7} xs={6}>
-          <Card elevation={3}>
+          <Card elevation={3} style={{ paddingBottom: "12px" }}>
             <CardHeader
               title={
-                <Typography variant="h4" component="h1" align="center">
+                <Typography variant="h5" component="h1" align="center">
                   Weekly Created Blocks
                 </Typography>
               }
@@ -82,17 +82,22 @@ const DashboardPage = () => {
             />
             <CardMedia image={blockchain} className={classes.media} />
             <CardContent align="center">
-              <Button variant="outlined" onClick={handleClick} align="center">
+              <Button
+                variant="outlined"
+                color="primary"
+                onClick={handleClick}
+                align="center"
+              >
                 Check validity
               </Button>
             </CardContent>
           </Card>
         </Grid>
         <Grid item xl={8} lg={7} md={7} sm={7} xs={6}>
-          <Card elevation={3}>
+          <Card elevation={3} style={{ paddingBottom: "11.5px" }}>
             <CardHeader
               title={
-                <Typography variant="h4" component="h1" align="center">
+                <Typography variant="h5" component="h1" align="center">
                   Weekly Created Transactions and Records
                 </Typography>
               }
@@ -103,7 +108,7 @@ const DashboardPage = () => {
           </Card>
         </Grid>
         <Grid item xl={3} lg={2} md={2} sm={2} xs={2}>
-          <Card elevation={3}>
+          <Card elevation={3} style={{ paddingBottom: "1.8px" }}>
             <CardHeader
               title={
                 <Typography variant="h5" align="center">
@@ -117,10 +122,10 @@ const DashboardPage = () => {
           </Card>
         </Grid>
         <Grid item xl={8} lg={7} md={7} sm={7} xs={6}>
-          <Card elevation={3}>
+          <Card elevation={3} style={{ paddingBottom: "11.5px" }}>
             <CardHeader
               title={
-                <Typography variant="h4" component="h1" align="center">
+                <Typography variant="h5" component="h1" align="center">
                   Weekly Created Products
                 </Typography>
               }
@@ -131,7 +136,7 @@ const DashboardPage = () => {
           </Card>
         </Grid>
         <Grid item xl={3} lg={2} md={2} sm={2} xs={2}>
-          <Card elevation={3}>
+          <Card elevation={3} style={{ paddingBottom: "1.8px" }}>
             <CardHeader
               title={
                 <Typography variant="h5" align="center">

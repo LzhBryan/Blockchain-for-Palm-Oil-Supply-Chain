@@ -7,13 +7,16 @@ import {
   IconButton,
   makeStyles,
   Typography,
+  FormControl,
+  MenuItem,
 } from "@material-ui/core"
 import { Field, FieldArray, Form, Formik } from "formik"
 import { MdAddCircleOutline, MdDelete } from "react-icons/md"
-import { TextField } from "formik-material-ui"
+import { TextField, Select } from "formik-material-ui"
 import * as Yup from "yup"
 import Swal from "sweetalert2"
 import axios from "../../utils/axios"
+import { useRole } from "../../utils/UserContext"
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -48,14 +51,15 @@ const validationSchema = Yup.object({
 
 const SupplyChainForm = ({ history }) => {
   const classes = useStyles()
+  const { role } = useRole()
 
   const handleOnSubmit = async (values, { resetForm }) => {
     try {
       await axios.post("/api/supply-chain", values)
       Swal.fire({
         customClass: { container: "z-index: 2000" },
-        title: "Transaction Completed!",
-        text: "You can view your transaction record in your profile.",
+        title: "Record is created!",
+        text: "You can view your supply chain record in your profile.",
         icon: "success",
         confirmButtonText: "Broadcast",
       })
@@ -132,12 +136,52 @@ const SupplyChainForm = ({ history }) => {
                             {products.map((_, index) => (
                               <Grid container item key={index} spacing={2}>
                                 <Grid xs={7} item>
-                                  <Field
-                                    name={`products.${index}.name`}
-                                    label="Product Name"
-                                    component={TextField}
-                                    fullWidth
-                                  />
+                                  <FormControl fullWidth>
+                                    <Field
+                                      name={`products.${index}.name`}
+                                      label="Product Name"
+                                      component={Select}
+                                    >
+                                      {role === "Planter" && (
+                                        <MenuItem
+                                          value="PALM FRUITS"
+                                          key={index}
+                                        >
+                                          PALM FRUITS
+                                        </MenuItem>
+                                      )}
+
+                                      {role === "Miller" && [
+                                        <MenuItem
+                                          value="CRUDE PALM OIL"
+                                          key={"CRUDE PALM OIL " + index}
+                                        >
+                                          CRUDE PALM OIL
+                                        </MenuItem>,
+                                        <MenuItem
+                                          value="CRUDE PALM KERNEL OIL"
+                                          key={"CRUDE PALM KERNEL OIL " + index}
+                                        >
+                                          CRUDE PALM KERNEL OIL
+                                        </MenuItem>,
+                                      ]}
+
+                                      {role === "Refiner" && [
+                                        <MenuItem
+                                          value="PALM OIL"
+                                          key={"PALM OIL " + index}
+                                        >
+                                          PALM OIL
+                                        </MenuItem>,
+                                        <MenuItem
+                                          value="PALM KERNEL OIL"
+                                          key={"PALM KERNEL OIL " + index}
+                                        >
+                                          PALM KERNEL OIL
+                                        </MenuItem>,
+                                      ]}
+                                    </Field>
+                                  </FormControl>
                                 </Grid>
 
                                 <Grid xs={3} item>

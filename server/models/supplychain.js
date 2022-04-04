@@ -20,6 +20,13 @@ const supplyChainSchema = new mongoose.Schema(
         name: {
           type: String,
           required: [true, "Please provide the product name"],
+          enum: [
+            "PALM FRUITS",
+            "CRUDE PALM OIL",
+            "CRUDE PALM KERNEL OIL",
+            "PALM OIL",
+            "PALM KERNEL OIL",
+          ],
         },
         quantity: {
           type: Number,

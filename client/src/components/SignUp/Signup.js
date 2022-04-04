@@ -118,7 +118,7 @@ const SignUp = ({ history }) => {
       setError(error.response.data.msg)
       setTimeout(() => {
         setError("")
-      }, 7000)
+      }, 5000)
     }
 
     setUsername("")

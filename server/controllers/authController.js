@@ -31,7 +31,7 @@ const register = async (req, res) => {
   }
 
   await UserModel.create(req.body)
-  res.status(201).json({ msg: "Successfuly registered user" })
+  res.status(201).json({ msg: "Successfully registered user" })
 }
 
 const login = async (req, res) => {

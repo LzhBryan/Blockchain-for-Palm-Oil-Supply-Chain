@@ -56,6 +56,9 @@ const LoginPage = ({ history }) => {
       history.push("/dashboard")
     } catch (error) {
       setError(error.response.data.msg)
+      setTimeout(() => {
+        setError("")
+      }, 3000)
     }
     setUsername("")
     setPassword("")

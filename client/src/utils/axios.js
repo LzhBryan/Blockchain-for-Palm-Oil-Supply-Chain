@@ -25,7 +25,6 @@ axiosInstance.interceptors.request.use(
 axiosInstance.interceptors.response.use(
   (response) => response,
   async (error) => {
-    const history = useHistory()
     if (error.response.status === 401) {
       const response = await Swal.fire({
         customClass: { container: "z-index: 2000" },
@@ -34,6 +33,7 @@ axiosInstance.interceptors.response.use(
         text: "Your token has expired. Please login again to refresh the token",
       })
       if (response.isConfirmed) {
+        const history = useHistory()
         localStorage.removeItem("authToken")
         localStorage.removeItem("role")
         history.push("/")

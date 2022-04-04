@@ -87,14 +87,13 @@ const getWeeklyCreatedBlocks = async (req, res) => {
 
   res.status(200).json({
     weeklyBlocks: [
-      1, 2, 3, 4, 5, 6, 7,
-      // firstDayBlocks,
-      // secondDayBlocks,
-      // thirdDayBlocks,
-      // fourthDayBlocks,
-      // fifthDayBlocks,
-      // sixthDayBlocks,
-      // seventhDayBlocks,
+      firstDayBlocks,
+      secondDayBlocks,
+      thirdDayBlocks,
+      fourthDayBlocks,
+      fifthDayBlocks,
+      sixthDayBlocks,
+      seventhDayBlocks,
     ],
   })
 }
@@ -192,41 +191,153 @@ const getWeeklyCreatedProducts = async (req, res) => {
 
   const firstDayProducts = await ProductModel.find({
     timestamp: { $gte: weekRange[0], $lt: weekRange[1] },
-  }).count()
+  })
+
+  const firstDayPalmOil = firstDayProducts.filter(
+    (product) => product.productName === "PALM OIL"
+  ).length
+
+  const firstDayPalmKernelOil = firstDayProducts.filter(
+    (product) => product.productName === "PALM KERNEL OIL"
+  ).length
+
+  const firstDayBiofuel = firstDayProducts.filter(
+    (product) => product.productName === "BIOFUEL"
+  ).length
 
   const secondDayProducts = await ProductModel.find({
     timestamp: { $gte: weekRange[1], $lt: weekRange[2] },
-  }).count()
+  })
+
+  const secondDayPalmOil = secondDayProducts.filter(
+    (product) => product.productName === "PALM OIL"
+  ).length
+
+  const secondDayPalmKernelOil = secondDayProducts.filter(
+    (product) => product.productName === "PALM KERNEL OIL"
+  ).length
+
+  const secondDayBiofuel = secondDayProducts.filter(
+    (product) => product.productName === "BIOFUEL"
+  ).length
 
   const thirdDayProducts = await ProductModel.find({
     timestamp: { $gte: weekRange[2], $lt: weekRange[3] },
-  }).count()
+  })
+
+  const thirdDayPalmOil = thirdDayProducts.filter(
+    (product) => product.productName === "PALM OIL"
+  ).length
+
+  const thirdDayPalmKernelOil = thirdDayProducts.filter(
+    (product) => product.productName === "PALM KERNEL OIL"
+  ).length
+
+  const thirdDayBiofuel = thirdDayProducts.filter(
+    (product) => product.productName === "BIOFUEL"
+  ).length
 
   const fourthDayProducts = await ProductModel.find({
     timestamp: { $gte: weekRange[3], $lt: weekRange[4] },
-  }).count()
+  })
+
+  const fourthDayPalmOil = fourthDayProducts.filter(
+    (product) => product.productName === "PALM OIL"
+  ).length
+
+  const fourthDayPalmKernelOil = fourthDayProducts.filter(
+    (product) => product.productName === "PALM KERNEL OIL"
+  ).length
+
+  const fourthDayBiofuel = fourthDayProducts.filter(
+    (product) => product.productName === "BIOFUEL"
+  ).length
 
   const fifthDayProducts = await ProductModel.find({
     timestamp: { $gte: weekRange[4], $lt: weekRange[5] },
-  }).count()
+  })
+
+  const fifthDayPalmOil = fifthDayProducts.filter(
+    (product) => product.productName === "PALM OIL"
+  ).length
+
+  const fifthDayPalmKernelOil = fifthDayProducts.filter(
+    (product) => product.productName === "PALM KERNEL OIL"
+  ).length
+
+  const fifthDayBiofuel = fifthDayProducts.filter(
+    (product) => product.productName === "BIOFUEL"
+  ).length
 
   const sixthDayProducts = await ProductModel.find({
     timestamp: { $gte: weekRange[5], $lt: weekRange[6] },
-  }).count()
+  })
+
+  const sixthDayPalmOil = sixthDayProducts.filter(
+    (product) => product.productName === "PALM OIL"
+  ).length
+
+  const sixthDayPalmKernelOil = sixthDayProducts.filter(
+    (product) => product.productName === "PALM KERNEL OIL"
+  ).length
+
+  const sixthDayBiofuel = sixthDayProducts.filter(
+    (product) => product.productName === "BIOFUEL"
+  ).length
 
   const seventhDayProducts = await ProductModel.find({
     timestamp: { $gte: weekRange[6], $lt: weekRange[7] },
-  }).count()
+  })
+
+  const seventhDayPalmOil = seventhDayProducts.filter(
+    (product) => product.productName === "PALM OIL"
+  ).length
+
+  const seventhDayPalmKernelOil = seventhDayProducts.filter(
+    (product) => product.productName === "PALM KERNEL OIL"
+  ).length
+
+  const seventhDayBiofuel = seventhDayProducts.filter(
+    (product) => product.productName === "BIOFUEL"
+  ).length
 
   res.status(200).json({
     weeklyProducts: [
-      firstDayProducts,
-      secondDayProducts,
-      thirdDayProducts,
-      fourthDayProducts,
-      fifthDayProducts,
-      sixthDayProducts,
-      seventhDayProducts,
+      {
+        palmOil: firstDayPalmOil,
+        palmKernelOil: firstDayPalmKernelOil,
+        biofuel: firstDayBiofuel,
+      },
+      {
+        palmOil: secondDayPalmOil,
+        palmKernelOil: secondDayPalmKernelOil,
+        biofuel: secondDayBiofuel,
+      },
+      {
+        palmOil: thirdDayPalmOil,
+        palmKernelOil: thirdDayPalmKernelOil,
+        biofuel: thirdDayBiofuel,
+      },
+      {
+        palmOil: fourthDayPalmOil,
+        palmKernelOil: fourthDayPalmKernelOil,
+        biofuel: fourthDayBiofuel,
+      },
+      {
+        palmOil: fifthDayPalmOil,
+        palmKernelOil: fifthDayPalmKernelOil,
+        biofuel: fifthDayBiofuel,
+      },
+      {
+        palmOil: sixthDayPalmOil,
+        palmKernelOil: sixthDayPalmKernelOil,
+        biofuel: sixthDayBiofuel,
+      },
+      {
+        palmOil: seventhDayPalmOil,
+        palmKernelOil: seventhDayPalmKernelOil,
+        biofuel: seventhDayBiofuel,
+      },
     ],
   })
 }

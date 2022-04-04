@@ -11,21 +11,17 @@ let mainWindow
 const createWindow = () => {
   // Create the browser window.
   mainWindow = new BrowserWindow({
-    // icon: path.join(__dirname, "(insert icon path)"),
-    width: 900,
-    height: 700,
-    frame: false,
+    width: 1000,
+    height: 600,
     show: false,
     minWidth: 1000,
     minHeight: 600,
-    webPreferences: {
-      preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
-    },
   })
 
   mainWindow.on("ready-to-show", mainWindow.show)
   // and load the index.html of the app.
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY)
+  mainWindow.setMenuBarVisibility(false)
 
   // Open the DevTools.
 
@@ -59,18 +55,4 @@ app.on("activate", () => {
 
 ipcMain.on("app/close", () => {
   app.quit()
-})
-
-ipcMain.on("app/minimize", () => {
-  mainWindow.minimize()
-})
-
-ipcMain.handle("app/resize", async () => {
-  if (mainWindow.isMaximized()) {
-    mainWindow.unmaximize()
-    return true
-  } else {
-    mainWindow.maximize()
-    return false
-  }
 })

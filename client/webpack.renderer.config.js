@@ -5,6 +5,15 @@ rules.push({
   use: [{ loader: "style-loader" }, { loader: "css-loader" }],
 })
 
+rules.push({
+  test: /\.(png|jpe?g|gif)$/i,
+  use: [
+    {
+      loader: "file-loader",
+    },
+  ],
+})
+
 module.exports = {
   // Put your normal webpack config below here
   module: {

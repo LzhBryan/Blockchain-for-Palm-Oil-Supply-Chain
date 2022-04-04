@@ -5,14 +5,14 @@ const supplyChainSchema = new mongoose.Schema(
     fromAddress: {
       type: String,
       required: [true, "Please provide sender address"],
-      // minlength: 130,
-      // maxlength: 130,
+      minlength: 130,
+      maxlength: 130,
     },
     toAddress: {
       type: String,
       required: [true, "Please provide receiver address"],
-      // minlength: 130,
-      // maxlength: 130,
+      minlength: 130,
+      maxlength: 130,
     },
     products: [
       {
@@ -22,10 +22,12 @@ const supplyChainSchema = new mongoose.Schema(
           required: [true, "Please provide the product name"],
           enum: [
             "PALM FRUITS",
+            "EMPTY FRUIT BUNCH",
             "CRUDE PALM OIL",
             "CRUDE PALM KERNEL OIL",
             "PALM OIL",
             "PALM KERNEL OIL",
+            "BIOFUEL",
           ],
         },
         quantity: {
@@ -38,11 +40,11 @@ const supplyChainSchema = new mongoose.Schema(
       type: String,
       required: true,
       unique: true,
-      // minlength: 3,
+      minlength: 3,
     },
     previousBatchId: {
       type: String,
-      // minlength: 3,
+      minlength: 3,
     },
     transactionReceipt: {
       type: mongoose.Schema.Types.ObjectId,

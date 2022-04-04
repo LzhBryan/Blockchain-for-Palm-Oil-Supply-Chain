@@ -43,6 +43,29 @@ const createRecord = async (req, res) => {
   } = req.body
   const { role, username } = req.user
 
+  const sender = await UserModel.findOne({ publicKey: fromAddress })
+  const receiver = await UserModel.findOne({ publicKey: toAddress })
+
+  if (!sender) {
+    throw new BadRequestError(
+      "The public key for sender address is not recognized"
+    )
+  }
+
+  if (sender.username !== username) {
+    throw new BadRequestError("You are not using your own pair of keys")
+  }
+
+  if (!receiver) {
+    throw new BadRequestError(`There's no user with the address ${to}`)
+  }
+
+  if (receiver.role === "Validator") {
+    throw new BadRequestError(
+      "Validators do not participate in transaction activities"
+    )
+  }
+
   const transactionReceipt = await TransactionModel.findOne({
     _id: transactionId,
   })

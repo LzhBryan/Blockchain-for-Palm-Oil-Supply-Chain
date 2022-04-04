@@ -5,6 +5,8 @@ const { NotFoundError, BadRequestError } = require("../errors")
 const EC = require("elliptic").ec
 const ec = new EC("secp256k1")
 const { createHash } = require("crypto")
+const { send } = require("process")
+const user = require("../models/user")
 const CONSENSUS_THRESHOLD = 0.66
 const MAX_RECORD = 2
 
@@ -33,6 +35,30 @@ const getTransaction = async (req, res) => {
 
 const createTransactions = async (req, res) => {
   const { fromAddress: from, privateKey, toAddress: to, amount } = req.body
+  const { username } = req.user
+
+  const sender = await UserModel.findOne({ publicKey: from })
+  const receiver = await UserModel.findOne({ publicKey: to })
+
+  if (!sender) {
+    throw new BadRequestError(
+      "The public key for sender address is not recognized"
+    )
+  }
+
+  if (sender.username !== username) {
+    throw new BadRequestError("You are not using your own pair of keys")
+  }
+
+  if (!receiver) {
+    throw new BadRequestError(`There's no user with the address ${to}`)
+  }
+
+  if (receiver.role === "Validator") {
+    throw new BadRequestError(
+      "Validators do not participate in transaction activities"
+    )
+  }
 
   const key = ec.keyFromPrivate(privateKey)
   const timestamp = new Date().toLocaleString("en-GB")

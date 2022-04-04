@@ -5,14 +5,14 @@ const transactionSchema = new mongoose.Schema(
     fromAddress: {
       type: String,
       required: [true, "Please provide sender address"],
-      // minlength: 130,
-      // maxlength: 130,
+      minlength: 130,
+      maxlength: 130,
     },
     toAddress: {
       type: String,
       required: [true, "Please provide receiver address"],
-      // minlength: 130,
-      // maxlength: 130,
+      minlength: 130,
+      maxlength: 130,
     },
     amount: {
       type: Number,

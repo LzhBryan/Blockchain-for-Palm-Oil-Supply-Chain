@@ -2,67 +2,10 @@
 <html>
   <head>
     <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   </head>
-  <body>
-    <section class="main-app">
-      <nav>
-        <div class="left-nav">
-          <span class="nav-link" id="sidebar">&#x2630</span>
-        </div>
-        <div class="right-nav">
-          <span
-            class="nav-link"
-            id="minimize"
-            onClick="minimizeApp()"
-          >
-            &#x2212 
-          </span>
-          <span
-            class="nav-link"
-            id="resize"
-            onClick="resizeApp()"
-          >&#x25A1
-          </span>
-          <span
-            class="nav-link"
-            id="close-app"
-            onClick="closeApp()"
-          >
-            &#10006
-          </span>
-        </div>
-      </nav>
-      <div id="root"></div>
-    </section>
+  <body style="margin: 0px">
+    <div id="root"></div>
   </body>
-  <script>
-    function closeApp() {
-      app.window.close()
-    }
-
-    function minimizeApp(){
-      app.window.minimize()
-    }
-
-    async function resizeApp(){
-      const isRestore = await app.window.resize()
-      if(isRestore){
-        document.getElementById("resize").innerHTML='&#x25A1'
-        document.getElementById("resize").style.fontSize="1.6rem"
-        document.getElementById("resize").style.textAlign="center"
-        document.getElementById("resize").style.paddingBottom="8px"
-        document.getElementById("minimize").style.paddingBottom="8.6px"
-        document.getElementById("close-app").style.paddingBottom="9.6px"
-      }
-      else{
-        document.getElementById("resize").innerHTML='&#x2750'
-        document.getElementById("resize").style.fontSize="1.2rem"
-        document.getElementById("resize").style.paddingBottom="10px"
-        document.getElementById("minimize").style.paddingBottom="8.9px"
-        document.getElementById("close-app").style.paddingBottom="9.9px"
-      }
-    }
-  </script>
 </html>

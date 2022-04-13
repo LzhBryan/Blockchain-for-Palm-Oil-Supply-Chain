@@ -69,7 +69,7 @@ const LoginPage = ({ history }) => {
       <Grid item xs={8} className={classes.bg}>
         <CardMedia className={classes.media} image={logo} />
       </Grid>
-      <Grid item xs={4}>
+      <Grid item xs={4} maxWidth="100vh">
         <Typography
           align="center"
           style={{

@@ -131,7 +131,7 @@ const SignUp = ({ history }) => {
 
   return (
     <div className={classes.root}>
-      <Grid container>
+      <Grid container maxheight="100%">
         <Grid item xs={8} className={classes.bg}>
           <CardMedia image={logo} className={classes.media} />
         </Grid>
@@ -139,7 +139,7 @@ const SignUp = ({ history }) => {
           <Typography
             align="center"
             style={{
-              marginTop: "95px",
+              marginTop: "60px",
               fontSize: "25px",
               fontWeight: "bolder",
               color: "#000",
@@ -226,7 +226,7 @@ const SignUp = ({ history }) => {
               type="submit"
               color="primary"
               variant="contained"
-              style={{ width: "20vm", marginTop: "0.5rem" }}
+              style={{ width: "20vm" }}
               onClick={(e) => registerUser(e)}
             >
               Sign up
@@ -236,7 +236,7 @@ const SignUp = ({ history }) => {
             <Button
               color="primary"
               variant="outlined"
-              style={{ width: "20vm", marginTop: "1.5rem" }}
+              style={{ width: "20vm", marginTop: "1rem" }}
               onClick={() => history.push("/")}
             >
               Already have an account? Login here

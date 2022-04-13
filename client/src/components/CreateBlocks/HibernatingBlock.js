@@ -108,8 +108,21 @@ const HibernatingBlock = ({ block }) => {
         >
           {block.approvedBy + ""}
         </Typography>
-
-        <Typography className={classes.pos} color="textSecondary">
+        <Typography
+          className={classes.pos}
+          color="textSecondary"
+          style={{ paddingTop: "10px" }}
+        >
+          Rejected By:
+        </Typography>
+        <Typography component="div" style={{ paddingBottom: "15px" }}>
+          {block.rejectedBy + ""}
+        </Typography>
+        <Typography
+          className={classes.pos}
+          color="textSecondary"
+          style={{ paddingTop: "10px" }}
+        >
           Records:
         </Typography>
         <TableRow>

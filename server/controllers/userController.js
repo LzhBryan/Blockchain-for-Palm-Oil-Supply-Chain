@@ -1,7 +1,6 @@
 const UserModel = require("../models/user")
 const TransactionModel = require("../models/transaction")
 const SupplyChainModel = require("../models/supplychain")
-const user = require("../models/user")
 
 const getAllUsers = async (req, res) => {
   const users = await UserModel.find({}).select("-password -privateKey")
@@ -43,8 +42,23 @@ const getUserTransactions = async (req, res) => {
 const getUserRecords = async (req, res) => {
   const { username } = req.user
 
-  const records = await SupplyChainModel.find({
+  const createdRecords = await SupplyChainModel.find({
     createdBy: username,
+  })
+
+  const user = await UserModel.find({ username: username })
+
+  const receivedRecords = await SupplyChainModel.find({
+    toAddress: user[0].publicKey,
+  })
+
+  let records = []
+  records = records.concat(createdRecords, receivedRecords)
+
+  records.sort(function (a, b) {
+    if (a.timestamp < b.timestamp) return -1
+    else if (a.timestamp > b.timestamp) return 1
+    return 0
   })
 
   res.status(200).json({ records })

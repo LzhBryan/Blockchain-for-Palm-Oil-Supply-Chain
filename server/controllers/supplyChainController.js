@@ -32,6 +32,80 @@ const getRecord = async (req, res) => {
   res.status(200).json({ record })
 }
 
+const getPreviousBatches = async (req, res) => {
+  const { role } = req.user
+
+  let previousBatches = []
+
+  if (role === "Miller") {
+    previousBatches = await SupplyChainModel.find({
+      $and: [
+        { batchId: /^PL/ },
+        {
+          $or: [
+            { status: "Approved" },
+            { status: "inBlock" },
+            { status: "inChain" },
+          ],
+        },
+      ],
+    })
+  } else if (role === "Refiner") {
+    previousBatches = await SupplyChainModel.find({
+      $and: [
+        { batchId: /^MI/ },
+        {
+          $or: [
+            { status: "Approved" },
+            { status: "inBlock" },
+            { status: "inChain" },
+          ],
+        },
+      ],
+    })
+  } else if (role === "WarehouseManager") {
+    previousBatches = await SupplyChainModel.find({
+      $and: [
+        { batchId: /^RE/ },
+        {
+          $or: [
+            { status: "Approved" },
+            { status: "inBlock" },
+            { status: "inChain" },
+          ],
+        },
+      ],
+    })
+  } else if (role === "Retailer") {
+    previousBatches = await SupplyChainModel.find({
+      $and: [
+        { batchId: /^WA/ },
+        {
+          $or: [
+            { status: "Approved" },
+            { status: "inBlock" },
+            { status: "inChain" },
+          ],
+        },
+      ],
+    })
+  }
+
+  let filteredPreviousBatches = []
+
+  for (batch of previousBatches) {
+    const alreadyBeenUsed = await SupplyChainModel.findOne({
+      previousBatchId: batch.batchId,
+    })
+
+    if (!alreadyBeenUsed) {
+      filteredPreviousBatches.push(batch)
+    }
+  }
+
+  res.status(200).json({ filteredPreviousBatches })
+}
+
 const createRecord = async (req, res) => {
   const {
     fromAddress,
@@ -321,6 +395,7 @@ async function recordConsensus(record, id) {
 module.exports = {
   getPendingRecords,
   getRecord,
+  getPreviousBatches,
   createRecord,
   validateRecord,
   approveRecord,

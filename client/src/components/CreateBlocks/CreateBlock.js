@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { Grid, Button, Container } from "@material-ui/core"
+import { Grid, Button } from "@material-ui/core"
 import Swal from "sweetalert2"
 import axios from "../../utils/axios"
 import HibernatingBlock from "./HibernatingBlock"
@@ -26,14 +26,17 @@ const CreateBlocks = () => {
         setDisabledValidate(false)
       }
     } catch (error) {
-      console.log(error.response.data.msg)
+      Swal.fire({
+        customClass: { container: "z-index: 2000" },
+        title: error.response.data.msg,
+        icon: "error",
+      })
     }
   }
 
   const handleActivate = async () => {
     try {
       const { data } = await axios.patch(`/api/blocks/${blocks._id}`, {})
-      console.log(data)
       setBlocks(data.activateBlock)
       setDisabledActivate(true)
       setDisabledValidate(false)
@@ -45,7 +48,6 @@ const CreateBlocks = () => {
         icon: "success",
       })
     } catch (error) {
-      console.log(error.response.data.msg)
       setError(true)
       Swal.fire({
         customClass: { container: "z-index: 2000" },
@@ -90,7 +92,11 @@ const CreateBlocks = () => {
       const { data } = await axios.get(`/api/blocks/approve/${blocks._id}`)
       setIsValid(data.isValid)
     } catch (error) {
-      console.log(error.response.data.msg)
+      Swal.fire({
+        customClass: { container: "z-index: 2000" },
+        title: error.response.data.msg,
+        icon: "error",
+      })
     }
   }
 
@@ -99,14 +105,10 @@ const CreateBlocks = () => {
       const { data } = await axios.put(`/api/blocks/approve/${blocks._id}`, {
         isApproved,
       })
-      console.log(data)
       setBlocks(data.block)
       setMessage(data.message)
       setDisabledValidate(true)
       setDisabledActivate(true)
-      // if (data.block.status === "inChain") {
-      //   Swal.fire("This block has been appended to the chain!", "", "success")
-      // }
     } catch (error) {
       setError(error.response.data.msg)
       setError(true)
@@ -117,10 +119,10 @@ const CreateBlocks = () => {
     const validateResponse = await Swal.fire({
       customClass: { container: "z-index: 2000" },
       title: isValid
-        ? "Hibernating block is valid, data has not been tampered"
-        : "Hibernating block is invalid, data has been tampered!",
+        ? "Block is valid, data has not been tampered"
+        : "Block is invalid, data has been tampered!",
       icon: isValid ? "success" : "error",
-      text: "Do you wish to proceed with validation?",
+      text: "Do you wish to proceed to the consensus?",
       confirmButtonText: "Yes",
       cancelButtonText: "No",
       showCloseButton: true,

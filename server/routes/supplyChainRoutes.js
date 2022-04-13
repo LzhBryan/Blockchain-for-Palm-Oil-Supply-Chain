@@ -9,6 +9,7 @@ const {
 const {
   getPendingRecords,
   getRecord,
+  getPreviousBatches,
   createRecord,
   validateRecord,
   approveRecord,
@@ -35,5 +36,13 @@ router
   .route("/validate/:id")
   .get(authenticateUser, authorizePermissions("Validator"), validateRecord)
   .patch(authenticateUser, authorizePermissions("Validator"), approveRecord)
+
+router
+  .route("/records/previousBatches")
+  .get(
+    authenticateUser,
+    authorizePermissions(["Miller", "Refiner", "WarehouseManager", "Retailer"]),
+    getPreviousBatches
+  )
 
 module.exports = router

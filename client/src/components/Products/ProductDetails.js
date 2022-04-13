@@ -371,30 +371,34 @@ const Trace = () => {
                                   </Typography>
                                 </TableCell>
                               </TableRow>
-                              <TableRow className={classes.table}>
-                                <TableCell className={classes.table}>
-                                  <Typography
-                                    style={{
-                                      paddingTop: "15px",
-                                      fontSize: "15px",
-                                      fontWeight: "bold",
-                                      color: "#000",
-                                    }}
+                              {index !== 3 && (
+                                <TableRow className={classes.table}>
+                                  <TableCell className={classes.table}>
+                                    <Typography
+                                      style={{
+                                        paddingTop: "15px",
+                                        fontSize: "15px",
+                                        fontWeight: "bold",
+                                        color: "#000",
+                                      }}
+                                    >
+                                      Previous Batch ID:
+                                    </Typography>
+                                  </TableCell>
+                                </TableRow>
+                              )}
+                              {index !== 3 && (
+                                <TableRow>
+                                  <TableCell
+                                    colSpan={2}
+                                    style={{ wordBreak: "break-all" }}
                                   >
-                                    Previous Batch ID:
-                                  </Typography>
-                                </TableCell>
-                              </TableRow>
-                              <TableRow>
-                                <TableCell
-                                  colSpan={2}
-                                  style={{ wordBreak: "break-all" }}
-                                >
-                                  <Typography component="div">
-                                    {record.previousBatchId}
-                                  </Typography>
-                                </TableCell>
-                              </TableRow>
+                                    <Typography component="div">
+                                      {record.previousBatchId}
+                                    </Typography>
+                                  </TableCell>
+                                </TableRow>
+                              )}
                               <TableRow className={classes.table}>
                                 <TableCell className={classes.table}>
                                   <Typography
@@ -523,7 +527,16 @@ const Trace = () => {
                 </Stepper>
                 {activeStep === data?.record.length && (
                   <Paper square elevation={0} sx={{ p: 3 }}>
-                    <Typography>You have traced every process</Typography>
+                    <Typography
+                      style={{
+                        fontSize: "15px",
+                        fontWeight: "bold",
+                        color: "#000",
+                        paddingBottom: "15px",
+                      }}
+                    >
+                      You have traced every process!
+                    </Typography>
                     <Button onClick={handleReset} sx={{ mt: 1, mr: 1 }}>
                       Reset
                     </Button>

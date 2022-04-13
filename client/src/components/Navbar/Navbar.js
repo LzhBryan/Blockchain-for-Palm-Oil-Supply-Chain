@@ -28,6 +28,7 @@ import { AiOutlineTransaction } from "react-icons/ai"
 import { FaUserFriends } from "react-icons/fa"
 import { ImStatsDots } from "react-icons/im"
 import { GiMagnifyingGlass } from "react-icons/gi"
+import { VscReferences } from "react-icons/vsc"
 
 const drawerWidth = 300
 
@@ -228,14 +229,27 @@ const Navbar = ({ open, setOpen }) => {
           style={{ color: "white", fontSize: "1.8rem", paddingLeft: "6px" }}
         />
       ),
-      allowedRole: [
-        "Planter",
-        "Miller",
-        "Refiner",
-        "WarehouseManager",
-        "Retailer",
-      ],
+      allowedRole: ["Planter", "Miller", "Refiner", "WarehouseManager"],
       onClick: () => history.push("/createSupplyChainRecord"),
+    },
+    {
+      text: (
+        <Typography
+          style={{
+            fontSize: "16px",
+            color: "#fff",
+          }}
+        >
+          Previous batches
+        </Typography>
+      ),
+      icon: (
+        <VscReferences
+          style={{ color: "white", fontSize: "1.8rem", paddingLeft: "6px" }}
+        />
+      ),
+      allowedRole: ["Miller", "Refiner", "WarehouseManager", "Retailer"],
+      onClick: () => history.push("/previousBatches"),
     },
     {
       text: (

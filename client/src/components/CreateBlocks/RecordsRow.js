@@ -166,10 +166,10 @@ const RecordsRow = ({ records }) => {
                               </Typography>
                             </TableCell>
                           </TableRow>
-                          {records.products.map((product) => {
+                          {records.products.map((product, index) => {
                             const { name, quantity } = product
                             return (
-                              <TableRow>
+                              <TableRow key={index}>
                                 <TableCell className={classes.product}>
                                   <Typography component="div" align="center">
                                     {name}

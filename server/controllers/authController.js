@@ -1,5 +1,5 @@
 const UserModel = require("../models/user")
-const { BadRequestError, UnauthenticatedError } = require("../errors")
+const { BadRequestError } = require("../errors")
 const EC = require("elliptic").ec
 const ec = new EC("secp256k1")
 

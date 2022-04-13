@@ -254,15 +254,17 @@ const SupplyChainForm = ({ history }) => {
                       }}
                     </FieldArray>
 
-                    <Grid xs={12} item>
-                      <Field
-                        name="prevBatchId"
-                        label="Previous Batch ID"
-                        placeholder="Enter batch ID"
-                        component={TextField}
-                        fullWidth
-                      ></Field>
-                    </Grid>
+                    {role !== "Planter" && (
+                      <Grid xs={12} item>
+                        <Field
+                          name="prevBatchId"
+                          label="Previous Batch ID"
+                          placeholder="Enter batch ID"
+                          component={TextField}
+                          fullWidth
+                        ></Field>
+                      </Grid>
+                    )}
 
                     <Grid xs={12} item>
                       <Field

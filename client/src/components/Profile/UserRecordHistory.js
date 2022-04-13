@@ -291,6 +291,27 @@ const UserRecordHistory = ({ records }) => {
                       </Typography>
                     </TableCell>
                   </TableRow>
+                  <TableRow className={classes.root}>
+                    <TableCell className={classes.root}>
+                      <Typography
+                        style={{
+                          paddingTop: "15px",
+                          fontSize: "15px",
+                          fontWeight: "bold",
+                          color: "#000",
+                        }}
+                      >
+                        Created By
+                      </Typography>
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell colSpan={2} style={{ wordBreak: "break-all" }}>
+                      <Typography component="div">
+                        {records.createdBy}
+                      </Typography>
+                    </TableCell>
+                  </TableRow>
                 </TableHead>
               </Table>
             </Box>

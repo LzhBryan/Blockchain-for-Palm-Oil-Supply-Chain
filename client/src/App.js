@@ -7,6 +7,7 @@ import ProtectedRoute from "./components/Route/ProtectedRoute"
 import TransactionTable from "./pages/TransactionTable"
 import TransactionForm from "./components/TransactionForm/TransactionForm"
 import SupplyChainForm from "./components/SupplyChainForm/SupplyChainForm"
+import PreviousBatches from "./components/PreviousBatches/PreviousBatches"
 import Products from "./components/Products/Products"
 import ProductDetails from "./components/Products/ProductDetails"
 import BlockList from "./pages/BlockchainPage/BlockList"
@@ -78,6 +79,11 @@ const App = () => {
               exact
               path="/createSupplyChainRecord"
               component={SupplyChainForm}
+            />
+            <ProtectedRoute
+              exact
+              path="/previousBatches"
+              component={PreviousBatches}
             />
             <ProtectedRoute exact path="/products" component={Products} />
             <ProtectedRoute

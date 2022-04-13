@@ -5,8 +5,6 @@ const { NotFoundError, BadRequestError } = require("../errors")
 const EC = require("elliptic").ec
 const ec = new EC("secp256k1")
 const { createHash } = require("crypto")
-const { send } = require("process")
-const user = require("../models/user")
 const CONSENSUS_THRESHOLD = 0.66
 const MAX_RECORD = 2
 
@@ -18,7 +16,7 @@ const getPendingTransactions = async (req, res) => {
     approvedBy: { $ne: username },
     rejectedBy: { $ne: username },
   })
-  // const transactions = await TransactionModel.find({})
+
   res.status(200).json({ transactions })
 }
 

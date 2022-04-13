@@ -123,11 +123,17 @@ const approveBlock = async (req, res) => {
 
   block = await blockConsensus(block, blockID)
 
-  let message
-  isApproved
-    ? (message = "You have approved this block")
-    : (message = "You have rejected this block")
+  console.log(block)
 
+  let message
+  if (block.status === "inChain") {
+    message =
+      "You have approved this block, the block has been added to the blockchain"
+  } else {
+    isApproved
+      ? (message = "You have approved this block")
+      : (message = "You have rejected this block")
+  }
   res.status(200).json({ message: message, block })
 }
 

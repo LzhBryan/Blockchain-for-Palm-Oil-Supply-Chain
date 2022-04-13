@@ -73,7 +73,7 @@ const UserRecordTable = () => {
           color: "#000",
         }}
       >
-        USERS RECORDS
+        USERS SUPPLY CHAIN RECORDS
       </Typography>
       <Table aria-label="collapsible table">
         <TableHead className={classes.tableHead}>

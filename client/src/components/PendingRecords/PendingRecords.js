@@ -69,7 +69,7 @@ const PendingRecords = ({ record, type, api }) => {
         ? `${type} is valid, data has not been tampered`
         : `${type}  is not valid, data has been tampered!`,
       icon: isValid ? "success" : "error",
-      text: "Do you wish to proceed to the next step?",
+      text: "Do you wish to proceed to the consensus?",
       showCloseButton: true,
       showCancelButton: true,
       confirmButtonText: "Yes",

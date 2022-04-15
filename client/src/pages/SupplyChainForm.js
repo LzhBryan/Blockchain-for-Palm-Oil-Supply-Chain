@@ -15,8 +15,8 @@ import { MdAddCircleOutline, MdDelete } from "react-icons/md"
 import { TextField, Select } from "formik-material-ui"
 import * as Yup from "yup"
 import Swal from "sweetalert2"
-import axios from "../../utils/axios"
-import { useRole } from "../../utils/UserContext"
+import axios from "../utils/axios"
+import { useRole } from "../utils/UserContext"
 
 const useStyles = makeStyles((theme) => ({
   root: {

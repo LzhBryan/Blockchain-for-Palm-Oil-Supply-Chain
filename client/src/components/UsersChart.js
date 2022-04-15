@@ -1,11 +1,11 @@
 import React from "react"
 import { Pie } from "react-chartjs-2"
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js"
-import { useFetch } from "../../utils/useFetch"
+import { useFetch } from "../utils/useFetch"
 
 ChartJS.register(ArcElement, Tooltip, Legend)
 
-const Users = () => {
+const UsersChart = () => {
   const { data } = useFetch("/api/dashboard/users")
 
   return (
@@ -48,4 +48,4 @@ const Users = () => {
   )
 }
 
-export default Users
+export default UsersChart

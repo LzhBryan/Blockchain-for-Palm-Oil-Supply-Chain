@@ -6,10 +6,10 @@ import CardContent from "@material-ui/core/CardContent"
 import Typography from "@material-ui/core/Typography"
 import { Grid, TableRow, TableCell } from "@material-ui/core"
 import Swal from "sweetalert2"
-import { useFetch } from "../../utils/useFetch"
-import RecordsRow from "../../components/CreateBlocks/RecordsRow"
+import { useFetch } from "../utils/useFetch"
+import RecordsRow from "../components/RecordsRow"
 import { IoMdArrowRoundBack } from "react-icons/io"
-import Loading from "../../components/Loading/Loading"
+import Loading from "../components/Loading"
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-const BlockDetails = () => {
+const BlockDetailsPage = () => {
   const classes = useStyles()
   const { id } = useParams()
   const {
@@ -197,4 +197,4 @@ const BlockDetails = () => {
   )
 }
 
-export default BlockDetails
+export default BlockDetailsPage

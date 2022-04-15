@@ -14,8 +14,8 @@ import {
 } from "@material-ui/core"
 import Swal from "sweetalert2"
 import { useFetch } from "../utils/useFetch"
-import PendingRecords from "../components/PendingRecords/PendingRecords"
-import Loading from "../components/Loading/Loading"
+import PendingRecords from "../components/PendingRecords"
+import Loading from "../components/Loading"
 
 const useRowStyles = makeStyles({
   tableContainer: {

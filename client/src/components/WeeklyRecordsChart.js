@@ -10,7 +10,7 @@ import {
   Tooltip,
   Legend,
 } from "chart.js"
-import axios from "../../utils/axios"
+import axios from "../utils/axios"
 
 ChartJS.register(
   CategoryScale,
@@ -22,7 +22,7 @@ ChartJS.register(
   Legend
 )
 
-const WeeklyRecords = () => {
+const WeeklyRecordsChart = () => {
   const [weeklyRecords, setWeeklyRecords] = useState([])
   const [weeklyTransactions, setWeeklyTransactions] = useState([])
 
@@ -94,4 +94,4 @@ const WeeklyRecords = () => {
   )
 }
 
-export default WeeklyRecords
+export default WeeklyRecordsChart

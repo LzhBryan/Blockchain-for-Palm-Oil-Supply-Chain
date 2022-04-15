@@ -9,7 +9,7 @@ import {
 } from "@material-ui/core"
 import { MdSearch } from "react-icons/md"
 import Swal from "sweetalert2"
-import axios from "../../utils/axios"
+import axios from "../utils/axios"
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-const Products = ({ history }) => {
+const SearchProductsPage = ({ history }) => {
   const classes = useStyles()
 
   const [productId, setProductId] = useState("")
@@ -81,4 +81,4 @@ const Products = ({ history }) => {
   )
 }
 
-export default Products
+export default SearchProductsPage

@@ -12,8 +12,8 @@ import {
   makeStyles,
 } from "@material-ui/core"
 import Swal from "sweetalert2"
-import axios from "../../utils/axios"
-import logo from "../../assets/logo.png"
+import axios from "../utils/axios"
+import logo from "../assets/logo.png"
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -71,7 +71,7 @@ const Keys = ({ publicKey, privateKey }) => {
   )
 }
 
-const SignUp = ({ history }) => {
+const SignUpPage = ({ history }) => {
   const classes = useStyles()
 
   const [username, setUsername] = useState("")
@@ -248,4 +248,4 @@ const SignUp = ({ history }) => {
   )
 }
 
-export default SignUp
+export default SignUpPage

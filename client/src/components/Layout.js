@@ -22,7 +22,7 @@ import {
   MdLogout,
 } from "react-icons/md"
 import { GiHamburgerMenu } from "react-icons/gi"
-import { useRole } from "../../utils/UserContext"
+import { useRole } from "../utils/UserContext"
 import { SiHiveBlockchain } from "react-icons/si"
 import { AiOutlineTransaction } from "react-icons/ai"
 import { FaUserFriends } from "react-icons/fa"
@@ -80,7 +80,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-const Navbar = ({ open, setOpen }) => {
+const Layout = ({ open, setOpen }) => {
   const history = useHistory()
   const classes = useStyles()
   const { role } = useRole()
@@ -423,4 +423,4 @@ const Navbar = ({ open, setOpen }) => {
   )
 }
 
-export default Navbar
+export default Layout

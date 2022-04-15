@@ -9,9 +9,9 @@ import {
 import { FaUserTie } from "react-icons/fa"
 import Swal from "sweetalert2"
 import { useFetch } from "../utils/useFetch"
-import Loading from "../components/Loading/Loading"
-import UserRecordTable from "../components/Profile/UserRecordTable"
-import UserTransactionTable from "../components/Profile/UserTransactionTable"
+import Loading from "../components/Loading"
+import UserRecordTable from "../components/UserRecordTable"
+import UserTransactionTable from "../components/UserTransactionTable"
 
 const useStyles = makeStyles({
   root: {

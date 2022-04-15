@@ -13,7 +13,7 @@ import {
 } from "@material-ui/core"
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md"
 import Swal from "sweetalert2"
-import axios from "../../utils/axios"
+import axios from "../utils/axios"
 
 const useRowStyles = makeStyles({
   root: {

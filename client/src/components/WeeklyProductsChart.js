@@ -6,11 +6,11 @@ import {
   Chart as ChartJS,
   LinearScale,
 } from "chart.js"
-import { useFetch } from "../../utils/useFetch"
+import { useFetch } from "../utils/useFetch"
 
 ChartJS.register(BarElement, CategoryScale, LinearScale)
 
-const WeeklyProducts = () => {
+const WeeklyProductsChart = () => {
   const { data } = useFetch("/api/dashboard/weeklyProducts")
 
   const palmOil = data?.weeklyProducts.map((product) => product.palmOil)
@@ -64,4 +64,4 @@ const WeeklyProducts = () => {
   )
 }
 
-export default WeeklyProducts
+export default WeeklyProductsChart

@@ -11,11 +11,11 @@ import {
   makeStyles,
 } from "@material-ui/core"
 import Swal from "sweetalert2"
-import OverallPercentage from "../components/Charts/OverallPercentage"
-import WeeklyBlocks from "../components/Charts/WeeklyBlocks"
-import WeeklyRecords from "../components/Charts/WeeklyRecords"
-import Users from "../components/Charts/Users"
-import WeeklyProducts from "../components/Charts/WeeklyProducts"
+import ApproveRejectChart from "../components/ApproveRejectChart"
+import WeeklyBlocksChart from "../components/WeeklyBlocksChart"
+import WeeklyRecordsChart from "../components/WeeklyRecordsChart"
+import UsersChart from "../components/UsersChart"
+import WeeklyProductsChart from "../components/WeeklyProductsChart"
 import axios from "../utils/axios"
 import blockchain from "../assets/blockchain.png"
 
@@ -67,7 +67,7 @@ const DashboardPage = () => {
             />
 
             <CardContent>
-              <WeeklyBlocks />
+              <WeeklyBlocksChart />
             </CardContent>
           </Card>
         </Grid>
@@ -103,7 +103,7 @@ const DashboardPage = () => {
               }
             />
             <CardContent>
-              <WeeklyRecords />
+              <WeeklyRecordsChart />
             </CardContent>
           </Card>
         </Grid>
@@ -121,7 +121,7 @@ const DashboardPage = () => {
               }
             />
             <CardContent>
-              <OverallPercentage />
+              <ApproveRejectChart />
             </CardContent>
           </Card>
         </Grid>
@@ -135,7 +135,7 @@ const DashboardPage = () => {
               }
             />
             <CardContent>
-              <WeeklyProducts />
+              <WeeklyProductsChart />
             </CardContent>
           </Card>
         </Grid>
@@ -149,7 +149,7 @@ const DashboardPage = () => {
               }
             />
             <CardContent>
-              <Users />
+              <UsersChart />
             </CardContent>
           </Card>
         </Grid>

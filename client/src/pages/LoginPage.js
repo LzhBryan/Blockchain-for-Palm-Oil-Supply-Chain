@@ -7,9 +7,9 @@ import {
   Typography,
   makeStyles,
 } from "@material-ui/core"
-import axios from "../../utils/axios"
-import { useRole } from "../../utils/UserContext"
-import logo from "../../assets/logo.png"
+import axios from "../utils/axios"
+import { useRole } from "../utils/UserContext"
+import logo from "../assets/logo.png"
 
 const useStyles = makeStyles({
   root: {

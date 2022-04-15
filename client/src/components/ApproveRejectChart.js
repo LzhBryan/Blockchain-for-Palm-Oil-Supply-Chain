@@ -1,11 +1,11 @@
 import React from "react"
 import { Doughnut } from "react-chartjs-2"
 import { ArcElement, Chart as ChartJS, Tooltip, Legend } from "chart.js"
-import { useFetch } from "../../utils/useFetch"
+import { useFetch } from "../utils/useFetch"
 
 ChartJS.register(ArcElement, Tooltip, Legend)
 
-const OverallPercentage = () => {
+const ApproveRejectChart = () => {
   const { data } = useFetch("/api/dashboard/approveReject")
 
   return (
@@ -43,4 +43,4 @@ const OverallPercentage = () => {
   )
 }
 
-export default OverallPercentage
+export default ApproveRejectChart

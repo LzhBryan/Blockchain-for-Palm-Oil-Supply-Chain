@@ -1,21 +1,21 @@
 import React from "react"
 import { MemoryRouter as Router, Switch, Route } from "react-router-dom"
 import { createTheme, ThemeProvider } from "@material-ui/core"
-import LoginPage from "./components/Login/Login"
-import SignUp from "./components/SignUp/Signup"
-import ProtectedRoute from "./components/Route/ProtectedRoute"
+import LoginPage from "./pages/LoginPage"
+import SignUpPage from "./pages/SignUpPage"
+import ProtectedRoute from "./components/ProtectedRoute"
 import TransactionTable from "./pages/TransactionTable"
-import TransactionForm from "./components/TransactionForm/TransactionForm"
-import SupplyChainForm from "./components/SupplyChainForm/SupplyChainForm"
-import PreviousBatches from "./components/PreviousBatches/PreviousBatches"
-import Products from "./components/Products/Products"
-import ProductDetails from "./components/Products/ProductDetails"
-import BlockList from "./pages/BlockchainPage/BlockList"
-import BlockDetails from "./pages/BlockchainPage/BlockDetails"
-import CreateBlock from "./components/CreateBlocks/CreateBlock"
+import TransactionForm from "./pages/TransactionForm"
+import SupplyChainForm from "./pages/SupplyChainForm"
+import PreviousBatchesPage from "./pages/PreviousBatchesPage"
+import SearchProductsPage from "./pages/SearchProductsPage"
+import ProductDetails from "./pages/ProductDetailsPage"
+import BlockchainTable from "./pages/BlockchainPage"
+import BlockDetailsPage from "./pages/BlockDetailsPage"
+import CreateBlock from "./pages/PendingBlockPage"
 import DashboardPage from "./pages/DashboardPage"
 import RecordTable from "./pages/RecordTable"
-import UserTable from "./components/UserList/UserTable"
+import UserTable from "./pages/UserTable"
 import ProfilePage from "./pages/ProfilePage"
 import { UserProvider } from "./utils/UserContext"
 
@@ -63,7 +63,7 @@ const App = () => {
         <Router>
           <Switch>
             <Route exact path="/" component={LoginPage} />
-            <Route exact path="/signup" component={SignUp} />
+            <Route exact path="/signup" component={SignUpPage} />
             <ProtectedRoute exact path="/dashboard" component={DashboardPage} />
             <ProtectedRoute
               exact
@@ -83,16 +83,28 @@ const App = () => {
             <ProtectedRoute
               exact
               path="/previousBatches"
-              component={PreviousBatches}
+              component={PreviousBatchesPage}
             />
-            <ProtectedRoute exact path="/products" component={Products} />
+            <ProtectedRoute
+              exact
+              path="/products"
+              component={SearchProductsPage}
+            />
             <ProtectedRoute
               exact
               path="/products/:id"
               component={ProductDetails}
             />
-            <ProtectedRoute exact path="/blockchain" component={BlockList} />
-            <ProtectedRoute exact path="/block/:id" component={BlockDetails} />
+            <ProtectedRoute
+              exact
+              path="/blockchain"
+              component={BlockchainTable}
+            />
+            <ProtectedRoute
+              exact
+              path="/block/:id"
+              component={BlockDetailsPage}
+            />
             <ProtectedRoute
               exact
               path="/pendingBlock"

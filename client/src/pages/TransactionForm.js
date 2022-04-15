@@ -11,7 +11,7 @@ import { Field, Form, Formik } from "formik"
 import { TextField } from "formik-material-ui"
 import * as Yup from "yup"
 import Swal from "sweetalert2"
-import axios from "../../utils/axios"
+import axios from "../utils/axios"
 
 const useStyles = makeStyles((theme) => ({
   root: {

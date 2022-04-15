@@ -6,11 +6,11 @@ import {
   Chart as ChartJS,
   LinearScale,
 } from "chart.js"
-import { useFetch } from "../../utils/useFetch"
+import { useFetch } from "../utils/useFetch"
 
 ChartJS.register(BarElement, CategoryScale, LinearScale)
 
-const WeeklyBlocks = () => {
+const WeeklyBlocksChart = () => {
   const { data } = useFetch("/api/dashboard/weeklyBlocks")
 
   return (
@@ -44,4 +44,4 @@ const WeeklyBlocks = () => {
   )
 }
 
-export default WeeklyBlocks
+export default WeeklyBlocksChart

@@ -15,9 +15,9 @@ import {
   Grid,
 } from "@material-ui/core"
 import Swal from "sweetalert2"
-import { useFetch } from "../../utils/useFetch"
-import BlockRows from "./BlockRows"
-import Loading from "../../components/Loading/Loading"
+import { useFetch } from "../utils/useFetch"
+import BlockRows from "../components/BlockRows"
+import Loading from "../components/Loading"
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-const BlockList = () => {
+const BlockchainTable = () => {
   const classes = useStyles()
   const [rowsPerPage, setRowsPerPage] = useState(5)
   const [page, setPage] = useState(0)
@@ -201,4 +201,4 @@ const BlockList = () => {
   )
 }
 
-export default BlockList
+export default BlockchainTable

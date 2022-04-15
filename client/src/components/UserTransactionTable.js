@@ -12,9 +12,9 @@ import {
   Typography,
 } from "@material-ui/core"
 import Swal from "sweetalert2"
-import { useFetch } from "../../utils/useFetch"
-import Loading from "../Loading/Loading"
-import UserRecordHistory from "./UserRecordHistory"
+import { useFetch } from "../utils/useFetch"
+import Loading from "./Loading"
+import UserTransactionHistory from "./UserTransactionHistory"
 
 const useRowStyles = makeStyles({
   tableContainer: {
@@ -28,12 +28,12 @@ const useRowStyles = makeStyles({
   },
 })
 
-const UserRecordTable = () => {
+const UserTransactionTable = () => {
   const classes = useRowStyles()
   const [rowsPerPage, setRowsPerPage] = useState(5)
   const [page, setPage] = useState(0)
   const { data, isLoading, serverError } = useFetch(
-    "/api/users/records/history"
+    "/api/users/transactions/history"
   )
 
   const handleChangePage = (event, newPage) => {
@@ -59,7 +59,7 @@ const UserRecordTable = () => {
 
   const emptyRows =
     rowsPerPage -
-    Math.min(rowsPerPage, data?.records.length - page * rowsPerPage)
+    Math.min(rowsPerPage, data?.transactions.length - page * rowsPerPage)
 
   return (
     <TableContainer component={Paper} className={classes.tableContainer}>
@@ -73,17 +73,17 @@ const UserRecordTable = () => {
           color: "#000",
         }}
       >
-        USERS SUPPLY CHAIN RECORDS
+        USERS TRANSACTIONS
       </Typography>
       <Table aria-label="collapsible table">
         <TableHead className={classes.tableHead}>
           <TableRow>
             <TableCell align="center" width="5%" />
-            <TableCell margin="auto" align="center" width="40%">
+            <TableCell margin="auto" align="center" width="30%">
               <Typography
                 style={{ fontSize: "15px", color: "white", fontWeight: "bold" }}
               >
-                Record ID
+                Transaction ID
               </Typography>
             </TableCell>
             <TableCell margin="auto" align="center" width="25%">
@@ -100,13 +100,24 @@ const UserRecordTable = () => {
                 Status
               </Typography>
             </TableCell>
+            <TableCell margin="auto" align="center" width="15%">
+              <Typography
+                style={{ fontSize: "15px", color: "white", fontWeight: "bold" }}
+              >
+                Amount
+              </Typography>
+            </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {data?.records
+          {data?.transactions
             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-            .map((records) => (
-              <UserRecordHistory key={records._id} records={records} />
+            .map((userTransaction) => (
+              <UserTransactionHistory
+                key={userTransaction._id}
+                userTransaction={userTransaction}
+                username={data?.username}
+              />
             ))}
           {emptyRows > 0 && (
             <TableRow style={{ height: 57 * emptyRows }}>
@@ -118,7 +129,7 @@ const UserRecordTable = () => {
       <TablePagination
         rowsPerPageOptions={[5, 10, 15]}
         component="div"
-        count={data?.records.length}
+        count={data?.transactions.length}
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}
@@ -128,4 +139,4 @@ const UserRecordTable = () => {
   )
 }
 
-export default UserRecordTable
+export default UserTransactionTable

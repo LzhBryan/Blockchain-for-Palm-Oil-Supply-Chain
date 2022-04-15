@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react"
 import { Grid, Button } from "@material-ui/core"
 import Swal from "sweetalert2"
-import axios from "../../utils/axios"
-import HibernatingBlock from "./HibernatingBlock"
+import axios from "../utils/axios"
+import HibernatingBlock from "../components/HibernatingBlock"
 
-const CreateBlocks = () => {
+const PendingBlockPage = () => {
   const [blocks, setBlocks] = useState([])
   const [isActivated, setIsActivated] = useState(false)
   const [disabledActivate, setDisabledActivate] = useState(false)
@@ -198,4 +198,4 @@ const CreateBlocks = () => {
   )
 }
 
-export default CreateBlocks
+export default PendingBlockPage

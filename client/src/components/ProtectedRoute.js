@@ -2,7 +2,7 @@ import React, { useState } from "react"
 import { Redirect, Route } from "react-router-dom"
 import clsx from "clsx"
 import { makeStyles, Container } from "@material-ui/core"
-import Navbar from "../Navbar/Navbar"
+import Navbar from "../components/Layout"
 
 const drawerWidth = 300
 

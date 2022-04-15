@@ -20,9 +20,9 @@ import {
 } from "@material-ui/core"
 import { IoMdArrowRoundBack } from "react-icons/io"
 import { useParams, Link } from "react-router-dom"
-import { useFetch } from "../../utils/useFetch"
+import { useFetch } from "../utils/useFetch"
 import Swal from "sweetalert2"
-import Loading from "../Loading/Loading"
+import Loading from "../components/Loading"
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -59,7 +59,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-const Trace = () => {
+const ProductDetailsPage = () => {
   const classes = useStyles()
   const { id } = useParams()
   const [activeStep, setActiveStep] = useState(0)
@@ -551,4 +551,4 @@ const Trace = () => {
   )
 }
 
-export default Trace
+export default ProductDetailsPage

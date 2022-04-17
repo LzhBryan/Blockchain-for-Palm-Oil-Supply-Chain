@@ -9,15 +9,16 @@ import {
   TableRow,
   Paper,
   TablePagination,
+  TableSortLabel,
   Typography,
   Grid,
 } from "@material-ui/core"
 import Swal from "sweetalert2"
 import { useFetch } from "../utils/useFetch"
-import PendingRecords from "../components/PendingRecords"
+import UserRows from "../components/UserRows"
 import Loading from "../components/Loading"
 
-const useRowStyles = makeStyles({
+const useRowStyles = makeStyles((theme) => ({
   tableContainer: {
     width: "60vw",
     marginTop: "3rem",
@@ -27,13 +28,18 @@ const useRowStyles = makeStyles({
   tableHead: {
     backgroundColor: "#4A78D0",
   },
-})
+  tableSort: {
+    color: theme.palette.common.white,
+  },
+}))
 
-const RecordTable = () => {
+const UserListPage = () => {
   const classes = useRowStyles()
   const [rowsPerPage, setRowsPerPage] = useState(5)
   const [page, setPage] = useState(0)
-  const { data, isLoading, serverError } = useFetch("/api/supply-chain")
+  const [order, setOrder] = useState(null)
+  const [orderBy, setOrderBy] = useState()
+  const { data, isLoading, serverError } = useFetch("/api/users")
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage)
@@ -43,6 +49,41 @@ const RecordTable = () => {
     setRowsPerPage(parseInt(event.target.value, 10))
     setPage(0)
   }
+
+  const handleSortRequest = () => {
+    const isAsc = orderBy === "role" && order === "asc"
+    setOrder(isAsc ? "desc" : "asc")
+    setOrderBy("role")
+  }
+
+  const stableSort = (array, comparator) => {
+    const stabilizedThis = array?.map((el, index) => [el, index])
+    stabilizedThis?.sort((a, b) => {
+      const order = comparator(a[0], b[0])
+      if (order !== 0) return order
+      return a[1] - b[1]
+    })
+    return stabilizedThis?.map((el) => el[0])
+  }
+
+  function getComparator(order, orderBy) {
+    return order === "desc"
+      ? (a, b) => descendingComparator(a, b, orderBy)
+      : (a, b) => -descendingComparator(a, b, orderBy)
+  }
+
+  function descendingComparator(a, b, orderBy) {
+    if (b[orderBy] < a[orderBy]) {
+      return -1
+    }
+    if (b[orderBy] > a[orderBy]) {
+      return 1
+    }
+    return 0
+  }
+
+  const emptyRows =
+    rowsPerPage - Math.min(rowsPerPage, data?.users.length - page * rowsPerPage)
 
   if (isLoading) {
     return <Loading />
@@ -55,10 +96,6 @@ const RecordTable = () => {
       icon: "error",
     })
   }
-
-  const emptyRows =
-    rowsPerPage -
-    Math.min(rowsPerPage, data?.records.length - page * rowsPerPage)
 
   return (
     <Grid container>
@@ -78,13 +115,13 @@ const RecordTable = () => {
               color: "#000",
             }}
           >
-            PENDING SUPPLY-CHAIN RECORDS
+            USER LIST
           </Typography>
           <Table aria-label="collapsible table">
             <TableHead className={classes.tableHead}>
               <TableRow>
                 <TableCell align="center" width="5%" />
-                <TableCell margin="auto" align="center" width="40%">
+                <TableCell align="center" width="20%">
                   <Typography
                     style={{
                       fontSize: "15px",
@@ -92,21 +129,32 @@ const RecordTable = () => {
                       fontWeight: "bold",
                     }}
                   >
-                    Supply Chain Record ID
+                    Username
                   </Typography>
                 </TableCell>
-                <TableCell margin="auto" align="center" width="25%">
-                  <Typography
-                    style={{
-                      fontSize: "15px",
-                      color: "white",
-                      fontWeight: "bold",
+                <TableCell width="20%" style={{ paddingLeft: "8%" }}>
+                  <TableSortLabel
+                    active={orderBy === "role"}
+                    direction={orderBy === "role" ? order : "asc"}
+                    onClick={() => handleSortRequest()}
+                    classes={{
+                      root: classes.tableSort,
+                      iconDirectionAsc: classes.tableSort,
+                      iconDirectionDesc: classes.tableSort,
                     }}
                   >
-                    Timestamp
-                  </Typography>
+                    <Typography
+                      style={{
+                        fontSize: "15px",
+                        color: "white",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      Role
+                    </Typography>
+                  </TableSortLabel>
                 </TableCell>
-                <TableCell margin="auto" align="center" width="25%">
+                <TableCell align="center" width="50%">
                   <Typography
                     style={{
                       fontSize: "15px",
@@ -114,24 +162,19 @@ const RecordTable = () => {
                       fontWeight: "bold",
                     }}
                   >
-                    Status
+                    Public Key
                   </Typography>
                 </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {data?.records
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((record) => (
-                  <PendingRecords
-                    key={record._id}
-                    record={record}
-                    type={"Supply-chain record"}
-                    api={"supply-chain"}
-                  />
+              {stableSort(data?.users, getComparator(order, orderBy))
+                ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map((users) => (
+                  <UserRows key={users._id} users={users} />
                 ))}
               {emptyRows > 0 && (
-                <TableRow style={{ height: 57 * emptyRows }}>
+                <TableRow style={{ height: 100 * emptyRows }}>
                   <TableCell colSpan={6} />
                 </TableRow>
               )}
@@ -140,7 +183,7 @@ const RecordTable = () => {
           <TablePagination
             rowsPerPageOptions={[5, 10, 15]}
             component="div"
-            count={data?.records.length}
+            count={data?.users.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}
@@ -152,4 +195,4 @@ const RecordTable = () => {
   )
 }
 
-export default RecordTable
+export default UserListPage

@@ -13,6 +13,7 @@ const PendingBlockPage = () => {
   const [isApproved, setIsApproved] = useState(null)
   const [message, setMessage] = useState("")
   const [error, setError] = useState(false)
+  const [isClicked, setIsClicked] = useState(null)
 
   const getBlocks = async () => {
     try {
@@ -63,11 +64,11 @@ const PendingBlockPage = () => {
       getBlocks()
     }
 
-    if (isValid !== null && isApproved === null) {
+    if (isClicked !== null && isApproved === null) {
       validatorPopup()
     }
 
-    if (isValid !== null && isApproved !== null && message === "") {
+    if (isApproved !== null && message === "") {
       handleApprove()
     }
 
@@ -85,9 +86,16 @@ const PendingBlockPage = () => {
     disabledValidate,
     isApproved,
     message,
+    isClicked,
+    error,
   ])
 
   const handleValidate = async () => {
+    if (isClicked === null) {
+      setIsClicked(true)
+    } else {
+      setIsClicked(!isClicked)
+    }
     try {
       const { data } = await axios.get(`/api/blocks/approve/${blocks._id}`)
       setIsValid(data.isValid)
@@ -95,7 +103,7 @@ const PendingBlockPage = () => {
       Swal.fire({
         customClass: { container: "z-index: 2000" },
         title: error.response.data.msg,
-        icon: "error",
+        icon: "warning",
       })
     }
   }
@@ -110,7 +118,7 @@ const PendingBlockPage = () => {
       setDisabledValidate(true)
       setDisabledActivate(true)
     } catch (error) {
-      setError(error.response.data.msg)
+      setMessage(error.response.data.msg)
       setError(true)
     }
   }
@@ -179,7 +187,6 @@ const PendingBlockPage = () => {
             Activate Block
           </Button>
           <Button
-            // style={{ marginTop: "40px", marginLeft: "20px" }}
             style={{
               display: "flex",
               marginLeft: "auto",

@@ -29,7 +29,7 @@ const useRowStyles = makeStyles((theme) => ({
   },
 }))
 
-const TransactionTable = () => {
+const PendingTransactionPage = () => {
   const classes = useRowStyles()
   const [rowsPerPage, setRowsPerPage] = useState(5)
   const [page, setPage] = useState(0)
@@ -153,4 +153,4 @@ const TransactionTable = () => {
   )
 }
 
-export default TransactionTable
+export default PendingTransactionPage

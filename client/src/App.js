@@ -4,7 +4,7 @@ import { createTheme, ThemeProvider } from "@material-ui/core"
 import LoginPage from "./pages/LoginPage"
 import SignUpPage from "./pages/SignUpPage"
 import ProtectedRoute from "./components/ProtectedRoute"
-import TransactionTable from "./pages/TransactionTable"
+import PendingTransactionPage from "./pages/PendingTransactionPage"
 import TransactionForm from "./pages/TransactionForm"
 import SupplyChainForm from "./pages/SupplyChainForm"
 import PreviousBatchesPage from "./pages/PreviousBatchesPage"
@@ -14,9 +14,10 @@ import BlockchainTable from "./pages/BlockchainPage"
 import BlockDetailsPage from "./pages/BlockDetailsPage"
 import CreateBlock from "./pages/PendingBlockPage"
 import DashboardPage from "./pages/DashboardPage"
-import RecordTable from "./pages/RecordTable"
-import UserTable from "./pages/UserTable"
+import PendingRecordPage from "./pages/PendingRecordPage"
+import UserListPage from "./pages/UserListPage"
 import ProfilePage from "./pages/ProfilePage"
+import ErrorPage from "./pages/ErrorPage"
 import { UserProvider } from "./utils/UserContext"
 
 const theme = createTheme({
@@ -68,7 +69,7 @@ const App = () => {
             <ProtectedRoute
               exact
               path="/pendingTransactions"
-              component={TransactionTable}
+              component={PendingTransactionPage}
             />
             <ProtectedRoute
               exact
@@ -113,14 +114,15 @@ const App = () => {
             <ProtectedRoute
               exact
               path="/pendingRecords"
-              component={RecordTable}
+              component={PendingRecordPage}
             />
-            <ProtectedRoute exact path="/users" component={UserTable} />
+            <ProtectedRoute exact path="/users" component={UserListPage} />
             <ProtectedRoute
               exact
               path="/page/profile"
               component={ProfilePage}
             />
+            <Route path="*" component={ErrorPage} />
           </Switch>
         </Router>
       </ThemeProvider>

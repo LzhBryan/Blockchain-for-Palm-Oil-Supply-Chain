@@ -2,13 +2,49 @@ const express = require("express")
 const router = express.Router()
 
 const {
-  login,
-  register,
-  generateKeys,
+  authenticateUser,
+  authorizePermissions,
+} = require("../middleware/authentication")
+
+const {
+  getAllUsers,
+  showCurrentUserProfile,
+  getUserTransactions,
+  getUserRecords,
 } = require("../controllers/userController")
 
-router.route("/register").post(register).get(generateKeys)
-router.route("/login").post(login)
-//router.route("/dashboard").get(authMiddleware, dashboard)
+router.route("/").get(authenticateUser, getAllUsers)
+
+router.route("/profile").get(authenticateUser, showCurrentUserProfile)
+
+router
+  .route("/transactions/history")
+  .get(
+    authenticateUser,
+    authorizePermissions([
+      "Planter",
+      "Miller",
+      "Refiner",
+      "Transporter",
+      "WarehouseManager",
+      "Retailer",
+    ]),
+    getUserTransactions
+  )
+
+router
+  .route("/records/history")
+  .get(
+    authenticateUser,
+    authorizePermissions([
+      "Planter",
+      "Miller",
+      "Refiner",
+      "Transporter",
+      "WarehouseManager",
+      "Retailer",
+    ]),
+    getUserRecords
+  )
 
 module.exports = router

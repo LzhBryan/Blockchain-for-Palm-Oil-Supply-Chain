@@ -13,7 +13,12 @@ const mongoose = require("mongoose")
 
 // routers
 const transactionRouter = require("./routes/transactionRoutes")
+const authRouter = require("./routes/authRoutes")
+const blockRouter = require("./routes/blockRoutes")
+const supplychainRouter = require("./routes/supplyChainRoutes")
+const productRouter = require("./routes/productRoutes")
 const userRouter = require("./routes/userRoutes")
+const dashboardRouter = require("./routes/dashboardRoutes")
 
 // middleware
 const errorHandlerMiddleware = require("./middleware/error-handler")
@@ -22,8 +27,13 @@ const notFoundMiddleware = require("./middleware/not-Found")
 app.use(cors())
 app.use(express.json())
 
+app.use("/api/auth", authRouter)
 app.use("/api/transactions", transactionRouter)
-app.use("/api/user", userRouter)
+app.use("/api/blocks", blockRouter)
+app.use("/api/supply-chain", supplychainRouter)
+app.use("/api/products", productRouter)
+app.use("/api/users", userRouter)
+app.use("/api/dashboard", dashboardRouter)
 
 app.use(notFoundMiddleware)
 app.use(errorHandlerMiddleware)

@@ -1,2 +1,1 @@
-import "../app.jsx"
-import "../index.css"
+import "../index"

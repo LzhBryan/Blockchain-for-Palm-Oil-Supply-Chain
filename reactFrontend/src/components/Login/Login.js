@@ -1,90 +1,145 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import {
+  CardMedia,
   Grid,
-  Paper,
   TextField,
-  FormControlLabel,
-  Checkbox,
   Button,
   Typography,
-  Link,
+  makeStyles,
 } from "@material-ui/core"
-import { FaUserCircle } from "react-icons/fa"
-import axios from "axios"
-import "./login.css"
+import axios from "../../utils/axios"
+import { useRole } from "../../utils/UserContext"
+import logo from "../../assets/logo.png"
 
-const LoginPage = () => {
+const useStyles = makeStyles({
+  root: {
+    flexGrow: 1,
+  },
+  bg: {
+    background: "linear-gradient(135deg, #3f51b5, #4a78d0, #f0edff)",
+    height: "100vh",
+  },
+  media: {
+    maxWidth: "60%",
+    height: "60%",
+    marginLeft: "auto",
+    marginRight: "auto",
+    marginTop: "9rem",
+  },
+})
+
+const LoginPage = ({ history }) => {
+  const classes = useStyles()
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
-  const [token, setToken] = useState("")
+  const [error, setError] = useState("")
+  const { setRole } = useRole()
+
+  useEffect(() => {
+    if (localStorage.getItem("authToken")) {
+      history.push("/dashboard")
+    }
+    return () => {}
+  }, [])
 
   const login = async (e) => {
     e.preventDefault()
-    if (!username || password) {
-      throw new Error("Please enter username and password")
-    }
 
     try {
-      const response = await axios.post("http://localhost:5000/login")
-      console.log(response)
-      setToken(response.data.token)
-      setUsername("")
-      setPassword("")
+      const { data } = await axios.post("/api/auth/login", {
+        username,
+        password,
+      })
+      localStorage.setItem("authToken", data.token)
+      localStorage.setItem("role", data.user.role)
+      setRole(data.user.role)
+      history.push("/dashboard")
     } catch (error) {
-      console.log(error)
+      setError(error.response.data.msg)
     }
+    setUsername("")
+    setPassword("")
   }
 
   return (
-    <div>
-      <h1>Palm Oil Blockchain</h1>
-      <Grid>
-        <Paper elevation={10} className="card">
-          <Grid align="center">
-            <FaUserCircle className="icon" />
-          </Grid>
+    <Grid container>
+      <Grid item xs={8} className={classes.bg}>
+        <CardMedia className={classes.media} image={logo} />
+      </Grid>
+      <Grid item xs={4}>
+        <Typography
+          align="center"
+          style={{
+            marginTop: "10rem",
+            fontSize: "25px",
+            fontWeight: "bolder",
+            color: "#000",
+          }}
+        >
+          LOGIN
+        </Typography>
+        <Grid align="center">
           <TextField
             label="Username"
             placeholder="Enter username"
-            style={{ margin: "1.7rem 0" }}
+            style={{ width: "25vw", margin: "2rem 0" }}
+            variant="standard"
+            value={username}
             onChange={(e) => setUsername(e.target.value)}
-            fullWidth
             required
           />
+        </Grid>
+        <Grid align="center">
           <TextField
             label="Password"
             placeholder="Enter password"
             type="password"
+            style={{ width: "25vw" }}
+            variant="standard"
+            value={password}
             onChange={(e) => setPassword(e.target.value)}
             fullWidth
             required
           />
-          <FormControlLabel
-            control={<Checkbox name="checkedB" color="primary" />}
-            style={{ margin: "1rem 0" }}
-            label="Remember me"
-          />
+          {error && (
+            <p
+              style={{
+                marginTop: "2rem",
+                color: "red",
+                textAlign: "center",
+                fontWeight: "bold",
+                fontSize: "1.1em",
+              }}
+            >
+              {error}
+            </p>
+          )}
+        </Grid>
+        <Grid align="center">
           <Button
             type="submit"
             color="primary"
             variant="contained"
-            style={{ margin: "0.5rem 0" }}
-            onSubmit={(e) => login(e)}
-            fullWidth
-            href="/User"
+            style={{
+              width: "20vw",
+              margin: "3rem 0",
+            }}
+            onClick={(e) => login(e)}
+            href="/dashboard"
           >
-            Sign in
+            Login
           </Button>
-          <Typography style={{ margin: "1rem 0" }}>
-            <Link href="#">Forgot Password ?</Link>
-          </Typography>
-          <Typography>
-            Don't have an account?
-            <Link href="/Signup"> Register here</Link>
-          </Typography>
-        </Paper>
+          <Button
+            color="primary"
+            variant="outlined"
+            style={{ width: "20vw" }}
+            onClick={() => history.push("/signup")}
+          >
+            Don't have an account? Register here
+          </Button>
+        </Grid>
       </Grid>
-    </div>
+    </Grid>
   )
 }
 

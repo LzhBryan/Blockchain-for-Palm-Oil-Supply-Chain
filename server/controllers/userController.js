@@ -1,48 +1,72 @@
 const UserModel = require("../models/user")
-const { BadRequestError, UnauthenticatedError } = require("../errors")
-const EC = require("elliptic").ec
-const ec = new EC("secp256k1")
+const TransactionModel = require("../models/transaction")
+const SupplyChainModel = require("../models/supplychain")
 
-const generateKeys = async (req, res) => {
-  const key = ec.genKeyPair()
-  const publicKey = key.getPublic("hex")
-  const privateKey = key.getPrivate("hex")
-  res.status(200).json({ publicKey, privateKey })
+const getAllUsers = async (req, res) => {
+  const users = await UserModel.find({}).select("-password -privateKey")
+  res.status(200).json({ users })
 }
 
-const register = async (req, res) => {
-  const user = await UserModel.create({ ...req.body })
+const showCurrentUserProfile = async (req, res) => {
+  const { username } = req.user
+  const user = await UserModel.find({ username: username }).select("-password")
 
-  // to do: check if user already exists in database
-
-  const token = user.createJWT()
-  res.status(201).json({ user: { name: user.username }, token })
+  res.status(200).json({ user })
 }
 
-const login = async (req, res) => {
-  const { username, password } = req.body
+const getUserTransactions = async (req, res) => {
+  const { username } = req.user
 
-  if (!username || !password) {
-    throw new BadRequestError("Please provide email and password")
-  }
+  const createdTransactions = await TransactionModel.find({
+    createdBy: username,
+  })
 
-  const user = await UserModel.findOne({ username })
+  const user = await UserModel.find({ username: username })
 
-  if (!user) {
-    throw new BadRequestError("Invalid credentials")
-  }
+  const receivedTransactions = await TransactionModel.find({
+    toAddress: user[0].publicKey,
+  })
 
-  const isPasswordCorrect = await user.comparePassword(password)
-  if (!isPasswordCorrect) {
-    throw new BadRequestError("Invalid credentials")
-  }
+  let transactions = []
+  transactions = transactions.concat(createdTransactions, receivedTransactions)
 
-  const token = user.createJWT()
-  res.status(200).json({ user: { name: user.username }, token })
+  transactions.sort(function (a, b) {
+    if (a.timestamp < b.timestamp) return -1
+    else if (a.timestamp > b.timestamp) return 1
+    return 0
+  })
+
+  res.status(200).json({ transactions, username })
+}
+
+const getUserRecords = async (req, res) => {
+  const { username } = req.user
+
+  const createdRecords = await SupplyChainModel.find({
+    createdBy: username,
+  })
+
+  const user = await UserModel.find({ username: username })
+
+  const receivedRecords = await SupplyChainModel.find({
+    toAddress: user[0].publicKey,
+  })
+
+  let records = []
+  records = records.concat(createdRecords, receivedRecords)
+
+  records.sort(function (a, b) {
+    if (a.timestamp < b.timestamp) return -1
+    else if (a.timestamp > b.timestamp) return 1
+    return 0
+  })
+
+  res.status(200).json({ records })
 }
 
 module.exports = {
-  register,
-  login,
-  generateKeys,
+  getAllUsers,
+  showCurrentUserProfile,
+  getUserTransactions,
+  getUserRecords,
 }

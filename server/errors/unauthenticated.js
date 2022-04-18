@@ -7,4 +7,4 @@ class UnauthenticatedError extends CustomAPIError {
   }
 }
 
-module.exports = CustomAPIError
+module.exports = UnauthenticatedError

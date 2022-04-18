@@ -1,5 +1,4 @@
-const { app, BrowserWindow } = require("electron")
-const path = require("path")
+const { app, BrowserWindow, ipcMain } = require("electron")
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require("electron-squirrel-startup")) {
@@ -7,18 +6,26 @@ if (require("electron-squirrel-startup")) {
   app.quit()
 }
 
+let mainWindow
+
 const createWindow = () => {
   // Create the browser window.
-  const mainWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
+  mainWindow = new BrowserWindow({
+    width: 1000,
+    height: 700,
+    show: false,
+    minWidth: 1000,
+    minHeight: 700,
   })
 
+  mainWindow.on("ready-to-show", mainWindow.show)
   // and load the index.html of the app.
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY)
+  mainWindow.setMenuBarVisibility(false)
 
   // Open the DevTools.
-  mainWindow.webContents.openDevTools()
+
+  // mainWindow.webContents.openDevTools()
 }
 
 // This method will be called when Electron has finished
@@ -45,3 +52,7 @@ app.on("activate", () => {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and import them here.
+
+ipcMain.on("app/close", () => {
+  app.quit()
+})

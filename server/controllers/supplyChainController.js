@@ -26,7 +26,7 @@ const getRecord = async (req, res) => {
 
   const record = await SupplyChainModel.findOne({ _id: recordID })
   if (!record) {
-    throw new NotFoundError(`No record with id ${recordID}`)
+    throw new NotFoundError(`No supply-chain record with id ${recordID}`)
   }
 
   res.status(200).json({ record })
@@ -136,7 +136,7 @@ const createRecord = async (req, res) => {
 
   if (receiver.role === "Validator") {
     throw new BadRequestError(
-      "Validators do not participate in transaction activities"
+      "Validators do not participate in supply-chain related activities"
     )
   }
 
@@ -149,9 +149,9 @@ const createRecord = async (req, res) => {
   }
 
   if (transactionReceipt.status == "Pending") {
-    throw new BadRequestError("This transaction hasn't been approved")
+    throw new BadRequestError("This transaction receipt hasn't been approved")
   } else if (transactionReceipt.status == "Rejected") {
-    throw new BadRequestError("This transaction is invalid")
+    throw new BadRequestError("This transaction receipt is invalid")
   }
 
   //Only planter is allowed to have a null previous batch ID
@@ -191,7 +191,9 @@ const createRecord = async (req, res) => {
   req.body.createdBy = username
 
   const record = await SupplyChainModel.create(req.body)
-  res.status(201).json({ msg: "Record is created successfully", record })
+  res
+    .status(201)
+    .json({ msg: "Supply-chain record is created successfully", record })
 }
 
 const validateRecord = async (req, res) => {
@@ -199,7 +201,7 @@ const validateRecord = async (req, res) => {
 
   const record = await SupplyChainModel.findOne({ _id: recordID })
   if (!record) {
-    throw new NotFoundError(`No record with id ${recordID}`)
+    throw new NotFoundError(`No supply-chain record with id ${recordID}`)
   }
 
   const isValid = checkRecordValidity(record)
@@ -220,7 +222,9 @@ const approveRecord = async (req, res) => {
   })
 
   if (approveBefore) {
-    throw new BadRequestError("Already rejected or approved this record")
+    throw new BadRequestError(
+      "Already rejected or approved this supply-chain record"
+    )
   }
 
   let record = await SupplyChainModel.findOneAndUpdate(
@@ -234,15 +238,15 @@ const approveRecord = async (req, res) => {
   )
 
   if (!record) {
-    throw new NotFoundError(`No record with id ${recordID}`)
+    throw new NotFoundError(`No supply-chain record with id ${recordID}`)
   }
 
   record = await recordConsensus(record, recordID)
 
   let message
   isApproved
-    ? (message = "You have approved this transaction")
-    : (message = "You have rejected this transaction")
+    ? (message = "You have approved this supply-chain record")
+    : (message = "You have rejected this supply-chain record")
 
   if (record.batchId.substring(0, 2) === "WA") {
     if (record.status === "Approved" || record.status === "inBlock") {
@@ -327,7 +331,7 @@ function checkRecordValidity(record) {
   const transactionReceiptId = parsedTransactionReceipt.input
 
   if (!signature || signature.length === 0) {
-    throw new BadRequestError("No signature in this transaction")
+    throw new BadRequestError("No signature in this supply-chain record")
   }
 
   const publicKey = ec.keyFromPublic(fromAddress, "hex")

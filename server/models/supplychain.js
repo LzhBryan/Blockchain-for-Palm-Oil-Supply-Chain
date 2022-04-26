@@ -5,14 +5,26 @@ const supplyChainSchema = new mongoose.Schema(
     fromAddress: {
       type: String,
       required: [true, "Please provide sender address"],
-      minlength: 130,
-      maxlength: 130,
+      minlength: [
+        130,
+        "The sender address must has the exact length of 130 characters",
+      ],
+      maxlength: [
+        130,
+        "The sender address must has the exact length of 130 characters",
+      ],
     },
     toAddress: {
       type: String,
       required: [true, "Please provide receiver address"],
-      minlength: 130,
-      maxlength: 130,
+      minlength: [
+        130,
+        "The receiver address must has the exact length of 130 characters",
+      ],
+      maxlength: [
+        130,
+        "The receiver address must has the exact length of 130 characters",
+      ],
     },
     products: [
       {
@@ -38,9 +50,9 @@ const supplyChainSchema = new mongoose.Schema(
     ],
     batchId: {
       type: String,
-      required: true,
+      required: [true, "Please provide batch ID"],
       unique: true,
-      minlength: 3,
+      minlength: [3, "Batch ID should have more than 2 characters"],
     },
     previousBatchId: {
       type: String,
@@ -66,7 +78,7 @@ const supplyChainSchema = new mongoose.Schema(
     },
     createdBy: {
       type: String,
-      required: true,
+      required: [true, "Please provide the created by field"],
     },
     approvedBy: {
       type: Array,

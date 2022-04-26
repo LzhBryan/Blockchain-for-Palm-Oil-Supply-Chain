@@ -9,13 +9,13 @@ const itemSchema = new mongoose.Schema(
     },
     productId: {
       type: Number,
-      required: true,
+      required: [true, "Please provide product ID"],
       unique: true,
-      minlength: 3,
+      minlength: [3, "Product ID should have 2 characters"],
     },
     prevBatchId: {
       type: String,
-      required: true,
+      required: [true, "Please provide previous batch ID"],
     },
     timestamp: {
       type: String,
